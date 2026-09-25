@@ -68,7 +68,8 @@ export const MethodologyModal: React.FC<MethodologyModalProps> = ({ isOpen, onCl
                 <ul className="space-y-1 text-zinc-400">
                   <li><strong>Demonstration:</strong> Illustrative values used to test the analytical pipeline.</li>
                   <li><strong>Proxy:</strong> Indirect evidence that is not equivalent to direct observation.</li>
-                  <li><strong>Model-derived:</strong> Output computed by an explicit model; not automatically observed or field validated.</li>
+                  <li><strong>Derived:</strong> Indicator or statistic computed from observed evidence (for example NDVI or a trend test); derivation does not establish cause or field validation.</li>
+                  <li><strong>Model-derived:</strong> Output computed by an explicit physical or analytical model; not automatically observed or field validated.</li>
                   <li><strong>Reproduced:</strong> A committed analysis chain was independently re-executed and matched its locked references.</li>
                   <li><strong>Observed:</strong> Directly observed or measured data from a documented source.</li>
                   <li><strong>Validated:</strong> Evidence that has passed a stated validation threshold for the specific claim.</li>
