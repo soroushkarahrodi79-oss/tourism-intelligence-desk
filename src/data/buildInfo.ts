@@ -1,8 +1,8 @@
 export const BUILD_INFO = {
-  appVersion: '0.4.0',
+  appVersion: '0.5.0',
   gitSha: import.meta.env.VITE_BUILD_SHA || 'local',
   deployment: import.meta.env.VITE_DEPLOYMENT || 'local',
-  evidenceManifestVersion: 'v0.4-2026-09-25'
+  evidenceManifestVersion: 'v0.5-2026-09-25'
 } as const;
 
 export const shortBuildSha =
