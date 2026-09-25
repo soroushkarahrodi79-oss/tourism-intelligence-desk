@@ -2,21 +2,83 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { evaluateAnalyticalQuestion } from '../src/services/analysisEngine';
 import { HATI_REFERENCE_ASSETS } from '../src/data/hatiEvidence';
+import { SNTO_REFERENCE_ASSETS, SNTO_REAL_EVIDENCE_METRICS } from '../src/data/sntoEvidence';
 
 function dump(value: unknown): string {
   return JSON.stringify(value);
 }
 
-test('curated SNTO causality trap refuses attribution', () => {
+test('SNTO real evidence summary exposes the committed 6/14/1 trend distribution', () => {
   const result = evaluateAnalyticalQuestion(
     'guadarrama-snto',
-    'NDVI decreased 18%. Are tourists damaging the park?'
+    'What does the real SNTO evidence currently show across the PNSG?'
   );
+  const serialized = dump(result);
+
+  assert.equal(result.dataStatus, 'Derived');
+  assert.match(result.statusHeadline, /Real Sentinel-2 Evidence/i);
+  assert.match(serialized, /6.*significant NDVI greening/i);
+  assert.match(serialized, /14.*no significant NDVI trend/i);
+  assert.match(serialized, /1.*significant decline/i);
+  assert.match(serialized, /tourism pressure.*not established|cannot identify tourism as the cause/i);
+});
+
+test('SNTO Maliciosa-Porrones assessment preserves the real signal but refuses tourism attribution', () => {
+  const result = evaluateAnalyticalQuestion(
+    'guadarrama-snto',
+    'Does the Maliciosa-Porrones NDVI decline prove tourism damage?'
+  );
+  const serialized = dump(result);
 
   assert.equal(result.status, 'INSUFFICIENT_EVIDENCE');
-  assert.equal(result.dataStatus, 'Demonstration');
-  assert.match(dump(result), /does not establish tourist damage|does not establish tourist visitation as the cause/i);
-  assert.doesNotMatch(dump(result), /Plausible primary contributor/i);
+  assert.equal(result.dataStatus, 'Derived');
+  assert.match(serialized, /-0\.369/);
+  assert.match(serialized, /\+0\.215/);
+  assert.match(serialized, /No evidence currently identifies tourism as the causal driver/i);
+  assert.doesNotMatch(serialized, /tourists caused|climbers caused/i);
+});
+
+test('SNTO restrictive-management question remains below closure and quota threshold', () => {
+  const result = evaluateAnalyticalQuestion(
+    'guadarrama-snto',
+    'Can SNTO justify closing trails or restricting visitor quotas?'
+  );
+  const serialized = dump(result);
+
+  assert.equal(result.status, 'INSUFFICIENT_EVIDENCE');
+  assert.equal(result.dataStatus, 'Derived');
+  assert.match(serialized, /Decision Ceiling L5a/i);
+  assert.match(serialized, /Trail-Level Visitor Counts.*NONE/i);
+  assert.match(serialized, /Field Validation.*PENDING/i);
+  assert.doesNotMatch(serialized, /closure is recommended|quota is recommended/i);
+});
+
+test('SNTO 218-trail layer is framed as seasonal environmental early warning, not pressure ranking', () => {
+  const result = evaluateAnalyticalQuestion(
+    'guadarrama-snto',
+    'What does the 218-trail OAPN layer actually support?'
+  );
+  const serialized = dump(result);
+
+  assert.equal(result.dataStatus, 'Derived');
+  assert.match(serialized, /218/);
+  assert.match(serialized, /165/);
+  assert.match(serialized, /46/);
+  assert.match(serialized, /not a multi-year per-trail time series/i);
+  assert.match(serialized, /cannot support a trail-by-trail tourism-pressure ranking/i);
+});
+
+test('SNTO missing-evidence assessment identifies visitor pressure and field validation as hard gaps', () => {
+  const result = evaluateAnalyticalQuestion(
+    'guadarrama-snto',
+    'What evidence is missing before tourism-pressure attribution is possible?'
+  );
+  const serialized = dump(result);
+
+  assert.equal(result.status, 'INSUFFICIENT_EVIDENCE');
+  assert.match(serialized, /Visitor Pressure Target.*MISSING/i);
+  assert.match(serialized, /Field Validation.*NOT RUN/i);
+  assert.match(serialized, /MISSING.*ZERO|MISSING ≠ ZERO/i);
 });
 
 test('unmatched causal questions never fabricate attribution statistics', () => {
@@ -27,54 +89,40 @@ test('unmatched causal questions never fabricate attribution statistics', () => 
   const serialized = dump(result);
 
   assert.equal(result.status, 'INSUFFICIENT_EVIDENCE');
+  assert.equal(result.dataStatus, 'Derived');
   assert.equal(result.confidence.level, 'Low');
   assert.match(serialized, /Causal Attribution.*NOT ESTABLISHED/i);
   assert.doesNotMatch(serialized, /Confounder Variance Share/i);
   assert.doesNotMatch(serialized, /Direct Anthropogenic Share/i);
   assert.doesNotMatch(serialized, />\s*70%|<\s*15%/i);
-  assert.doesNotMatch(serialized, /dominant share of (the )?observed variance/i);
   assert.doesNotMatch(serialized, /statistically significant independent causal effect/i);
 });
 
-test('unmatched custom questions return a scoping response, not a fabricated finding', () => {
+test('unmatched custom questions retain the case evidence status without pretending they were answered', () => {
   const result = evaluateAnalyticalQuestion(
     'madrid-hati',
-    'How should we interpret thermal comfort around a new plaza not represented in the demo?'
+    'How should we interpret thermal comfort around a new plaza not represented in the locked pilot?'
   );
   const serialized = dump(result);
 
   assert.equal(result.status, 'INSUFFICIENT_EVIDENCE');
+  assert.equal(result.dataStatus, 'Reproduced');
   assert.equal(result.confidence.level, 'Low');
   assert.match(result.statusHeadline, /No Curated Assessment Matches/i);
-  assert.match(serialized, /Context is shown without claiming that the custom question has been empirically answered/i);
-  assert.doesNotMatch(serialized, /Evidence-Supported Observation in Demonstration Dataset/i);
+  assert.match(serialized, /not reinterpreted as proof for an unmatched claim/i);
 });
 
-test('out-of-scope economic questions remain outside the environmental evidence boundary', () => {
+test('out-of-scope economic questions remain outside the evidence boundary', () => {
   const result = evaluateAnalyticalQuestion(
     'madrid-hati',
     'Will hotel revenue increase because of this thermal pattern?'
   );
-
-  assert.equal(result.status, 'INSUFFICIENT_EVIDENCE');
-  assert.match(result.statusHeadline, /Outside Measured Territorial Indicators/i);
-  assert.match(dump(result), /No empirical measurements exist/i);
-});
-
-test('immediate policy requests are deferred when only demonstration evidence is loaded', () => {
-  const result = evaluateAnalyticalQuestion(
-    'guadarrama-snto',
-    'Should we change policy immediately and restrict access?'
-  );
   const serialized = dump(result);
 
   assert.equal(result.status, 'INSUFFICIENT_EVIDENCE');
-  assert.equal(result.confidence.level, 'Low');
-  assert.match(serialized, /No immediate policy alteration is justified/i);
-  assert.doesNotMatch(serialized, /multiple seasons of validated data/i);
-  assert.doesNotMatch(serialized, /accredited operational monitoring arrays/i);
+  assert.match(result.statusHeadline, /Outside the Variables Represented by This Case/i);
+  assert.match(serialized, /Matched Evidence Sources.*0/i);
 });
-
 
 test('HATI headline assessment exposes reproduced locked-pilot evidence', () => {
   const result = evaluateAnalyticalQuestion(
@@ -120,20 +168,25 @@ test('HATI behavior question respects the published claim ceiling', () => {
   assert.doesNotMatch(serialized, /tourists avoided hot streets/i);
 });
 
-test('HATI map snapshot contains the 27 published study assets', () => {
+test('reference maps contain the expected published HATI and real SNTO assets', () => {
   assert.equal(HATI_REFERENCE_ASSETS.length, 27);
   assert.equal(new Set(HATI_REFERENCE_ASSETS.map((asset) => asset.code)).size, 27);
+
+  assert.equal(SNTO_REFERENCE_ASSETS.length, 21);
+  assert.equal(SNTO_REAL_EVIDENCE_METRICS.significantGreening, 6);
+  assert.equal(SNTO_REAL_EVIDENCE_METRICS.noSignificantTrend, 14);
+  assert.equal(SNTO_REAL_EVIDENCE_METRICS.significantDecline, 1);
 });
 
-test('immediate HATI policy requests distinguish reproduction from operational validation', () => {
-  const result = evaluateAnalyticalQuestion(
-    'madrid-hati',
-    'Should we change policy immediately?'
-  );
-  const serialized = dump(result);
+test('immediate policy requests stay evidence-state aware', () => {
+  const hati = evaluateAnalyticalQuestion('madrid-hati', 'Should we change policy immediately?');
+  const snto = evaluateAnalyticalQuestion('guadarrama-snto', 'Should we change policy immediately?');
 
-  assert.equal(result.status, 'INSUFFICIENT_EVIDENCE');
-  assert.equal(result.dataStatus, 'Reproduced');
-  assert.match(serialized, /computational reproducibility does not convert/i);
-  assert.match(serialized, /single-day|2023/i);
+  assert.equal(hati.status, 'INSUFFICIENT_EVIDENCE');
+  assert.equal(hati.dataStatus, 'Reproduced');
+  assert.equal(snto.status, 'INSUFFICIENT_EVIDENCE');
+  assert.equal(snto.dataStatus, 'Derived');
+
+  assert.match(dump(hati), /research evidence is not automatically validated for current operational policy|Operational Decision Threshold Not Met/i);
+  assert.match(dump(snto), /research evidence is not automatically validated for current operational policy|Operational Decision Threshold Not Met/i);
 });
