@@ -209,9 +209,6 @@ export const TERRITORY_CASES: Record<string, TerritoryCase> = {
           [40.74, -3.88],
           [40.74, -3.91]
         ],
-    dataStatus: 'Demonstration',
-    dataStatusNote:
-      'Curated demonstration/proxy values illustrate the analytical workflow. They are not operational SNTO field measurements or live satellite ingestion.',
         center: [40.7525, -3.895],
         properties: {
           ndviDelta: -0.045,
@@ -220,7 +217,10 @@ export const TERRITORY_CASES: Record<string, TerritoryCase> = {
           visitorVolumeHourly: 420
         }
       }
-    ]
+    ],
+    dataStatus: 'Demonstration',
+    dataStatusNote:
+      'Curated demonstration/proxy values illustrate the analytical workflow. They are not operational SNTO field measurements or live satellite ingestion.'
   }
 };
 
