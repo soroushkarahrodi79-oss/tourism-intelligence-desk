@@ -73,3 +73,18 @@ test('immediate policy requests are deferred when only demonstration evidence is
   assert.doesNotMatch(serialized, /multiple seasons of validated data/i);
   assert.doesNotMatch(serialized, /accredited operational monitoring arrays/i);
 });
+
+
+test('Madrid heat causality fixture does not invent attributable heat shares', () => {
+  const result = evaluateAnalyticalQuestion(
+    'madrid-hati',
+    'Can high tourist density in Puerta del Sol be identified as the cause of urban heat island intensity?'
+  );
+  const serialized = dump(result);
+
+  assert.equal(result.status, 'INSUFFICIENT_EVIDENCE');
+  assert.match(serialized, /Causal Attribution.*NOT ESTABLISHED/i);
+  assert.match(serialized, /Energy Flux Partition.*NOT ESTIMATED/i);
+  assert.doesNotMatch(serialized, /less than 6%|over 90%|<60|>900/i);
+  assert.doesNotMatch(serialized, /rules out human body warmth/i);
+});
