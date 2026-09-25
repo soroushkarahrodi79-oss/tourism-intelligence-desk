@@ -166,7 +166,7 @@ export default function App() {
                       <span className="text-[10px] font-mono text-emerald-400">Mountain Area</span>
                     </div>
                     <div className="text-[11px] text-zinc-400 mt-0.5 truncate">
-                      Environmental & Satellite Monitoring
+                      Real Sentinel-2 Evidence & Monitoring Limits
                     </div>
                   </div>
                 </button>
@@ -175,8 +175,18 @@ export default function App() {
               {/* Case-level data status */}
               <div className="mt-3.5 p-2.5 rounded bg-zinc-950/80 border border-zinc-800 text-[11px] text-zinc-400 font-mono">
                 <div className="flex items-center gap-1.5 text-zinc-300 font-semibold mb-1">
-                  <span className={`w-1.5 h-1.5 rounded-full ${currentTerritory.dataStatus === 'Reproduced' ? 'bg-emerald-400' : 'bg-amber-400'}`}></span>
-                  <span>{currentTerritory.dataStatus === 'Reproduced' ? 'REPRODUCED RESEARCH SNAPSHOT' : 'DEMONSTRATION DATA'}</span>
+                  <span className={`w-1.5 h-1.5 rounded-full ${
+                    currentTerritory.dataStatus === 'Demonstration' || currentTerritory.dataStatus === 'Proxy'
+                      ? 'bg-amber-400'
+                      : 'bg-emerald-400'
+                  }`}></span>
+                  <span>
+                    {currentTerritory.dataStatus === 'Reproduced'
+                      ? 'REPRODUCED RESEARCH SNAPSHOT'
+                      : currentTerritory.dataStatus === 'Derived'
+                        ? 'REAL OBSERVATIONS · DERIVED INDICATORS'
+                        : currentTerritory.dataStatus.toUpperCase()}
+                  </span>
                 </div>
                 <p className="text-zinc-400 leading-relaxed font-sans text-xs">
                   {currentTerritory.dataStatusNote}
@@ -188,7 +198,15 @@ export default function App() {
             <div className="bg-zinc-900/50 border border-zinc-800 rounded-lg p-4">
               <div className="text-xs font-mono uppercase tracking-wider text-zinc-400 font-semibold mb-2.5 flex items-center justify-between">
                 <span>Territorial Indicators</span>
-                <span className="text-[10px] text-amber-400 font-normal">Demonstration Values</span>
+                <span className={`text-[10px] font-normal ${
+                  currentTerritory.dataStatus === 'Demonstration' || currentTerritory.dataStatus === 'Proxy'
+                    ? 'text-amber-400'
+                    : 'text-emerald-400'
+                }`}>
+                  {currentTerritory.dataStatus === 'Demonstration' || currentTerritory.dataStatus === 'Proxy'
+                    ? 'Demonstration Values'
+                    : 'Evidence-Bounded Values'}
+                </span>
               </div>
 
               <div className="space-y-2">
@@ -223,7 +241,9 @@ export default function App() {
               <p className="text-[11px] text-zinc-400 leading-normal">
                 {currentTerritory.dataStatus === 'Reproduced'
                   ? 'Sources and analytical methods documented in the locked HATI research layer:'
-                  : 'Reference observation platforms intended for future operational integration:'}
+                  : currentTerritory.dataStatus === 'Derived'
+                    ? 'Observed sources and derived analytical layers represented in the SNTO evidence snapshot:'
+                    : 'Reference observation platforms intended for future operational integration:'}
               </p>
               <ul className="space-y-1 text-xs font-mono text-zinc-300">
                 {currentTerritory.satelliteBands.map((band, idx) => (
@@ -233,7 +253,11 @@ export default function App() {
                       <span>{band}</span>
                     </span>
                     <span className="text-[10px] text-zinc-500">
-                      {currentTerritory.dataStatus === 'Reproduced' ? 'Research Source' : 'Intended Spec'}
+                      {currentTerritory.dataStatus === 'Reproduced'
+                        ? 'Research Source'
+                        : currentTerritory.dataStatus === 'Derived'
+                          ? 'Observed / Derived'
+                          : 'Intended Spec'}
                     </span>
                   </li>
                 ))}
@@ -244,24 +268,38 @@ export default function App() {
                   <span className="text-zinc-400">
                     {currentTerritory.dataStatus === 'Reproduced'
                       ? 'AEMET · OSM · IGN/CNIG · EUMETSAT'
-                      : 'Copernicus / Earth Observation Reference'}
+                      : currentTerritory.dataStatus === 'Derived'
+                        ? 'Sentinel-2 · OAPN · PRUG'
+                        : 'Copernicus / Earth Observation Reference'}
                   </span>
                 </div>
                 <div className="flex items-center justify-between text-[10px]">
                   <span className="text-zinc-500">Evidence Layer:</span>
                   <span className="text-zinc-400">
-                    {currentTerritory.dataStatus === 'Reproduced' ? 'Locked HATI Research Snapshot' : 'Curated Demonstration Dataset'}
+                    {currentTerritory.dataStatus === 'Reproduced'
+                      ? 'Locked HATI Research Snapshot'
+                      : currentTerritory.dataStatus === 'Derived'
+                        ? 'Real EO + Derived Trend Snapshot'
+                        : 'Curated Demonstration Dataset'}
                   </span>
                 </div>
                 <div className="flex items-center justify-between text-[10px]">
                   <span className="text-zinc-500">Spatial Input:</span>
                   <span className="text-zinc-400">
-                    {currentTerritory.dataStatus === 'Reproduced' ? '27 Published Study Assets' : 'Demonstration Geometry & Station Records'}
+                    {currentTerritory.dataStatus === 'Reproduced'
+                      ? '27 Published Study Assets'
+                      : currentTerritory.dataStatus === 'Derived'
+                        ? '21 Real Campaign Assets'
+                        : 'Demonstration Geometry & Station Records'}
                   </span>
                 </div>
                 <div className="flex items-center justify-between text-[10px]">
                   <span className="text-zinc-500">Data Status:</span>
-                  <span className={`${currentTerritory.dataStatus === 'Reproduced' ? 'text-emerald-400' : 'text-amber-400'} font-medium`}>
+                  <span className={`${
+                    currentTerritory.dataStatus === 'Demonstration' || currentTerritory.dataStatus === 'Proxy'
+                      ? 'text-amber-400'
+                      : 'text-emerald-400'
+                  } font-medium`}>
                     {currentTerritory.dataStatus}
                   </span>
                 </div>
