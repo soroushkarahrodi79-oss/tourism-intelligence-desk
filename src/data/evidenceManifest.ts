@@ -2,6 +2,8 @@ export interface EvidenceSnapshotManifest {
   caseId: 'madrid-hati' | 'guadarrama-snto';
   repository: string;
   snapshotRole: string;
+  primaryCommit: string;
+  primarySourceUrl: string;
   immutableCommits: Record<string, string>;
   immutableSources: Record<string, string>;
   archivalRecord: string;
@@ -31,6 +33,12 @@ export const EVIDENCE_MANIFEST: Record<string, EvidenceSnapshotManifest> = {
     caseId: 'madrid-hati',
     repository: HATI_IMMUTABLE.repository,
     snapshotRole: 'Locked publication evidence + reproduced screening chain',
+    primaryCommit: HATI_IMMUTABLE.reproductionEvidenceCommit,
+    primarySourceUrl: blobUrl(
+      HATI_IMMUTABLE.repository,
+      HATI_IMMUTABLE.reproductionEvidenceCommit,
+      'professional/REPRODUCTION_REPORT.md'
+    ),
     immutableCommits: {
       scienceFreeze: HATI_IMMUTABLE.scienceFreezeCommit,
       reproductionBase: HATI_IMMUTABLE.reproductionBaseCommit,
@@ -55,6 +63,8 @@ export const EVIDENCE_MANIFEST: Record<string, EvidenceSnapshotManifest> = {
     caseId: 'guadarrama-snto',
     repository: SNTO_IMMUTABLE.repository,
     snapshotRole: 'Real Sentinel-2 observations + derived PNSG evidence snapshot',
+    primaryCommit: SNTO_IMMUTABLE.snapshotCommit,
+    primarySourceUrl: commitUrl(SNTO_IMMUTABLE.repository, SNTO_IMMUTABLE.snapshotCommit),
     immutableCommits: {
       sourceSnapshot: SNTO_IMMUTABLE.snapshotCommit
     },
@@ -88,4 +98,4 @@ export const EVIDENCE_MANIFEST: Record<string, EvidenceSnapshotManifest> = {
   }
 };
 
-export const EVIDENCE_MANIFEST_VERSION = 'v0.4-2026-09-25';
+export const EVIDENCE_MANIFEST_VERSION = 'v0.5-2026-09-25';
