@@ -1,5 +1,6 @@
 import { TerritoryCase, EvidenceAssessment } from '../types';
 import { HATI_EVIDENCE_SOURCE, HATI_REPRODUCED_METRICS, HATI_REFERENCE_ASSETS } from './hatiEvidence';
+import { SNTO_EVIDENCE_SOURCE, SNTO_REAL_EVIDENCE_METRICS, SNTO_REFERENCE_ASSETS } from './sntoEvidence';
 
 export const TERRITORY_CASES: Record<string, TerritoryCase> = {
   'madrid-hati': {
@@ -72,155 +73,65 @@ export const TERRITORY_CASES: Record<string, TerritoryCase> = {
     code: 'SNTO-GUA',
     shortName: 'Sierra de Guadarrama',
     title: 'SNTO: Smart Nature Tourism Observatory',
-    subtitle: 'High-Mountain Protected Area Environmental Monitoring & Satellite Indicators',
+    subtitle: 'Real Sentinel-2 Environmental Signals & Evidence-Proportionate Public-Use Planning',
     description:
-      'Copernicus Sentinel-2 10-meter Normalized Difference Vegetation Index (NDVI) multi-year time series, high-elevation meteorological observations, and automated trail counters across sensitive subalpine habitats in the Sierra de Guadarrama National Park (Peñalara, Cotos, and La Pedriza).',
-    focusTheme: 'Subalpine Vegetation Dynamics & Trail Buffer Monitoring',
-    center: [40.8172, -3.9564],
-    zoom: 12,
+      'Real Sentinel-2 environmental observations and derived multi-year NDVI/NDMI trends for 21 PNSG campaign assets, combined with official OAPN trail and PRUG management context. Visitor-use evidence and field validation remain missing, so tourism-impact attribution and restrictive management are not supported.',
+    focusTheme: 'Environmental Change · Evidence Ceiling · Monitoring / Inspection',
+    center: [40.8803, -3.8952],
+    zoom: 10,
     bounds: [
-      [40.75, -4.05],
-      [40.88, -3.85]
+      [40.72, -4.08],
+      [41.03, -3.71]
     ],
-    satelliteBands: ['Sentinel-2 Band 4 (Red)', 'Sentinel-2 Band 8 (NIR)', 'Sentinel-2 Band 11 (SWIR)'],
+    satelliteBands: [
+      'Sentinel-2 SR Harmonized · NDVI / NDMI / EVI',
+      'Mann–Kendall + Sen trend analysis · 2021–2026',
+      'Official OAPN trail cartography · 218 trails',
+      'PRUG management zoning'
+    ],
     keyIndicators: [
-      { name: 'Laguna Peñalara NDVI Delta', value: '-0.142', unit: 'Index', change: '-18.5% YoY in demo period', isDemo: true },
-      { name: 'Root-Zone Soil Moisture Proxy', value: '11.8', unit: '% vol', change: 'Deficit condition in demo proxy', isDemo: true },
-      { name: 'Trailhead Peak Footfall (Cotos)', value: '3,840', unit: 'visitors/day', change: 'Illustrative weekend spike', isDemo: true },
-      { name: 'Snowpack Persistence Anomaly', value: '-22', unit: 'days', change: 'Earlier snow depletion anomaly', isDemo: true }
+      {
+        name: 'Real Time-Series Assets',
+        value: String(SNTO_REAL_EVIDENCE_METRICS.timeSeriesAssets),
+        unit: 'assets',
+        change: 'Sentinel-2 · 2021–2026',
+        isDemo: false
+      },
+      {
+        name: 'NDVI Trend Distribution',
+        value: `${SNTO_REAL_EVIDENCE_METRICS.significantGreening}/${SNTO_REAL_EVIDENCE_METRICS.noSignificantTrend}/${SNTO_REAL_EVIDENCE_METRICS.significantDecline}`,
+        unit: '↑ / stable / ↓',
+        change: '6 greening · 14 no trend · 1 decline',
+        isDemo: false
+      },
+      {
+        name: 'Visitor-Use Evidence',
+        value: 'NONE',
+        unit: 'asset/trail scale',
+        change: 'pressure attribution blocked',
+        isDemo: false
+      },
+      {
+        name: 'Current Decision Ceiling',
+        value: 'L5a',
+        unit: 'claim ladder',
+        change: 'monitor / inspect; no closure or quota',
+        isDemo: false
+      }
     ],
     sampleQuestions: [
-      'NDVI decreased 18%. Are tourists damaging the park?',
-      'Is this area experiencing a meaningful environmental change?',
-      'Can subalpine vegetation degradation along Laguna de Peñalara be attributed to tourist trampling?',
-      'Can elevated weekend visitor spikes be linked to water quality fluctuations in the upper Manzanares basin?',
-      'What additional evidence is required before restricting visitor quotas based on vegetation decline?'
+      'What does the real SNTO evidence currently show across the PNSG?',
+      'Does the Maliciosa-Porrones NDVI decline prove tourism damage?',
+      'Can SNTO justify closing trails or restricting visitor quotas?',
+      'What does the 218-trail OAPN layer actually support?',
+      'What evidence is missing before tourism-pressure attribution is possible?'
     ],
-    stations: [
-      {
-        id: 'gua-st-01',
-        name: 'Puerto de Cotos Gateway Node (1,830m)',
-        code: 'SNTO-COT-01',
-        lat: 40.8285,
-        lng: -3.9602,
-        elevationMeters: 1830,
-        type: 'visitor_counter',
-        readings: { airTempC: 22.4, dailyVisitors: 3840, soilMoisturePct: 14.1, snowDepthCm: 0, windSpeedMs: 4.8 },
-        status: 'active',
-        isDemonstrationStation: true
-      },
-      {
-        id: 'gua-st-02',
-        name: 'Laguna Grande de Peñalara Observation Node (2,019m)',
-        code: 'SNTO-PEN-02',
-        lat: 40.8351,
-        lng: -3.9525,
-        elevationMeters: 2019,
-        type: 'phenology_camera',
-        readings: { airTempC: 19.8, dailyVisitors: 1120, soilMoisturePct: 9.8, ndviMean: 0.41, soilCompactionMpa: 2.8 },
-        status: 'active',
-        isDemonstrationStation: true
-      },
-      {
-        id: 'gua-st-03',
-        name: 'La Pedriza — Canto Cochino Monitoring Base (1,025m)',
-        code: 'SNTO-PED-03',
-        lat: 40.7512,
-        lng: -3.8968,
-        elevationMeters: 1025,
-        type: 'visitor_counter',
-        readings: { airTempC: 31.6, dailyVisitors: 2950, soilMoisturePct: 10.4, waterTurbidityNtu: 3.8, parkingCapacityPct: 96 },
-        status: 'active',
-        isDemonstrationStation: true
-      },
-      {
-        id: 'gua-st-04',
-        name: 'Puerto de Navacerrada Meteorological Reference (1,858m)',
-        code: 'SNTO-NAV-04',
-        lat: 40.7895,
-        lng: -4.0041,
-        elevationMeters: 1858,
-        type: 'microclimate',
-        readings: { airTempC: 21.2, dailyVisitors: 2180, soilMoisturePct: 16.5, solarRadiationWm2: 890, relativeHumidity: 38 },
-        status: 'active',
-        isDemonstrationStation: true
-      },
-      {
-        id: 'gua-st-05',
-        name: 'Pico de Peñalara High Alpine Tower (2,428m)',
-        code: 'SNTO-SUM-05',
-        lat: 40.8503,
-        lng: -3.9554,
-        elevationMeters: 2428,
-        type: 'flux_tower',
-        readings: { airTempC: 16.1, dailyVisitors: 640, windSpeedMs: 11.2, uvIndex: 9.6, atmosphericPressureHpa: 760 },
-        status: 'active',
-        isDemonstrationStation: true
-      }
-    ],
-    features: [
-      {
-        id: 'feat-penalara-laguna',
-        name: 'Peñalara Glacial Cirque & Subalpine Sector',
-        category: 'subalpine_zone',
-        coordinates: [
-          [40.842, -3.962],
-          [40.842, -3.945],
-          [40.828, -3.945],
-          [40.828, -3.962]
-        ],
-        center: [40.835, -3.9535],
-        properties: {
-          ndviDelta: -0.142,
-          erosionRisk: 'Severe',
-          soilCompactionIndex: 2.8,
-          visitorVolumeHourly: 240
-        }
-      },
-      {
-        id: 'feat-cotos-trail-buffer',
-        name: 'Puerto de Cotos to Laguna Trail Buffer Zone',
-        category: 'trail_buffer',
-        coordinates: [
-          [40.829, -3.961],
-          [40.831, -3.958],
-          [40.833, -3.955],
-          [40.836, -3.953],
-          [40.835, -3.951],
-          [40.832, -3.954],
-          [40.83, -3.958],
-          [40.828, -3.96]
-        ],
-        center: [40.832, -3.956],
-        properties: {
-          ndviDelta: -0.21,
-          erosionRisk: 'Critical',
-          soilCompactionIndex: 3.4,
-          visitorVolumeHourly: 380
-        }
-      },
-      {
-        id: 'feat-pedriza-granite',
-        name: 'La Pedriza Granite Sector & Riparian Buffer',
-        category: 'trail_buffer',
-        coordinates: [
-          [40.765, -3.91],
-          [40.765, -3.88],
-          [40.74, -3.88],
-          [40.74, -3.91]
-        ],
-        center: [40.7525, -3.895],
-        properties: {
-          ndviDelta: -0.045,
-          erosionRisk: 'Moderate',
-          soilCompactionIndex: 1.6,
-          visitorVolumeHourly: 420
-        }
-      }
-    ],
-    dataStatus: 'Demonstration',
+    stations: [],
+    features: [],
+    dataStatus: 'Derived',
     dataStatusNote:
-      'Curated demonstration/proxy values illustrate the analytical workflow. They are not operational SNTO field measurements or live satellite ingestion.'
+      'Real Sentinel-2 observations underpin the environmental layer; NDVI/NDMI/EVI and trend statistics are derived from those observations. No asset/trail-scale visitor-use series and no completed field-validation campaign are available.',
+    referencePoints: SNTO_REFERENCE_ASSETS
   }
 };
 
