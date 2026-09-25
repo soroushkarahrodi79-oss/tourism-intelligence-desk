@@ -10,7 +10,7 @@
     "clean": "node -e \"require('node:fs').rmSync('dist', { recursive: true, force: true })\"",
     "lint": "tsc --noEmit",
     "test": "tsx --test tests/analysisEngine.test.ts",
-    "check": "tsc --noEmit && tsx --test tests/analysisEngine.test.ts && bun run build"
+    "check": "tsc --noEmit && tsx --test tests/analysisEngine.test.ts && bun run build && node scripts/verify-build-manifest.mjs"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.3.3",
