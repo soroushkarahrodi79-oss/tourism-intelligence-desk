@@ -67,17 +67,19 @@ export const MethodologyModal: React.FC<MethodologyModalProps> = ({ isOpen, onCl
                 <span className="font-semibold text-zinc-200 font-mono block mb-1">DATA STATUS (The Nature of the Input):</span>
                 <ul className="space-y-1 text-zinc-400">
                   <li><strong>Demonstration:</strong> Illustrative values used to test the analytical pipeline.</li>
-                  <li><strong>Proxy:</strong> Derived indirect indicators (e.g. mobile mobility traces).</li>
+                  <li><strong>Proxy:</strong> Indirect evidence that is not equivalent to direct observation.</li>
+                  <li><strong>Model-derived:</strong> Output computed by an explicit model; not automatically observed or field validated.</li>
+                  <li><strong>Reproduced:</strong> A committed analysis chain was independently re-executed and matched its locked references.</li>
                   <li><strong>Observed:</strong> Directly observed or measured data from a documented source.</li>
-                  <li><strong>Validated:</strong> Independently verified and quality-controlled data suitable for the stated analytical use.</li>
+                  <li><strong>Validated:</strong> Evidence that has passed a stated validation threshold for the specific claim.</li>
                 </ul>
               </div>
               <div>
-                <span className="font-semibold text-zinc-200 font-mono block mb-1">EVIDENCE CONFIDENCE (Epistemic Certainty):</span>
+                <span className="font-semibold text-zinc-200 font-mono block mb-1">EVIDENCE CONFIDENCE (Support for This Claim):</span>
                 <ul className="space-y-1 text-zinc-400">
-                  <li><strong>Low:</strong> High ambiguity, unobserved confounders, or sparse sampling.</li>
-                  <li><strong>Moderate:</strong> Consistent signal but proxy-derived or uncalibrated.</li>
-                  <li><strong>High:</strong> Ground-truth verified with alternative hypotheses ruled out.</li>
+                  <li><strong>Low:</strong> The specific claim is weakly supported or substantially confounded.</li>
+                  <li><strong>Moderate:</strong> The claim has meaningful support but important uncertainty or evidence gaps remain.</li>
+                  <li><strong>High:</strong> The specific bounded claim is strongly supported by the available evidence; this does not upgrade the underlying data to a different status.</li>
                 </ul>
               </div>
             </div>
