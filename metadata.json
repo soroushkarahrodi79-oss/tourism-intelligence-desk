@@ -1,6 +1,6 @@
 {
   "name": "Tourism Intelligence Desk",
-  "description": "Professional evidence-governed tourism decision-support prototype with a 60-second evaluation path, reproduced HATI-Madrid research, real Sentinel-2 and derived SNTO PNSG evidence, immutable provenance, claim ceilings, and deterministic anti-causality guardrails.",
+  "description": "Professional evidence-governed tourism decision-support prototype with reproduced HATI-Madrid research, real Sentinel-2 and derived SNTO PNSG evidence, immutable provenance, deterministic claim guardrails, and versioned CV/LinkedIn/interview integration materials.",
   "requestFramePermissions": [],
   "majorCapabilities": []
 }
