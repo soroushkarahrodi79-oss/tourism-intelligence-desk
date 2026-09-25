@@ -670,7 +670,7 @@ export const EVIDENCE_ASSESSMENTS: Record<string, EvidenceAssessment> = {
     id: 'guadarrama-snto-q1',
     territoryId: 'guadarrama-snto',
     question: 'What does the real SNTO evidence currently show across the PNSG?',
-    status: 'OBSERVED_ANOMALY',
+    status: 'DERIVED_RESULT',
     statusHeadline: 'Real Sentinel-2 Evidence: PNSG Asset Trends Are Dominated by Stability or Greening',
     dataStatus: 'Derived',
     signal: {
@@ -1024,7 +1024,7 @@ export const EVIDENCE_ASSESSMENTS: Record<string, EvidenceAssessment> = {
     id: 'guadarrama-snto-q4',
     territoryId: 'guadarrama-snto',
     question: 'What does the 218-trail OAPN layer actually support?',
-    status: 'MODEL_DERIVED_RESULT',
+    status: 'DERIVED_RESULT',
     statusHeadline: 'Real Cartography × Real Sentinel-2: Useful Seasonal Early Warning, Not a Tourism-Pressure Ranking',
     dataStatus: 'Derived',
     signal: {
