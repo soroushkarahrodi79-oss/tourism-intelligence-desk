@@ -665,356 +665,567 @@ export const EVIDENCE_ASSESSMENTS: Record<string, EvidenceAssessment> = {
     ]
   },
 
-  // GUADARRAMA QUESTION 1: Meaningful environmental change
+  // GUADARRAMA QUESTION 1: real PNSG evidence summary
   'guadarrama-snto-q1': {
     id: 'guadarrama-snto-q1',
     territoryId: 'guadarrama-snto',
-    question: 'Is this area experiencing a meaningful environmental change?',
+    question: 'What does the real SNTO evidence currently show across the PNSG?',
     status: 'OBSERVED_ANOMALY',
-    statusHeadline: 'Observed Vegetation & Hydrological Signal in Demonstration Dataset',
-    dataStatus: 'Demonstration',
+    statusHeadline: 'Real Sentinel-2 Evidence: PNSG Asset Trends Are Dominated by Stability or Greening',
+    dataStatus: 'Derived',
     signal: {
       observation:
-        'A reduction in Normalized Difference Vegetation Index (NDVI) of approximately -0.142 (-18.5% YoY in demonstration processing) is detected across subalpine scrub (Cytisus oromediterraneus) and wet pasture zones above 1,900m in the Peñalara glacial cirque.',
-      spatialScope: 'Parque Nacional de la Sierra de Guadarrama, Peñalara sector (high-mountain protected area).',
-      temporalWindow: 'Demonstration Sentinel-2 multi-year composite (August peak greenness window).',
-      summary: 'Satellite optical indices and high-mountain meteorological records indicate widespread subalpine moisture stress.'
+        'Across 21 real PNSG campaign assets with Sentinel-2 time series from 2021-01 to 2026-06, 6 show significant NDVI greening, 14 show no significant NDVI trend, and 1 shows a significant decline.',
+      spatialScope: '21 campaign assets across the Parque Nacional de la Sierra de Guadarrama.',
+      temporalWindow: SNTO_EVIDENCE_SOURCE.observationWindow,
+      summary:
+        'The dominant real remote-sensing signal is stability or greening, not widespread decline. The one significant declining NDVI signal occurs at Maliciosa-Porrones and is accompanied by significantly increasing NDMI.'
     },
     evidence: {
       supportingDatasets: [
-        'Copernicus Sentinel-2 MSI 10m surface reflectance shows reduced August NDVI relative to multi-year historical medians.',
-        'Meteorological records at Puerto de Navacerrada document a substantial precipitation deficit during the preceding spring months.',
-        'High-elevation soil moisture sensors at Laguna Grande indicate depressed root-zone moisture during the summer window.',
-        'Snowpack persistence records show earlier snow depletion compared to the long-term climatological median.'
+        'Real monthly Sentinel-2 SR Harmonized observations for 21 PNSG assets.',
+        'Derived NDVI / NDMI / EVI series with 60–66 monthly observations per asset.',
+        'Deseasonalised Mann–Kendall and Sen-slope trend analysis committed in the SNTO repository.',
+        'The public-use decision evidence brief records the current L5a claim ceiling and the absence of visitor-use and field-validation evidence.'
       ],
       metrics: [
-        { label: 'Subalpine NDVI Delta', value: '-0.142', unit: 'Index', baseline: 'Historical average', delta: '-18.5% in demo window', trend: 'alert', isDemo: true },
-        { label: 'Spring Precipitation Deficit', value: '-62.0', unit: '%', baseline: 'Seasonal median', delta: 'Deficit condition (demo)', trend: 'down', isDemo: true },
-        { label: 'Root Soil Moisture Proxy', value: '9.8', unit: '% vol', baseline: 'Normal range', delta: 'Moisture deficit (demo)', trend: 'alert', isDemo: true },
-        { label: 'Data Status', value: 'DEMONSTRATION', unit: 'mode', baseline: 'Demonstration data', delta: 'Operational validation required', trend: 'stable', isDemo: true }
+        { label: 'Significant NDVI Greening', value: '6', unit: 'assets', baseline: '21 time-series assets', delta: 'real derived trend', trend: 'up', isDemonstration: false },
+        { label: 'No Significant NDVI Trend', value: '14', unit: 'assets', baseline: '21 time-series assets', delta: 'dominant outcome', trend: 'stable', isDemonstration: false },
+        { label: 'Significant NDVI Decline', value: '1', unit: 'asset', baseline: '21 time-series assets', delta: 'Maliciosa-Porrones', trend: 'alert', isDemonstration: false },
+        { label: 'Visitor-Use Series', value: 'NONE', unit: 'asset/trail scale', baseline: 'Required for pressure attribution', delta: 'INSUFFICIENT EVIDENCE', trend: 'alert', isDemonstration: false }
       ],
-      spatialCoordinates: '40.8351° N, 3.9525° W, Elevation 2,019m a.s.l.',
-      sampleSize: 'Demonstration Sentinel-2 composite series and automated sensor telemetry.',
-      dataIntegrityNotes: 'DEMONSTRATION DATA: Illustrative values used to demonstrate the analytical workflow. Not an operational national park finding.'
+      spatialCoordinates: 'PNSG campaign assets spanning approximately 40.74–41.02° N and 4.06–3.73° W.',
+      sampleSize: '21 real Sentinel-2 campaign assets; monthly series through June 2026.',
+      dataIntegrityNotes:
+        'REAL OBSERVATIONS + DERIVED INDICATORS: environmental change is observed remotely; tourism pressure, ecological condition, and causal impact are not established.'
     },
     interpretation: {
       inferences: [
-        'Subalpine plant communities are experiencing physiological vegetative and moisture stress.',
-        'Earlier snowmelt combined with spring precipitation deficit has reduced moisture availability in high-elevation granite soils.'
+        'The real environmental signal does not support a narrative of park-wide vegetation deterioration across the monitored assets.',
+        'Maliciosa-Porrones merits monitoring because it is the only asset with a significant declining NDVI trend in this 21-asset series.',
+        'The evidence can prioritize investigation, but cannot identify tourism as the cause of any change.'
       ],
       plausibleMechanisms:
-        'Accelerated spring snowpack melt exposes high-mountain scrub to early radiation drying, followed by extended summer moisture deficit.'
+        'Observed vegetation-index trends can reflect climate, phenology, succession, fire, management, geometry / mixed-pixel effects, or visitor-related mechanisms; the current evidence does not resolve attribution.'
     },
     evidenceLimit: {
       strictlyForbiddenInferences: [
-        'DO NOT conclude that tourism is the primary cause of this regional NDVI decline (the signal occurs across both visited trail corridors and inaccessible rock faces).',
-        'DO NOT infer permanent scrub mortality without observing subsequent spring phenological recovery.',
-        'DO NOT extrapolate high-elevation subalpine scrub trends to deep-rooted lower-elevation Scots pine forests.'
+        'DO NOT label the Sentinel-2 signal as tourism pressure or tourism impact.',
+        'DO NOT claim ecological or trail-condition field validation; Issue #26 has not run.',
+        'DO NOT infer visitor volume at any asset or trail: no real asset/trail-scale visitor-use series is ingested.',
+        'DO NOT generalize the 21 heterogeneous campaign assets as a representative sample of every PNSG trail.'
       ],
       unobservedVariables: [
-        'Wild ungulate (Spanish ibex / Capra pyrenaica) grazing pressure distribution.',
-        'Prevalence of seasonal fungal pathogens or insect defoliation in Cytisus stands.'
+        'Real asset/trail-scale visitor counts or access records.',
+        'Qualified field observations of trail and ecological condition.',
+        'Causal controls capable of separating visitor activity from climate and other environmental drivers.'
       ],
-      spatialTemporalGaps: 'Winter cloud and snow cover limit continuous optical satellite monitoring between November and April.'
+      spatialTemporalGaps:
+        'The 21 assets include points, polygons, lines, and conservation reserves with different spatial-fit quality; 2026 is a partial year in the time series.'
     },
     competingExplanations: [
       {
-        category: 'Meteorological Drought',
-        explanation: 'Regional precipitation deficit and high vapor pressure deficit during spring and early summer.',
-        evaluation: 'Contextually supported hypothesis',
-        reasoning: 'Precipitation deficit affects the entire mountain range and correlates with regional drought indices.',
-        investigationNeeded: 'Correlate with Standardized Precipitation Evapotranspiration Index (SPEI) at catchment scale.'
-      },
-      {
-        category: 'Snowpack Depletion & Thermal Stress',
-        explanation: 'Earlier snowmelt leading to prolonged summer soil moisture desiccation.',
+        category: 'Environmental / Phenological Drivers',
+        explanation: 'Climate variability, drought, phenology, succession, disturbance, and land management can alter NDVI and NDMI.',
         evaluation: 'Plausible competing explanation',
-        reasoning: 'Snow cover ended weeks earlier than climatological median, eliminating summer snowmelt recharge.',
-        investigationNeeded: 'Analyze satellite MODIS/Sentinel-2 fractional snow cover duration records.'
+        reasoning: 'Sentinel-2 observes surface state, not the cause of that state.',
+        investigationNeeded: 'Add matched climate / disturbance context and continue the time series before making attribution claims.'
       },
       {
-        category: 'Tourist Off-Trail Trampling',
-        explanation: 'Localized visitor trampling as a candidate factor.',
-        evaluation: 'Plausible secondary factor',
-        reasoning: 'Localized mechanical trampling can occur within meters of trail edges, but cannot account for widespread decline observed on remote cliff faces.',
-        investigationNeeded: 'Conduct high-resolution spatial buffer analysis separating trail corridors from remote controls.'
+        category: 'Spatial-Fit Effects',
+        explanation: 'Point, line, and rocky climbing footprints may mix the used surface with surrounding vegetation.',
+        evaluation: 'Contextually supported hypothesis',
+        reasoning: 'The SNTO decision brief explicitly identifies heterogeneous footprint fit as a claim ceiling.',
+        investigationNeeded: 'Use field validation and higher-resolution observations where asset-scale interpretation matters.'
       }
     ],
     confidence: {
-      level: 'Moderate',
+      level: 'High',
       justification: [
-        'The broad biophysical signal (drought-induced NDVI decline) is consistent across satellite and meteorological observations; marked Moderate because specific numerical values are demonstration proxies.'
+        'Confidence is High in the bounded descriptive statement that 6 assets greened significantly, 14 showed no significant NDVI trend, and 1 declined significantly because these values are derived from the committed real Sentinel-2 series.',
+        'Confidence in causal attribution remains Low because visitor-use and field-validation evidence are absent.'
       ],
-      marginOrInterval: 'Regional vegetation stress observed; numerical attribution requires operational validation'
+      marginOrInterval: 'Claim-specific confidence: high for trend distribution; no causal effect estimate.'
     },
     decisionImplication: {
       managerialConsiderations: [
-        'If seasonal dry conditions continue, field inspection of fragile wet meadow habitats along primary trail approaches could be prioritized.',
-        'If field verification confirms localized trampling or path widening, trail delineation (low-profile timber and stone borders) could be considered.',
-        'High-mountain wildfire prevention protocols could be maintained as a precautionary safeguard during periods of observed vegetation desiccation.'
+        'Use the environmental signal to focus monitoring attention, not to prescribe restrictive intervention.',
+        'Keep Maliciosa-Porrones on a monitoring / field-inspection shortlist.',
+        'Treat stability / greening as evidence against manufacturing a degradation priority where no adverse signal exists.'
       ],
       cautionsAndGuardrails: [
-        'Do not attribute park-wide vegetation decline to tourist trampling without presenting meteorological drought and phenology context.',
-        'Do not enact sweeping administrative closures without operational ground verification.'
+        'No closure, quota, restoration, or budget commitment follows from the current Sentinel-2 evidence alone.',
+        'Environmental change must remain separate from visitor-pressure attribution.'
       ],
       policyPerspective: [
-        'Integrate climate drought indicators alongside visitor volume when evaluating seasonal trail management.'
+        'The current product ceiling is L5a: monitoring / inspection recommendation with explicit uncertainty.'
       ]
     },
     dataNeededNext: [
-      'High-resolution drone (UAV) multispectral imagery (<5cm resolution) to separate immediate trailside trampling from background slope drought response.',
-      'Permanent fenced control exclosure plots to isolate grazing and trampling from meteorological drought effects.',
-      'Field soil moisture transects across varying soil depths.'
+      'Real visitor-use evidence at a spatial unit appropriate to the decision.',
+      'Execution of the field-validation protocol (#26) by qualified personnel.',
+      'Continued Sentinel-2 observations to test persistence of the Maliciosa-Porrones signal.'
     ],
     provenance: [
       {
-        sensorOrPlatform: 'Copernicus Sentinel-2 MSI Multi-Spectral Instrument (Illustrative Proxy)',
-        spatialResolution: '10m (Bands 4, 8)',
-        temporalCoverage: 'Demonstration summer comparison',
-        processingLevel: 'Level 2A Surface Reflectance Proxy',
-        sourceAuthority: 'Earth Observation Data Reference',
-        isCalibratedProxy: true,
-        dataStatus: 'Demonstration'
+        sensorOrPlatform: 'Sentinel-2 SR Harmonized campaign series',
+        spatialResolution: 'Per-asset footprint; mixed geometry',
+        temporalCoverage: '2021-01 to 2026-06',
+        processingLevel: 'Observed surface reflectance source',
+        sourceAuthority: 'SNTO public repository / Google Earth Engine campaign export',
+        citationUrl: 'https://github.com/soroushkarahrodi79-oss/snto-smart-tourism-observatory',
+        isCalibratedProxy: false,
+        dataStatus: 'Observed'
       },
       {
-        sensorOrPlatform: 'AEMET High-Mountain Meteorological Observatory (Navacerrada #2462 Reference)',
-        spatialResolution: 'Point observatory (1,858m)',
-        temporalCoverage: 'Climatological baseline reference',
-        processingLevel: 'Quality Controlled Observation Reference',
-        sourceAuthority: 'Agencia Estatal de Meteorología (Reference)',
+        sensorOrPlatform: 'NDVI / NDMI + deseasonalised Mann–Kendall / Sen slope',
+        spatialResolution: 'Per campaign asset',
+        temporalCoverage: '2021-01 to 2026-06',
+        processingLevel: 'Derived environmental trend',
+        sourceAuthority: 'SNTO committed trend-analysis artifact',
+        citationUrl: 'https://github.com/soroushkarahrodi79-oss/snto-smart-tourism-observatory/blob/main/clean_assets/timeseries/analysis/mk_trends_pnsg.json',
         isCalibratedProxy: false,
-        dataStatus: 'Proxy'
+        dataStatus: 'Derived'
       }
     ]
   },
 
-  // GUADARRAMA QUESTION 2: CAUSALITY TRAP TEST - Does trampling cause Peñalara degradation?
+  // GUADARRAMA QUESTION 2: Maliciosa-Porrones causal boundary
   'guadarrama-snto-q2': {
     id: 'guadarrama-snto-q2',
     territoryId: 'guadarrama-snto',
-    question: 'NDVI decreased 18%. Are tourists damaging the park?',
+    question: 'Does the Maliciosa-Porrones NDVI decline prove tourism damage?',
     status: 'INSUFFICIENT_EVIDENCE',
-    statusHeadline: 'Available Evidence Does Not Establish Causation: Environmental Confounders Prevent Attributing NDVI Decline to Tourism',
-    dataStatus: 'Demonstration',
+    statusHeadline: 'INSUFFICIENT EVIDENCE: A Real Declining NDVI Trend Does Not Establish Tourism Damage',
+    dataStatus: 'Derived',
     signal: {
       observation:
-        'In the demonstration dataset, Normalized Difference Vegetation Index (NDVI) within the 10m buffer of the Laguna de Peñalara hiking path decreased by -0.21 (-18.5%), while background vegetation across remote control slopes decreased by -0.14.',
-      spatialScope: 'Laguna de Peñalara trail corridor and surrounding subalpine basin (1,830m to 2,020m).',
-      temporalWindow: 'Demonstration summer comparison.',
-      summary: 'Vegetation decline is observed in the demonstration dataset. However, this does not establish tourist damage, as regional environmental factors also explain the background landscape signal.'
+        'Maliciosa-Porrones is the only one of the 21 campaign assets with a significant declining NDVI trend (τ = -0.369, p ≈ 0; n = 65), with a significant change point around March 2025.',
+      spatialScope: 'Escuela de escalada Maliciosa-Porrones asset footprint.',
+      temporalWindow: 'Monthly Sentinel-2 series, 2021-01 to 2026-06.',
+      summary:
+        'The environmental change signal is real and statistically significant within the committed analysis, but attribution to climbing, tourism, or visitor trampling is not supported.'
     },
     evidence: {
       supportingDatasets: [
-        'Trail buffer (0–5m) shows bare soil patches and elevated soil compaction in demonstration field surveys.',
-        'However, remote control areas more than 150m from any trail also experienced significant NDVI decline during the same period due to spring precipitation deficits.',
-        'High visitor counts coincide with the summer season, creating strong temporal overlap with the period of peak annual drought and solar radiation.',
-        'No fenced exclosure control plots currently exist to isolate human mechanical footfall from ambient climatic drying.'
+        'NDVI: significant decreasing trend, τ = -0.369, p ≈ 0, n = 65.',
+        'NDMI: significant increasing trend, τ = +0.215, p = 0.0114, creating an internally contradictory simple desiccation / trampling story.',
+        'Annual mean NDVI in the committed trend artifact decreases from approximately 0.234 in 2021 to 0.213 in partial-year 2026.',
+        'No real visitor-use series and no completed field-condition campaign exist for this asset.'
       ],
       metrics: [
-        { label: 'Trail Buffer (0-5m) NDVI Delta', value: '-0.210', unit: 'Index', baseline: 'Historical average', delta: '-0.210 (demo)', trend: 'alert', isDemo: true },
-        { label: 'Remote Control (>150m) NDVI Delta', value: '-0.142', unit: 'Index', baseline: 'Historical average', delta: '-0.142 (drought)', trend: 'alert', isDemo: true },
-        { label: 'Attributable Difference', value: '-0.068', unit: 'Index', baseline: '0.000', delta: 'Confounded by soil & topography', trend: 'alert', isDemo: true },
-        { label: 'Evidence Confidence', value: 'LOW', unit: 'attribution', baseline: 'Defensible threshold', delta: 'INSUFFICIENT EVIDENCE', trend: 'alert', isDemo: true }
+        { label: 'NDVI Trend', value: '-0.369', unit: 'Kendall τ', baseline: 'No monotonic trend', delta: 'significant decrease', trend: 'alert', isDemonstration: false },
+        { label: 'NDVI p-value', value: '<0.001', unit: 'approx.', baseline: '0.05', delta: 'significant', trend: 'alert', isDemonstration: false },
+        { label: 'NDMI Trend', value: '+0.215', unit: 'Kendall τ', baseline: 'No monotonic trend', delta: 'significant increase', trend: 'up', isDemonstration: false },
+        { label: 'Visitor-Use Evidence', value: 'NONE', unit: 'asset scale', baseline: 'Needed for tourism attribution', delta: 'missing', trend: 'alert', isDemonstration: false }
       ],
-      spatialCoordinates: '40.8320° N, 3.9560° W, Elevation 1,940m',
-      sampleSize: 'Demonstration transect model and field proxy data.',
-      dataIntegrityNotes: 'DEMONSTRATION DATA: Illustrative values used to demonstrate the analytical workflow. Not an operational project result.'
+      spatialCoordinates: 'Maliciosa-Porrones representative display point derived from the committed polygon geometry.',
+      sampleSize: '65 monthly observations in the committed trend analysis.',
+      dataIntegrityNotes:
+        'REAL SATELLITE SIGNAL; DERIVED TREND. The polygon covers rocky terrain, NDVI baseline is low, and no field observation verifies degradation or visitor impact.'
     },
     interpretation: {
       inferences: [
-        'Vegetation decline is observed in the demonstration dataset; this does not establish tourist damage.',
-        'Localized visitor pressure remains one candidate explanation along immediate 2–3m path margins, but regional environmental factors may also explain the signal across the broader landscape.',
-        'Attribution requires additional spatial and temporal evidence; for demonstration data, no competing explanation should be promoted to the established cause.'
+        'A persistent remote-sensing vegetation-change signal is present and merits monitoring / a targeted field look.',
+        'The combination of declining NDVI and increasing NDMI argues against a simplistic single-mechanism story.',
+        'No evidence currently identifies tourism as the causal driver.'
       ],
       plausibleMechanisms:
-        'Possible compound interaction: ambient meteorological moisture deficit weakens turf resilience, with localized visitor trampling acting as a candidate secondary factor along immediate trail edges.'
+        'Possible explanations include vegetation composition / phenology, climate variability, surface geometry / mixed-pixel effects, land management, disturbance, or localized visitor effects; none is established as the cause.'
     },
     evidenceLimit: {
       strictlyForbiddenInferences: [
-        'CRITICAL ANTI-CAUSALITY RULE: Available evidence does not establish tourist visitation as the cause of the 18% NDVI reduction.',
-        'DO NOT conclude that eliminating visitors would restore vegetation levels during an ongoing meteorological drought.',
-        'DO NOT promote any candidate explanation to an established cause without controlled exclosure experiments.',
-        'DO NOT implement park-wide management interventions based solely on this demonstration signal.'
+        'DO NOT state that climbers or tourists caused the NDVI decline.',
+        'DO NOT label the area ecologically degraded without qualified field evidence.',
+        'DO NOT infer a closure, quota, restoration project, or budget from this signal.',
+        'DO NOT treat statistical significance of a trend as causal significance.'
       ],
       unobservedVariables: [
-        'Fenced control exclosures (preventing human and ungulate access) to measure natural baseline recovery.',
-        'Soil depth variation (trails often follow naturally thin-soil rocky ridgelines with higher drought vulnerability).'
+        'Asset-scale visitor counts and temporal use pattern.',
+        'Ground observations of vegetation cover, erosion, trail widening, or compaction.',
+        'Matched environmental controls and disturbance history.'
       ],
-      spatialTemporalGaps: 'Sentinel-2 10m pixels aggregate both the 1.5m trail and adjacent untouched vegetation, creating mixed-pixel averaging.'
+      spatialTemporalGaps:
+        'The climbing polygon is a coarse vegetation proxy over rocky terrain; 2026 is partial and no satellite-to-field validation has been completed.'
     },
     competingExplanations: [
       {
-        category: 'Macro-Climatic Drought',
-        explanation: 'Regional precipitation deficit and high vapor pressure deficit across the Iberian Central System.',
-        evaluation: 'Contextually supported hypothesis',
-        reasoning: 'Remote, inaccessible cliff faces experienced ~68% of the equivalent NDVI decline without any human visitation, indicating regional environmental factors may explain the signal.',
-        investigationNeeded: 'Model regional vegetation-drought sensitivity curves and catchment SPEI.'
-      },
-      {
-        category: 'Localized Visitor Trampling',
-        explanation: 'Localized visitor trampling as a candidate factor.',
+        category: 'Mixed-Pixel / Rocky-Surface Sensitivity',
+        explanation: 'Low baseline vegetation cover can make the footprint sensitive to small compositional or scene-level changes.',
         evaluation: 'Plausible competing explanation',
-        reasoning: 'Localized visitor pressure remains one candidate explanation for trailside buffer differentials, but cannot account for park-wide background declines.',
-        investigationNeeded: 'Deploy paired UAV flights and sub-meter soil compaction transects.'
+        reasoning: 'The SNTO evidence brief explicitly notes low baseline NDVI and coarse spatial fit at this climbing polygon.',
+        investigationNeeded: 'Compare higher-resolution imagery and repeat observations over the same footprint.'
       },
       {
-        category: 'Wild Ungulate Grazing',
-        explanation: 'Herbivory and trampling by Spanish ibex (Capra pyrenaica) concentrated near water sources.',
+        category: 'Environmental Change Unrelated to Tourism',
+        explanation: 'Climate, phenology, succession, management, or disturbance may generate the observed NDVI trend.',
+        evaluation: 'Plausible competing explanation',
+        reasoning: 'No visitor-use denominator or attribution design exists.',
+        investigationNeeded: 'Add environmental covariates and matched controls before testing any visitor-impact hypothesis.'
+      },
+      {
+        category: 'Localized Visitor Effect',
+        explanation: 'Climbing or access activity is a candidate mechanism only if spatially and temporally matched exposure can be demonstrated.',
         evaluation: 'Requires field validation',
-        reasoning: 'Ibex populations frequent high-elevation alpine springs during dry summer months.',
-        investigationNeeded: 'Conduct camera trap censuses and ungulate exclosure trials.'
+        reasoning: 'The current repository contains no asset-scale visitor series and no field-condition validation.',
+        investigationNeeded: 'Run the #26 field protocol and obtain a traceable visitor-use series appropriate to the asset.'
       }
     ],
     confidence: {
-      level: 'Low',
+      level: 'High',
       justification: [
-        'Evidence confidence for attributing the decline to tourism is Low due to severe confounding with regional meteorological drought and coarse satellite spatial resolution.'
+        'Confidence is High that a declining NDVI trend exists in the committed series.',
+        'Confidence is Low for any tourism-impact attribution because the relevant exposure and field evidence do not exist.'
       ],
-      marginOrInterval: 'Causal attribution cannot be established with available data'
+      marginOrInterval: 'Trend estimate exists; causal effect estimate does not.'
     },
     decisionImplication: {
       managerialConsiderations: [
-        'No park-wide management intervention or visitor quota restriction is justified from this signal alone.',
-        'Vegetation decline observed in the demonstration dataset does not establish tourist damage; attribution requires additional spatial and temporal evidence.',
-        'If field verification confirms localized trampling or path widening, targeted trail delineation (timber borders, stone cairns) could be considered.',
-        'Paired scientific exclosure plots could be commissioned to isolate human mechanical pressure from ambient meteorological drying.'
+        'Maintain Maliciosa-Porrones as MONITOR / DATA GAP rather than an intervention priority.',
+        'Continue the Sentinel-2 series and include the asset in a qualified field-validation campaign.',
+        'Acquire visitor-use evidence only if a tourism-pressure decision is actually required.'
       ],
       cautionsAndGuardrails: [
-        'Do not announce tourist trampling as the established cause of park-wide vegetation decline without presenting drought and phenology context.',
-        'Avoid making definitive public claims without controlled experimental data.'
+        'No restrictive action is justified from this signal alone.',
+        'Do not collapse “significant trend” into “significant tourism impact”.'
       ],
       policyPerspective: [
-        'Incorporate compound drought indicators into trail management frameworks rather than using visitor numbers in isolation.'
+        'A defensible monitoring flag is the highest current action supported for this asset.'
       ]
     },
     dataNeededNext: [
-      'Establishment of permanent fenced scientific exclosure plots (10m x 10m) to monitor vegetation with and without footfall.',
-      'High-resolution UAV multispectral imagery (<3cm ground sampling distance) before and after peak hiking seasons.',
-      'Soil depth and compaction mapping across both trail and control transects.'
+      'Qualified field-condition observations under the #26 protocol.',
+      'Traceable asset-scale visitor-use data or an appropriately scoped proxy.',
+      'Repeated remote-sensing observations and environmental covariates for attribution testing.'
     ],
     provenance: [
       {
-        sensorOrPlatform: 'Sentinel-2 MSI + Illustrative Field Penetrometer Survey Proxy',
-        spatialResolution: '10m satellite / point mechanical sampling proxy',
-        temporalCoverage: 'Demonstration observation',
-        processingLevel: 'Differential Buffer Anomaly Model',
-        sourceAuthority: 'Tourism Intelligence Desk Analytical Prototype',
-        isCalibratedProxy: true,
-        dataStatus: 'Demonstration'
+        sensorOrPlatform: 'Sentinel-2 SR Harmonized → NDVI / NDMI trend artifact',
+        spatialResolution: 'Maliciosa-Porrones polygon footprint',
+        temporalCoverage: '2021-01 to 2026-06',
+        processingLevel: 'Derived trend from real observations',
+        sourceAuthority: 'SNTO committed mk_trends_pnsg.json',
+        citationUrl: 'https://github.com/soroushkarahrodi79-oss/snto-smart-tourism-observatory/blob/main/clean_assets/timeseries/analysis/mk_trends_pnsg.json',
+        isCalibratedProxy: false,
+        dataStatus: 'Derived'
       }
     ]
   },
 
-  // GUADARRAMA QUESTION 3: Water quality vs weekend visitor spikes
+  // GUADARRAMA QUESTION 3: restrictive management ceiling
   'guadarrama-snto-q3': {
     id: 'guadarrama-snto-q3',
     territoryId: 'guadarrama-snto',
-    question: 'Can elevated weekend visitor spikes be linked to water quality fluctuations in the upper Manzanares basin?',
+    question: 'Can SNTO justify closing trails or restricting visitor quotas?',
     status: 'INSUFFICIENT_EVIDENCE',
-    statusHeadline: 'INSUFFICIENT EVIDENCE: Discrete Sampling Aliasing & Confounding Storm Runoff Prevent Attribution',
-    dataStatus: 'Demonstration',
+    statusHeadline: 'Decision Ceiling L5a: Current Evidence Does Not Authorize Closure, Quota, Restoration, or Budget Commitment',
+    dataStatus: 'Derived',
     signal: {
       observation:
-        'Occasional spikes in river water turbidity and sporadic biological indicator detections downstream of recreational areas are recorded in demonstration grab sampling during summer weekend afternoons.',
-      spatialScope: 'Upper Río Manzanares basin within La Pedriza (18.6 km² sub-catchment).',
-      temporalWindow: 'Demonstration bi-weekly grab sampling series.',
-      summary: 'Sampling frequency and meteorological confounding prevent establishing an evidence-based link between visitor volume and water quality.'
+        'SNTO currently has real environmental observations and management context, but effectively no visitor-use evidence at asset or trail scale and no completed field-validation campaign.',
+      spatialScope: 'PNSG public-use planning.',
+      temporalWindow: 'Current repository evidence state.',
+      summary:
+        'The scientific product contract authorizes monitoring / inspection recommendations at the current evidence ceiling, not restrictive or resource-committing action.'
     },
     evidence: {
       supportingDatasets: [
-        'Discrete grab sample records show elevated turbidity on 3 out of 6 sampled summer Saturdays in demonstration data.',
-        'However, 2 of those 3 elevated readings coincided with localized convective alpine summer thunderstorm events recorded in radar telemetry.',
-        'Water sampling was performed only twice per month, representing severe temporal under-sampling (temporal aliasing).',
-        'Wildlife populations and natural organic debris breakdown during low baseflow periods also introduce background organic loading.'
+        'Real Sentinel-2 ecosystem-state evidence reaches the monitoring / investigation layer.',
+        'PRUG protection zoning is available as real management context.',
+        'Visitor-pressure target variable remains INSUFFICIENT_EVIDENCE: no real asset/trail count series is ingested.',
+        'Field validation #26 has not run.'
       ],
       metrics: [
-        { label: 'Weekend Turbidity Mean', value: '6.2', unit: 'NTU', baseline: '1.8 NTU (weekday)', delta: '+4.4 NTU in demo data', trend: 'alert', isDemo: true },
-        { label: 'Storm Confounding Events', value: '2 / 3', unit: 'episodes', baseline: '0 storm events', delta: 'Convective storm overlap', trend: 'alert', isDemo: true },
-        { label: 'Sampling Frequency', value: '2', unit: 'samples/mo', baseline: 'Continuous needed', delta: 'Severe temporal aliasing', trend: 'down', isDemo: true },
-        { label: 'Attribution Status', value: 'INSUFFICIENT', unit: 'status', baseline: 'Defensible threshold', delta: 'INSUFFICIENT EVIDENCE', trend: 'alert', isDemo: true }
+        { label: 'Evidence Ceiling', value: 'L5a', unit: 'claim ladder', baseline: 'L5b/L6 required for stronger action', delta: 'monitor / inspect only', trend: 'stable', isDemonstration: false },
+        { label: 'Trail-Level Visitor Counts', value: 'NONE', unit: 'real series', baseline: 'Required for pressure target', delta: 'missing', trend: 'alert', isDemonstration: false },
+        { label: 'Field Validation', value: 'PENDING', unit: '#26', baseline: 'Required for validated condition claims', delta: 'not executed', trend: 'alert', isDemonstration: false },
+        { label: 'Public-Use Intervention Priorities', value: '0', unit: 'supported cases', baseline: 'Evidence-proportionate review', delta: 'none supported', trend: 'stable', isDemonstration: false }
       ],
-      spatialCoordinates: '40.7512° N, 3.8968° W, Elevation 1,025m',
-      sampleSize: 'Demonstration discrete grab sample logs (N = 12 samples).',
-      dataIntegrityNotes: 'DEMONSTRATION DATA: Illustrative values used to demonstrate the analytical workflow. Not an operational project result.'
+      spatialCoordinates: 'PNSG management territory.',
+      sampleSize: 'Current SNTO evidence inventory and decision contract.',
+      dataIntegrityNotes:
+        'The absence of authorization is a scientific boundary, not a recommendation that management should never act using other institutional evidence.'
     },
     interpretation: {
       inferences: [
-        'Local wading and riverbank disturbance by visitors plausibly cause localized resuspension of fine granitic sediments near specific pools.',
-        'However, with discrete bi-weekly samples and convective storm overlap, attributing systemic basin-wide water degradation to tourism is scientifically unfounded.'
+        'SNTO can flag environmental signals for monitoring / inspection.',
+        'SNTO cannot currently justify closures, quotas, restoration budgets, or claims of intervention effectiveness.',
+        'A real environmental signal does not fill the missing visitor-pressure and field-validation links.'
       ],
       plausibleMechanisms:
-        'Local physical sediment agitation by recreational bathers combined with stormwater surface runoff carrying mineral dust into shallow stream reaches.'
+        'Restrictive public-use decisions require a stronger evidence chain than ecosystem-state observation alone.'
     },
     evidenceLimit: {
       strictlyForbiddenInferences: [
-        'DO NOT conclude that tourism is contaminating or degrading the municipal water supply based on this evidence.',
-        'DO NOT perform statistical correlation between bi-weekly grab samples and daily visitor counts (violates sampling theory).',
-        'DO NOT ignore natural thunderstorm runoff as a dominant contributor to episodic turbidity.'
+        'DO NOT recommend closure or quota from Sentinel-2 evidence alone.',
+        'DO NOT convert municipal mobility context into trail-level footfall.',
+        'DO NOT present legacy per-trail budget / priority fields as decision recommendations.',
+        'DO NOT claim effectiveness or regenerative outcome.'
       ],
       unobservedVariables: [
-        'Continuous high-frequency (10-minute) turbidity, dissolved oxygen, and conductivity sensor telemetry.',
-        'Microbial source tracking (MST) to distinguish human-specific genetic markers from wildlife feces.'
+        'Real target visitor-pressure series.',
+        'Complete management-response records.',
+        'Field validation and comparator evidence required for higher claim levels.'
       ],
-      spatialTemporalGaps: 'A 14-day gap between grab samples leaves hundreds of transient discharge and contamination events completely unrecorded.'
+      spatialTemporalGaps:
+        'The strongest local environmental evidence and the missing visitor-use evidence exist at different decision scales.'
     },
     competingExplanations: [
       {
-        category: 'Convective Alpine Thunderstorms',
-        explanation: 'Localized convective rain cells flushing natural mineral sediment into the stream channel.',
-        evaluation: 'Contextually supported hypothesis',
-        reasoning: 'Turbidity spikes coincided with recorded radar precipitation pulses in 2 of 3 elevated episodes.',
-        investigationNeeded: 'Deploy rainfall-triggered autosamplers.'
-      },
-      {
-        category: 'Localized Recreational Disturbance',
-        explanation: 'Bathing and foot traffic physically resuspending fine riverbed sediments.',
-        evaluation: 'Plausible secondary factor',
-        reasoning: 'Observed locally in popular bathing pools, but downstream spatial persistence is unverified.',
-        investigationNeeded: 'Deploy paired turbidity probes upstream and downstream of recreational pools.'
-      },
-      {
-        category: 'Wildlife & Low-Flow Biological Loading',
-        explanation: 'Natural organic loading from wildlife during periods of reduced summer baseflow.',
-        evaluation: 'Requires field validation',
-        reasoning: 'Low stream discharge concentrates natural background organic matter.',
-        investigationNeeded: 'Analyze seasonal baseflow hydrographs.'
+        category: 'Management Evidence Outside SNTO',
+        explanation: 'Park authorities may possess other operational evidence not represented in this repository.',
+        evaluation: 'Confounded / indeterminate',
+        reasoning: 'The prototype can only authorize claims from the evidence it actually contains.',
+        investigationNeeded: 'Integrate authoritative management evidence explicitly before changing the decision ceiling.'
       }
     ],
     confidence: {
-      level: 'Low',
+      level: 'High',
       justification: [
-        'Evidence confidence is Low due to severe temporal under-sampling (12 discrete samples) and overlapping storm events.'
+        'Confidence is High in the current claim ceiling because it is explicitly codified in the SNTO scientific product contract and decision-evidence matrix.'
       ],
-      marginOrInterval: 'Sampling frequency inadequate to test causal hypothesis'
+      marginOrInterval: 'Authorization boundary, not a probabilistic estimate.'
     },
     decisionImplication: {
       managerialConsiderations: [
-        'No regulatory bans or recreational access restrictions are justified on the basis of preliminary grab samples alone.',
-        'If ongoing water quality screening is required, deploying continuous multi-parameter water quality sondes (turbidity, temperature, conductivity) upstream and downstream of high-visitation areas could be considered.',
-        'If public health advisories are contemplated, microbial source tracking could be commissioned to differentiate human and wildlife inputs.'
+        'Use SNTO to prioritize monitoring / inspection where environmental evidence warrants attention.',
+        'Require additional evidence before any restrictive or resource-committing recommendation.',
+        'Preserve “insufficient evidence to prioritise” as a legitimate decision outcome.'
       ],
       cautionsAndGuardrails: [
-        'Do not present preliminary grab samples to the media as establishing tourism impact.',
-        'Ensure park communications classify current water data as preliminary and undergoing validation.'
+        'Do not use product UI pressure to force a ranked intervention list.',
+        'Do not silently upgrade REAL satellite evidence into validated ecological impact.'
       ],
       policyPerspective: [
-        'Base water resource management on continuous automated telemetry rather than episodic grab sampling.'
+        'Restrictive action remains outside the current SNTO evidence ceiling.'
       ]
     },
     dataNeededNext: [
-      'Automated continuous water quality telemetry logging turbidity and conductivity at 10-minute intervals.',
-      'Stormwater hydrograph separation to decouple rainfall runoff from dry-weather recreation.',
-      'PCR microbial source tracking (Bacteroides human-specific vs animal markers).'
+      'Traceable public-use evidence at the relevant spatial scale.',
+      'Field validation #26.',
+      'If effectiveness claims are desired: complete intervention records, pre/post evidence, and a comparator / counterfactual.'
     ],
     provenance: [
       {
-        sensorOrPlatform: 'Manual Water Quality Grab Sampling (Illustrative Proxy)',
-        spatialResolution: 'Point sampling location (Canto Cochino Bridge)',
-        temporalCoverage: 'Demonstration bi-weekly sampling',
-        processingLevel: 'Discrete Laboratory Measurement Proxy',
-        sourceAuthority: 'Water Monitoring Reference Archive',
-        isCalibratedProxy: true,
-        dataStatus: 'Demonstration'
+        sensorOrPlatform: 'SNTO Scientific Product Contract + Evidence→Decision Matrix',
+        spatialResolution: 'Product-level claim governance',
+        temporalCoverage: 'Current main evidence state',
+        processingLevel: 'Decision-use authorization',
+        sourceAuthority: 'SNTO canonical scientific contract',
+        citationUrl: 'https://github.com/soroushkarahrodi79-oss/snto-smart-tourism-observatory/blob/main/docs/phase1/SCIENTIFIC_PRODUCT_CONTRACT.md',
+        isCalibratedProxy: false,
+        dataStatus: 'Derived'
+      }
+    ]
+  },
+
+  // GUADARRAMA QUESTION 4: 218-trail layer
+  'guadarrama-snto-q4': {
+    id: 'guadarrama-snto-q4',
+    territoryId: 'guadarrama-snto',
+    question: 'What does the 218-trail OAPN layer actually support?',
+    status: 'MODEL_DERIVED_RESULT',
+    statusHeadline: 'Real Cartography × Real Sentinel-2: Useful Seasonal Early Warning, Not a Tourism-Pressure Ranking',
+    dataStatus: 'Derived',
+    signal: {
+      observation:
+        'The PNSG Pipeline-A layer combines official OAPN geometry for 218 trails with a two-scene Sentinel-2 environmental signal and PRUG zoning.',
+      spatialScope: '218 official PNSG trail geometries.',
+      temporalWindow: 'Two-scene seasonal comparison, not a multi-year per-trail time series.',
+      summary:
+        'At aggregate level, 165 trails are classified as improving and 46 as worsening in the seasonal environmental signal. The layer does not contain trail-level visitor-use evidence.'
+    },
+    evidence: {
+      supportingDatasets: [
+        'Official OAPN trail cartography for 218 trails.',
+        'Real Sentinel-2 seasonal environmental signal (EHS / ΔEHS).',
+        'Official PRUG management zoning per trail.',
+        'The decision evidence brief explicitly separates this layer from the 21-asset multi-year time series.'
+      ],
+      metrics: [
+        { label: 'Official OAPN Trails', value: '218', unit: 'trails', baseline: 'Full mapped layer', delta: 'official geometry', trend: 'stable', isDemonstration: false },
+        { label: 'Seasonal Signal Improving', value: '165', unit: 'trails', baseline: 'Two-scene ΔEHS', delta: 'environmental signal', trend: 'up', isDemonstration: false },
+        { label: 'Seasonal Signal Worsening', value: '46', unit: 'trails', baseline: 'Two-scene ΔEHS', delta: 'environmental signal', trend: 'alert', isDemonstration: false },
+        { label: 'Trail-Level Visitor Pressure', value: 'NOT AVAILABLE', unit: 'target evidence', baseline: 'Required for pressure ranking', delta: 'unsupported', trend: 'alert', isDemonstration: false }
+      ],
+      spatialCoordinates: 'Official PNSG OAPN trail network.',
+      sampleSize: '218 trail geometries.',
+      dataIntegrityNotes:
+        'REAL CARTOGRAPHY × REAL SATELLITE SIGNAL. Seasonal early-warning only; derived legacy budget / priority fields are not authorized as management recommendations.'
+    },
+    interpretation: {
+      inferences: [
+        'The trail layer can support environmental monitoring and PRUG-aware inspection planning.',
+        'It cannot support a trail-by-trail tourism-pressure ranking because visitor use is not measured at trail scale.',
+        'A two-scene seasonal change is not equivalent to a multi-year trend.'
+      ],
+      plausibleMechanisms:
+        'Environmental signal changes may reflect seasonal vegetation dynamics and other non-tourism drivers.'
+    },
+    evidenceLimit: {
+      strictlyForbiddenInferences: [
+        'DO NOT call worsening ΔEHS “tourism degradation”.',
+        'DO NOT present the layer as a visitor-footfall map.',
+        'DO NOT surface legacy per-trail budget_eur or priority_index as recommendations.',
+        'DO NOT treat the two-scene signal as a long-term trend.'
+      ],
+      unobservedVariables: [
+        'Trail-level visitor counts.',
+        'Field trail-condition measurements.',
+        'Multi-year per-trail trend series for all 218 trails.'
+      ],
+      spatialTemporalGaps: 'Environmental state is localized per trail, but public-use exposure is not.'
+    },
+    competingExplanations: [
+      {
+        category: 'Seasonal Environmental Variability',
+        explanation: 'Two-scene differences can reflect seasonal or scene-specific environmental conditions.',
+        evaluation: 'Plausible competing explanation',
+        reasoning: 'The 218-trail layer is explicitly a seasonal early-warning layer rather than a long time series.',
+        investigationNeeded: 'Extend temporal coverage before interpreting persistence.'
+      }
+    ],
+    confidence: {
+      level: 'High',
+      justification: [
+        'Confidence is High in the existence and scope of the 218-trail environmental layer and its aggregate counts; confidence is not transferred to tourism-pressure attribution.'
+      ],
+      marginOrInterval: 'Descriptive layer summary; no visitor-pressure effect estimate.'
+    },
+    decisionImplication: {
+      managerialConsiderations: [
+        'Use the layer to organize environmental follow-up by trail and PRUG zone.',
+        'Combine it with real public-use evidence only when such evidence exists at a compatible scale.'
+      ],
+      cautionsAndGuardrails: [
+        'Do not rank trails by tourism impact from environmental signal alone.',
+        'Keep seasonal and multi-year evidence surfaces distinct.'
+      ],
+      policyPerspective: [
+        'The layer is an early-warning and monitoring aid, not an automated intervention allocator.'
+      ]
+    },
+    dataNeededNext: [
+      'Trail/access-level visitor evidence where operationally feasible.',
+      'Repeated environmental observations to establish persistence.',
+      'Field-condition evidence for any ground-impact claim.'
+    ],
+    provenance: [
+      {
+        sensorOrPlatform: 'OAPN trail cartography × Sentinel-2 Pipeline A',
+        spatialResolution: 'Per official trail geometry',
+        temporalCoverage: 'Two-scene seasonal comparison',
+        processingLevel: 'Derived environmental early-warning layer',
+        sourceAuthority: 'SNTO PNSG Pipeline A',
+        citationUrl: 'https://github.com/soroushkarahrodi79-oss/snto-smart-tourism-observatory',
+        isCalibratedProxy: false,
+        dataStatus: 'Derived'
+      }
+    ]
+  },
+
+  // GUADARRAMA QUESTION 5: evidence gap
+  'guadarrama-snto-q5': {
+    id: 'guadarrama-snto-q5',
+    territoryId: 'guadarrama-snto',
+    question: 'What evidence is missing before tourism-pressure attribution is possible?',
+    status: 'INSUFFICIENT_EVIDENCE',
+    statusHeadline: 'Evidence Gap: Real Environmental State Exists, but the Tourism-Pressure Target Is Still Missing',
+    dataStatus: 'Derived',
+    signal: {
+      observation:
+        'SNTO has real environmental observations but no traceable asset/trail-scale visitor-pressure target series and no completed field-validation campaign.',
+      spatialScope: 'PNSG evidence architecture.',
+      temporalWindow: 'Current evidence inventory.',
+      summary:
+        'The missing link is not more satellite imagery alone; it is evidence that measures public use at the decision scale and validates physical condition on the ground.'
+    },
+    evidence: {
+      supportingDatasets: [
+        'No counters, access-control records, parking occupancy series, surveys, or ingested mobility exist at asset/trail scale.',
+        'The MITMA crosswalk exists only as municipal context and its snapshot is not generated; even if ingested it would not become trail footfall.',
+        'Field validation #26 has not run.',
+        'Management-response evidence is incomplete for effectiveness reasoning.'
+      ],
+      metrics: [
+        { label: 'Visitor Pressure Target', value: 'MISSING', unit: 'readiness', baseline: 'Real asset/park series', delta: 'INSUFFICIENT EVIDENCE', trend: 'alert', isDemonstration: false },
+        { label: 'Field Validation', value: 'NOT RUN', unit: '#26', baseline: 'Required for field-confirmed condition', delta: 'hard gate', trend: 'alert', isDemonstration: false },
+        { label: 'Management Response Record', value: 'INCOMPLETE', unit: 'evidence pillar', baseline: 'Needed for effectiveness', delta: 'L6 blocked', trend: 'alert', isDemonstration: false },
+        { label: 'Current Ceiling', value: 'L5a', unit: 'claim ladder', baseline: 'monitor / inspect', delta: 'causality blocked', trend: 'stable', isDemonstration: false }
+      ],
+      spatialCoordinates: 'Product-level evidence architecture.',
+      sampleSize: 'Evidence inventory, not a statistical sample.',
+      dataIntegrityNotes:
+        'MISSING ≠ ZERO and MISSING ≠ SAFE. The product explicitly represents absent evidence rather than substituting a proxy as if it were the target.'
+    },
+    interpretation: {
+      inferences: [
+        'The priority gap is a measurement problem, not an AI-generation problem.',
+        'Municipal mobility can provide macro context but cannot satisfy the trail-level visitor-pressure target.',
+        'Satellite-to-field validation is necessary before field-confirmed condition or causal impact claims.'
+      ],
+      plausibleMechanisms:
+        'A future attribution design would need temporally aligned visitor exposure, environmental state, field condition, and confounder treatment.'
+    },
+    evidenceLimit: {
+      strictlyForbiddenInferences: [
+        'DO NOT use digital route traces as direct visitor counts without a validated calibration relationship.',
+        'DO NOT substitute municipal mobility for trail footfall.',
+        'DO NOT treat missing pressure data as low pressure.',
+        'DO NOT bypass the #26 field gate using model confidence.'
+      ],
+      unobservedVariables: [
+        'Direct or instrumented public-use counts at an appropriate decision unit.',
+        'Qualified ground-condition observations.',
+        'Complete management-response evidence if effectiveness is later studied.'
+      ],
+      spatialTemporalGaps: 'Evidence layers currently resolve different spatial units and cannot be fused into a causal trail-level claim.'
+    },
+    competingExplanations: [
+      {
+        category: 'Proxy Substitution Risk',
+        explanation: 'Convenient mobility or digital-activity proxies may be mistaken for the target visitor-use variable.',
+        evaluation: 'Contextually supported hypothesis',
+        reasoning: 'The SNTO scientific contract explicitly ranks pressure proxies and blocks unsuitable sources from upgrading readiness.',
+        investigationNeeded: 'Predefine the target variable and acceptable measurement instrument before acquisition.'
+      }
+    ],
+    confidence: {
+      level: 'High',
+      justification: [
+        'Confidence is High in the evidence-gap statement because the absence of the visitor-pressure target and field campaign is explicitly documented and enforced by the product contract.'
+      ],
+      marginOrInterval: 'Evidence inventory statement; no effect estimate.'
+    },
+    decisionImplication: {
+      managerialConsiderations: [
+        'Prioritize data acquisition only where it answers a concrete management question.',
+        'Prefer direct counts or instrumented proxies for a visitor-pressure target.',
+        'Run field validation before escalating environmental signals into physical-impact claims.'
+      ],
+      cautionsAndGuardrails: [
+        'Do not create synthetic precision to fill a missing evidence pillar.',
+        'Do not convert availability of data into scientific suitability.'
+      ],
+      policyPerspective: [
+        'The next maturity step is better evidence alignment, not a stronger model.'
+      ]
+    },
+    dataNeededNext: [
+      'Direct counts, access records, or a documented instrumented proxy at the relevant public-use unit.',
+      'Field-validation observations from qualified personnel under #26.',
+      'A pre-specified attribution design if causal tourism-impact claims are eventually sought.'
+    ],
+    provenance: [
+      {
+        sensorOrPlatform: 'SNTO PNSG Decision Evidence Brief + Scientific Product Contract',
+        spatialResolution: 'Evidence architecture',
+        temporalCoverage: 'Current project state',
+        processingLevel: 'Evidence-gap audit',
+        sourceAuthority: 'SNTO canonical documentation',
+        citationUrl: 'https://github.com/soroushkarahrodi79-oss/snto-smart-tourism-observatory/blob/main/docs/PNSG_DECISION_EVIDENCE_BRIEF.md',
+        isCalibratedProxy: false,
+        dataStatus: 'Derived'
       }
     ]
   }
