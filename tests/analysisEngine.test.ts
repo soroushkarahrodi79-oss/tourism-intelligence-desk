@@ -190,6 +190,9 @@ test('evidence provenance is pinned to immutable full Git SHAs', () => {
       assert.match(sha, /^[0-9a-f]{40}$/);
     }
 
+    assert.match(manifest.primaryCommit, /^[0-9a-f]{40}$/);
+    assert.match(manifest.primarySourceUrl, new RegExp(manifest.primaryCommit));
+
     for (const url of Object.values(manifest.immutableSources)) {
       assert.doesNotMatch(url, /\/blob\/main\//);
       assert.doesNotMatch(url, /\/tree\/main(?:\/|$)/);
