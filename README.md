@@ -15,7 +15,12 @@ Current case studies:
 
 Version 0.1 intentionally uses a **deterministic rule-based assessment engine** rather than a generative-AI runtime. Analytical questions are routed through curated assessments and explicit guardrails in `src/services/analysisEngine.ts` and `src/data/cases.ts`.
 
-This design makes the prototype reproducible and prevents an LLM from inventing evidence, causal claims, or operational recommendations. No Gemini API key is required.
+The engine has two behaviors:
+
+1. **Curated question match** — returns a predefined demonstration assessment with explicit provenance, limits, confounders, and data status.
+2. **Unmatched custom question** — returns a bounded **INSUFFICIENT EVIDENCE** response rather than synthesizing new measurements, effect sizes, significance tests, causal shares, or operational recommendations.
+
+This design makes the prototype reproducible and prevents free-form generation from inventing evidence or causal claims. No Gemini API key is required.
 
 The core reasoning sequence is:
 
@@ -28,31 +33,55 @@ The core reasoning sequence is:
 7. Decision implication
 8. Data needed next
 
-If evidence is insufficient for a causal or operational conclusion, the system is designed to return **INSUFFICIENT EVIDENCE** rather than force a recommendation.
+## Epistemic contract
+
+The v0.1 quality gate is intentionally strict:
+
+- correlation or spatial co-occurrence is never treated as causation;
+- demonstration data cannot justify an operational intervention by itself;
+- unmatched custom questions cannot fabricate quantitative attribution;
+- unknown variables remain unknown rather than being inferred from unrelated indicators;
+- reference data sources are distinguished from runtime-ingested observations;
+- provider attribution remains visible on map baselayers.
+
+Regression tests in `tests/analysisEngine.test.ts` enforce the highest-risk guardrails, including the NDVI/tourism causality trap and custom-query fallback behavior.
 
 ## Run locally
 
-**Prerequisite:** Node.js
+The repository commits a Bun lockfile for reproducible installs.
+
+**Prerequisite:** Bun 1.x
 
 ```bash
-npm install
-npm run dev
+bun install --frozen-lockfile
+bun run dev
 ```
 
 No external API key is required for the current prototype.
 
-## Quality checks
+## Quality gate
+
+Run the same gate used by GitHub Actions:
 
 ```bash
-npm run lint
-npm run build
+bun run check
 ```
+
+It executes:
+
+- TypeScript typecheck
+- epistemic regression tests
+- production Vite build
+
+CI configuration: `.github/workflows/ci.yml`.
 
 ## AI Studio preview
 
 The prototype originated in Google AI Studio and can be previewed there:
 
 https://ai.studio/apps/98264a97-707c-4e7e-b1c8-4d002131227d
+
+The GitHub repository is the auditable source for the hardened v0.1 codebase.
 
 ## Scope and limitations
 
