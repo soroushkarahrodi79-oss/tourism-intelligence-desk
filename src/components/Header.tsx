@@ -71,7 +71,7 @@ export const Header: React.FC<HeaderProps> = ({
                   ? 'bg-zinc-800 text-zinc-100 shadow-sm border border-zinc-700/60'
                   : 'text-zinc-400 hover:text-zinc-200'
               }`}
-              title="SNTO: Sierra de Guadarrama Environmental Monitoring"
+              title="SNTO: Real Sentinel-2 Evidence & Decision Limits"
             >
               <Activity className="w-3.5 h-3.5 text-emerald-400" />
               <span>Guadarrama (SNTO)</span>

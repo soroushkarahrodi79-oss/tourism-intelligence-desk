@@ -34,7 +34,7 @@ export const CaseCardHero: React.FC<CaseCardHeroProps> = ({
             <span className="text-zinc-500">Evidence Modes:</span>
             <span className="bg-zinc-900 px-2 py-0.5 rounded border border-zinc-800">HATI · Reproduced Research</span>
             <span className="bg-zinc-900 px-2 py-0.5 rounded border border-zinc-800">UTCI · Model-Derived</span>
-            <span className="bg-zinc-900 px-2 py-0.5 rounded border border-zinc-800">SNTO · Demonstration</span>
+            <span className="bg-zinc-900 px-2 py-0.5 rounded border border-zinc-800">SNTO · Real EO / Derived Trends</span>
           </div>
         </div>
 
@@ -127,7 +127,7 @@ export const CaseCardHero: React.FC<CaseCardHeroProps> = ({
                   <span className="text-xs font-normal text-zinc-400 font-mono">({guadarramaCase.code})</span>
                 </h2>
                 <div className="text-xs text-zinc-300 mt-0.5">
-                  Environmental Monitoring & Earth Observation
+                  Real Sentinel-2 Evidence & Public-Use Decision Limits
                 </div>
               </div>
               <div className="p-2 rounded bg-zinc-800/80 border border-zinc-700 text-emerald-400 shrink-0">
@@ -162,7 +162,7 @@ export const CaseCardHero: React.FC<CaseCardHeroProps> = ({
               <div className="flex items-center gap-2">
                 <span className="text-zinc-400">DATA STATUS:</span>
                 <span className="px-1.5 py-0.5 rounded bg-emerald-950/40 border border-emerald-600/40 text-emerald-300 text-[10px]">
-                  DEMONSTRATION PROXY
+                  REAL OBSERVATIONS · DERIVED TRENDS
                 </span>
               </div>
               <div className="flex items-center gap-1 font-medium text-zinc-300 group-hover:text-emerald-300 transition-colors">

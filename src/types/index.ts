@@ -2,7 +2,7 @@ export type TerritoryId = 'madrid-hati' | 'guadarrama-snto';
 
 export type EvidenceConfidence = 'Low' | 'Moderate' | 'High';
 
-export type DataStatus = 'Demonstration' | 'Proxy' | 'Validated' | 'Observed' | 'Model-derived' | 'Reproduced';
+export type DataStatus = 'Demonstration' | 'Proxy' | 'Derived' | 'Validated' | 'Observed' | 'Model-derived' | 'Reproduced';
 
 export interface DataProvenance {
   sensorOrPlatform: string;
@@ -47,7 +47,7 @@ export interface EvidenceAssessment {
   isCustomQuestion?: boolean;
   
   // Epistemic assessment status
-  status: 'OBSERVED_ANOMALY' | 'INSUFFICIENT_EVIDENCE' | 'CORRELATION_WARNING' | 'ASSOCIATION_ONLY' | 'REPRODUCED_RESULT' | 'MODEL_DERIVED_RESULT';
+  status: 'OBSERVED_ANOMALY' | 'INSUFFICIENT_EVIDENCE' | 'CORRELATION_WARNING' | 'ASSOCIATION_ONLY' | 'REPRODUCED_RESULT' | 'DERIVED_RESULT' | 'MODEL_DERIVED_RESULT';
   statusHeadline: string;
   dataStatus: DataStatus;
   

@@ -52,9 +52,9 @@ export const EvidenceAssessmentPanel: React.FC<EvidenceAssessmentPanelProps> = (
             <div className="flex flex-wrap items-center gap-2 text-xs font-mono">
               <span className="text-zinc-400">DATA STATUS:</span>
               <span className={`px-2 py-0.5 rounded bg-zinc-800 border border-zinc-700 font-semibold text-[11px] ${
-                assessment.dataStatus === 'Reproduced' || assessment.dataStatus === 'Model-derived'
-                  ? 'text-emerald-300'
-                  : 'text-amber-300'
+                assessment.dataStatus === 'Demonstration' || assessment.dataStatus === 'Proxy'
+                  ? 'text-amber-300'
+                  : 'text-emerald-300'
               }`}>
                 {assessment.dataStatus.toUpperCase()}
               </span>

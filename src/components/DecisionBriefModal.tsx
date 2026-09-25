@@ -34,11 +34,13 @@ export const DecisionBriefModal: React.FC<DecisionBriefModalProps> = ({
   });
 
   const isDemo = assessment.dataStatus === 'Demonstration' || assessment.dataStatus === 'Proxy';
-  const isResearchSnapshot = assessment.dataStatus === 'Reproduced' || assessment.dataStatus === 'Model-derived';
+  const isReproduced = assessment.dataStatus === 'Reproduced' || assessment.dataStatus === 'Model-derived';
+  const isObservedResearch = assessment.dataStatus === 'Observed' || assessment.dataStatus === 'Derived' || assessment.dataStatus === 'Validated';
+  const isResearchSnapshot = isReproduced || isObservedResearch;
 
   const generateMarkdown = () => {
     return `# TERRITORIAL DECISION SUPPORT BRIEF
-${isDemo ? '> **DEMONSTRATION BRIEF — NOT FOR OPERATIONAL DECISION-MAKING**\n' : ''}${isResearchSnapshot ? '> **REPRODUCED RESEARCH BRIEF — NOT CURRENT OPERATIONAL EVIDENCE**\n' : ''}
+${isDemo ? '> **DEMONSTRATION BRIEF — NOT FOR OPERATIONAL DECISION-MAKING**\n' : ''}${isReproduced ? '> **REPRODUCED RESEARCH BRIEF — NOT CURRENT OPERATIONAL EVIDENCE**\n' : ''}${isObservedResearch ? '> **REAL / DERIVED RESEARCH EVIDENCE — CHECK CLAIM-SPECIFIC LIMITS BEFORE OPERATIONAL USE**\n' : ''}
 **DOCUMENT REF:** ${docId}
 **TERRITORY:** ${territory.title} (${territory.code})
 **CASE / PROJECT:** ${territory.shortName}
@@ -196,9 +198,17 @@ ${assessment.provenance.map((p) => `- ${p.sensorOrPlatform} | Authority: ${p.sou
             <div className="p-3 rounded bg-zinc-900 border border-emerald-800/60 text-xs flex items-center justify-between font-mono">
               <div className="flex items-center gap-2 text-emerald-300 font-semibold">
                 <Check className="w-4 h-4 shrink-0" />
-                <span>REPRODUCED RESEARCH BRIEF — NOT CURRENT OPERATIONAL EVIDENCE</span>
+                <span>
+                  {isReproduced
+                    ? 'REPRODUCED RESEARCH BRIEF — NOT CURRENT OPERATIONAL EVIDENCE'
+                    : 'REAL / DERIVED RESEARCH EVIDENCE — CLAIM LIMITS APPLY'}
+                </span>
               </div>
-              <span className="text-zinc-400 hidden sm:inline">MODEL OUTPUTS REMAIN SUBJECT TO THEIR EVIDENCE CEILING</span>
+              <span className="text-zinc-400 hidden sm:inline">
+                {isReproduced
+                  ? 'MODEL OUTPUTS REMAIN SUBJECT TO THEIR EVIDENCE CEILING'
+                  : 'ENVIRONMENTAL SIGNAL ≠ TOURISM IMPACT OR FIELD VALIDATION'}
+              </span>
             </div>
           )}
           {/* Header Block */}
@@ -226,7 +236,7 @@ ${assessment.provenance.map((p) => `- ${p.sensorOrPlatform} | Authority: ${p.sou
               </div>
               <div>
                 <span className="text-zinc-400 block text-[10px]">DATA STATUS</span>
-                <span className={`${isResearchSnapshot ? 'text-emerald-300' : 'text-amber-300'} print:text-black font-semibold`}>{assessment.dataStatus.toUpperCase()}</span>
+                <span className={`${isDemo ? 'text-amber-300' : 'text-emerald-300'} print:text-black font-semibold`}>{assessment.dataStatus.toUpperCase()}</span>
               </div>
               <div>
                 <span className="text-zinc-400 block text-[10px]">EVIDENCE CONFIDENCE</span>
