@@ -59,9 +59,9 @@ export function evaluateAnalyticalQuestion(
       },
       evidence: {
         supportingDatasets: [
-          'The loaded assessment contains demonstration datasets and proxy variables that require on-site validation before operational use.',
-          'Scientific decision-support protocol requires multiple seasons of validated data before regulatory or policy interventions are justified.',
-          'Competing environmental hypotheses have not yet been isolated via controlled experimental exclosures.'
+          'The loaded assessment contains demonstration datasets and proxy variables that are not validated for operational policy use.',
+          'No validated operational dataset matched to this custom policy query is available in the current prototype.',
+          'The appropriate validation design depends on the specific decision, territory, and causal claim under consideration.'
         ],
         metrics: [
           { label: 'Data Status', value: 'DEMONSTRATION', unit: 'mode', baseline: 'Operational validation needed', delta: 'Not validated for policy', trend: 'alert', isDemonstration: true },
@@ -87,24 +87,24 @@ export function evaluateAnalyticalQuestion(
           'DO NOT assume correlations between environmental shifts and tourism justify immediate regulatory restrictions.'
         ],
         unobservedVariables: [
-          'Multi-year controlled baseline data free from confounding climatic anomalies.',
-          'Socio-economic impact assessment of proposed policy interventions.'
+          'Decision-specific validation evidence sufficient to test the causal or operational claim.',
+          'Potential social, economic, environmental, and distributional effects of the proposed policy change.'
         ],
-        spatialTemporalGaps: 'Requires multi-seasonal longitudinal monitoring across diverse weather conditions.'
+        spatialTemporalGaps: 'The current demonstration record is not designed to establish an operational policy threshold.'
       },
       competingExplanations: [
         {
           category: 'Data Status Limitation',
           explanation: 'Demonstration datasets and proxy variables cannot substantiate regulatory interventions.',
           evaluation: 'Contextually supported hypothesis',
-          reasoning: 'Administrative and legal defensibility requires accredited sensor calibration and peer-reviewed protocols.',
-          investigationNeeded: 'Deploy accredited operational monitoring arrays.'
+          reasoning: 'Operational policy requires evidence whose quality, provenance, and validation are appropriate to the specific decision context.',
+          investigationNeeded: 'Define and execute a decision-specific validation plan using appropriate quality-controlled observations.'
         },
         {
           category: 'Environmental Confounding',
-          explanation: 'Observed signals are heavily confounded by regional meteorological and urban morphological factors.',
+          explanation: 'Regional meteorological, spatial, or management factors may confound the observed signal.',
           evaluation: 'Plausible competing explanation',
-          reasoning: 'Regulating tourism would fail to address the underlying macro-environmental driver.',
+          reasoning: 'Without attribution analysis, it is unknown whether regulating tourism would address the relevant driver.',
           investigationNeeded: 'Conduct attribution analysis separating natural variation from anthropogenic pressure.'
         }
       ],
@@ -117,9 +117,9 @@ export function evaluateAnalyticalQuestion(
       },
       decisionImplication: {
         managerialConsiderations: [
-          'No immediate policy alterations or visitor quota restrictions are justified on current preliminary signals alone.',
-          'Targeted field monitoring and sensor calibration could be prioritized to establish an operational baseline.',
-          'Reversible, low-regret operational adaptations (e.g., temporary shade sails, advisory wayfinding, trail borders) could be piloted while evidence is gathered.'
+          'No immediate policy alteration is justified from the current demonstration evidence alone.',
+          'Define the exact decision claim first, then collect the minimum validation evidence needed to test it.',
+          'Any interim action should be reversible, proportionate, and justified independently of the unvalidated causal claim.'
         ],
         cautionsAndGuardrails: [
           'Maintain institutional transparency: clearly communicate that data is undergoing research validation.',
@@ -130,9 +130,9 @@ export function evaluateAnalyticalQuestion(
         ]
       },
       dataNeededNext: [
-        'Accredited in-situ sensor networks with traceable calibration standards.',
-        'Longitudinal multi-year observations capturing inter-annual climatic variability.',
-        'Controlled field trials isolating specific managerial interventions.'
+        'A decision-specific validation plan defining the claim, comparison, spatial unit, temporal window, and acceptance threshold.',
+        'Quality-controlled observations appropriate to the variables in that decision claim.',
+        'A documented analysis that tests plausible confounders before any causal or policy conclusion.'
       ],
       provenance: [
         {
@@ -260,209 +260,198 @@ export function evaluateAnalyticalQuestion(
       territoryId,
       question,
       isCustomQuestion: true,
-      status: 'CORRELATION_WARNING',
-      statusHeadline: 'Available Evidence Does Not Establish Causation: Environmental Confounders Must Be Controlled',
+      status: 'INSUFFICIENT_EVIDENCE',
+      statusHeadline: 'INSUFFICIENT EVIDENCE: Custom Causal Attribution Is Not Supported by the Loaded Demonstration Evidence',
       dataStatus: 'Demonstration',
       signal: {
-        observation: `Spatial or temporal co-occurrence observed between tourism activity and environmental indicators in ${territory.shortName}.`,
+        observation: `The query asks whether tourism or visitor activity causes an environmental outcome in ${territory.shortName}. No curated attribution assessment matching this custom causal claim is loaded.`,
         spatialScope: `${territory.shortName} focal study sector.`,
-        temporalWindow: 'Demonstration observation window.',
-        summary: 'Correlation between visitor density and environmental signals cannot be interpreted as direct causation without controlling for macro-environmental drivers.'
+        temporalWindow: 'Current prototype evaluation cycle.',
+        summary: 'The prototype refuses to infer causal attribution from a custom question when no matching validated evidence design is available.'
       },
       evidence: {
         supportingDatasets: [
-          'Statistical correlation exists between visitor presence and measured environmental variance, but physical energy/water balance indicates secondary contribution.',
-          'Macro-environmental confounders (regional drought, solar irradiance, ambient atmospheric dome, soil geology) account for the dominant share of observed variance.',
-          'Null-hypothesis (H0: Tourism volume has no statistically significant independent causal effect on the macro baseline) cannot be rejected on available evidence.'
+          'The current prototype contains curated demonstration fixtures for selected questions, not a general causal-attribution dataset.',
+          'A custom causal claim requires evidence explicitly matched to the proposed exposure, outcome, comparison, spatial unit, and temporal window.',
+          'No variance decomposition, attributable fraction, causal effect estimate, or significance test is computed for this custom query.'
         ],
         metrics: [
-          { label: 'Spatial Co-occurrence', value: 'High', unit: 'overlap', baseline: 'Independent factors', delta: 'Spurious correlation', trend: 'alert', isDemo: true },
-          { label: 'Confounder Variance Share', value: '> 70%', unit: 'estimated', baseline: '0%', delta: 'Dominant driver', trend: 'alert', isDemo: true },
-          { label: 'Direct Anthropogenic Share', value: '< 15%', unit: 'attributable', baseline: '100%', delta: 'Secondary or unverified', trend: 'down', isDemo: true }
+          { label: 'Data Status', value: 'DEMONSTRATION', unit: 'mode', baseline: 'Validated evidence required', delta: 'Custom attribution unavailable', trend: 'alert', isDemo: true },
+          { label: 'Causal Attribution', value: 'NOT ESTABLISHED', unit: 'status', baseline: 'Defensible causal design', delta: 'INSUFFICIENT EVIDENCE', trend: 'alert', isDemo: true },
+          { label: 'Operational Recommendation', value: 'DEFER', unit: 'status', baseline: 'Validated decision threshold', delta: 'No causal basis', trend: 'stable', isDemo: true }
         ],
         spatialCoordinates: `${territory.center[0]}° N, ${territory.center[1]}° W`,
-        sampleSize: 'Demonstration sensor array and proxy series.',
-        dataIntegrityNotes: 'DEMONSTRATION DATA: Illustrative values used to demonstrate the analytical workflow. Not an operational project result.'
+        sampleSize: 'No query-specific causal sample is defined for this custom question.',
+        dataIntegrityNotes: 'DEMONSTRATION DATA: The system intentionally does not fabricate effect sizes, shares, p-values, confidence intervals, or causal rankings.'
       },
       interpretation: {
         inferences: [
-          'Visitors and environmental stresses frequently cluster in space due to landscape morphology (e.g., accessible valleys, paved civic squares, landmark corridors) rather than tourism generating the environmental hazard.',
-          'Interventions aimed solely at restricting visitors would fail to address the primary physical or meteorological driver.'
+          'The causal claim cannot be evaluated from the custom question alone.',
+          'Tourism pressure may remain one candidate explanation, but it must be tested against plausible environmental and spatial confounders rather than assumed.'
         ],
         plausibleMechanisms:
-          'Common-cause confounding: Macro-climatological and urban structural drivers independently govern both visitor distribution and physical sensor readings.'
+          'Candidate mechanisms must be specified and tested with a design that separates visitor exposure from background environmental variation.'
       },
       evidenceLimit: {
         strictlyForbiddenInferences: [
-          'CRITICAL ANTI-CAUSALITY RULE: NEVER CONVERT CORRELATION INTO CAUSATION.',
-          'DO NOT claim tourism is the sole or primary driver without control-group experimental validation.',
-          'DO NOT design punitive destination regulations based solely on bivariate spatial co-occurrence.'
+          'CRITICAL ANTI-CAUSALITY RULE: NEVER CONVERT CORRELATION OR CO-OCCURRENCE INTO CAUSATION.',
+          'DO NOT invent effect sizes, attributable shares, statistical significance, or dominant drivers for a custom query.',
+          'DO NOT recommend restrictive policy on the basis of an unvalidated causal claim.'
         ],
-        unobservedVariables: ['Micro-scale control plots with identical solar exposure/elevation free from visitor presence.'],
-        spatialTemporalGaps: 'Coarse satellite footprint aggregates multiple surface types.'
+        unobservedVariables: [
+          'A query-specific control or comparison condition.',
+          'Relevant environmental, spatial, temporal, and management confounders.',
+          'Validated exposure and outcome measurements aligned in space and time.'
+        ],
+        spatialTemporalGaps: 'No query-specific attribution design has been supplied or matched to this custom question.'
       },
       competingExplanations: [
         {
-          category: 'Macro-Environmental Driver',
-          explanation: 'Regional synoptic meteorology, solar radiation, or drought.',
-          evaluation: 'Contextually supported hypothesis',
-          reasoning: 'Explains the dominant share of variance across both visited and unvisited control areas.',
-          investigationNeeded: 'Cross-reference with regional meteorological reanalysis.'
+          category: 'Background Environmental Variation',
+          explanation: 'Meteorology, phenology, topography, land management, material properties, or other non-tourism factors may explain part or all of the observed pattern.',
+          evaluation: 'Requires field validation',
+          reasoning: 'The current custom query does not contain evidence that separates visitor exposure from background variation.',
+          investigationNeeded: 'Define matched controls and measure the main plausible confounders for the specific claim.'
         },
         {
-          category: 'Tourism Footfall Causation',
-          explanation: 'Visitor footfall as an explanatory factor for observed environmental variance.',
-          evaluation: 'Unlikely based on physics / data',
-          reasoning: 'The environmental anomaly persists in locations or times where visitors are completely absent.',
-          investigationNeeded: 'Deploy controlled fenced exclosures or night-time thermal observations.'
+          category: 'Localized Visitor Pressure',
+          explanation: 'Visitor activity remains a candidate factor only where a plausible exposure pathway and spatially matched outcome can be measured.',
+          evaluation: 'Plausible competing explanation',
+          reasoning: 'A candidate mechanism is not a causal estimate; it requires direct validation against controls.',
+          investigationNeeded: 'Collect exposure, outcome, and control observations at compatible spatial and temporal scales.'
         }
       ],
       confidence: {
-        level: 'Moderate',
+        level: 'Low',
         justification: [
-          'High confidence in ruling out sole tourism causation based on physical constraints; Moderate overall because specific parameters are demonstration values.'
+          'Confidence in causal attribution is Low because no query-specific causal design or validated effect estimate is available.'
         ],
-        marginOrInterval: 'Attribution confounded by macro-environmental factors'
+        marginOrInterval: 'Causal effect not estimated'
       },
       decisionImplication: {
         managerialConsiderations: [
-          'Deploying controlled sensor arrays (fenced exclosures or shaded vs unshaded control transects) could be prioritized.',
-          'Destination managers should avoid implementing visitor bans that do not address underlying environmental drivers (e.g., material albedo or regional drought).'
+          'Do not treat the custom causal claim as established.',
+          'If the question is decision-relevant, convert it into a testable hypothesis with explicit exposure, outcome, control, spatial unit, and time window.',
+          'Use the resulting validation evidence to decide whether any targeted management response is warranted.'
         ],
         cautionsAndGuardrails: [
-          'Ensure destination management decisions withstand scientific and legal scrutiny.',
-          'Do not present correlation to stakeholders as establishing causal impact.'
+          'Do not communicate invented percentages, causal shares, or significance levels.',
+          'Keep demonstration outputs separate from operational evidence.'
         ],
         policyPerspective: [
-          'Ground destination policy in multi-variate analysis that accounts for climatic confounders.'
+          'Policy review should follow validated attribution evidence, not precede it.'
         ]
       },
       dataNeededNext: [
-        'Controlled paired exclosure plots with identical aspect, elevation, and geology.',
-        'Multi-variate regression controlling for macro-meteorological covariates.'
+        'A clearly specified causal hypothesis and comparison design.',
+        'Validated visitor-exposure measurements aligned with the environmental outcome.',
+        'Matched control observations and measurements of the leading plausible confounders.'
       ],
       provenance: [
         {
-          sensorOrPlatform: 'Tourism Intelligence Desk Confounder Screening Engine',
-          spatialResolution: 'Territorial extent',
-          temporalCoverage: 'Demonstration series',
-          processingLevel: 'Confounder Screening Protocol',
-          sourceAuthority: 'Tourism Intelligence Desk Analytical Prototype',
-          isCalibratedProxy: true,
+          sensorOrPlatform: 'Tourism Intelligence Desk Epistemic Guardrail Engine',
+          spatialResolution: 'No query-specific causal resolution defined',
+          temporalCoverage: 'Runtime prototype query',
+          processingLevel: 'Deterministic boundary check',
+          sourceAuthority: 'Tourism Intelligence Desk Prototype',
+          isCalibratedProxy: false,
           dataStatus: 'Demonstration'
         }
       ]
     };
   }
 
-  // General scientific assessment for custom analytical questions
+  // General fallback for custom questions: expose available context without pretending the question was answered.
   return {
     id,
     territoryId,
     question,
     isCustomQuestion: true,
-    status: 'OBSERVED_ANOMALY',
-    statusHeadline: 'Evidence-Supported Observation in Demonstration Dataset',
+    status: 'INSUFFICIENT_EVIDENCE',
+    statusHeadline: 'INSUFFICIENT EVIDENCE: No Curated Assessment Matches This Custom Question',
     dataStatus: 'Demonstration',
     signal: {
-      observation: `Analysis of multi-layer indicators in ${territory.shortName} reflects localized biophysical variation responding to the parameters queried: "${question}".`,
+      observation: `The custom question is within the broad thematic scope of ${territory.shortName}, but no curated assessment in the current prototype directly answers it.`,
       spatialScope: `${territory.shortName} focal study sector (${territory.focusTheme}).`,
-      temporalWindow: 'Demonstration multi-temporal satellite and sensor records.',
-      summary: 'Observational evidence provides moderate support for localized trends, requiring careful differentiation between background dynamics and tourism interaction.'
+      temporalWindow: 'Current prototype evaluation cycle.',
+      summary: 'Available demonstration fixtures can provide context, but the system will not reinterpret them as evidence for an unmatched custom claim.'
     },
     evidence: {
       supportingDatasets: [
-        `The prototype contains ${territory.stations.length} curated demonstration station records; these fixtures are used to exercise the workflow and are not live telemetry nodes.`,
-        `Satellite radiometry proxies (${territory.satelliteBands.join(', ')}) align with microclimatic indicators across modeled zones.`,
-        'Observations reflect demonstration proxy modeling requiring operational validation.'
+        `The prototype contains ${territory.stations.length} curated demonstration station records used to exercise the interface; they are not live telemetry.`,
+        `Reference sources listed for this case include ${territory.satelliteBands.join(', ')}, but those sources are not automatically ingested for this custom query.`,
+        'No query-specific statistical test or effect estimate is computed for unmatched custom questions.'
       ],
-      metrics: territory.keyIndicators.map((k) => ({
-        label: k.name,
-        value: k.value,
-        unit: k.unit,
-        baseline: 'Historical average',
-        delta: k.change,
-        trend: 'alert' as const,
-        isDemonstration: true
-      })),
+      metrics: [
+        { label: 'Assessment Match', value: 'NONE', unit: 'curated cases', baseline: 'Direct evidence match', delta: 'Custom query unmatched', trend: 'alert', isDemo: true },
+        { label: 'Data Status', value: 'DEMONSTRATION', unit: 'mode', baseline: 'Validated evidence required', delta: 'Context only', trend: 'stable', isDemo: true },
+        { label: 'Decision Status', value: 'DEFER', unit: 'action', baseline: 'Evidence threshold', delta: 'Need query-specific evidence', trend: 'stable', isDemo: true }
+      ],
       spatialCoordinates: `${territory.center[0]}° N, ${territory.center[1]}° W`,
-      sampleSize: `Curated demonstration dataset with ${territory.stations.length} station records; not a live monitoring network.`,
-      dataIntegrityNotes: 'DEMONSTRATION DATA: Illustrative values used to demonstrate the analytical workflow. Not an operational project result.'
+      sampleSize: `Curated demonstration context with ${territory.stations.length} station records; no query-specific sample defined.`,
+      dataIntegrityNotes: 'DEMONSTRATION DATA: Context is shown without claiming that the custom question has been empirically answered.'
     },
     interpretation: {
       inferences: [
-        'The evidence demonstrates an observed signal in the demonstration dataset, but the relative contribution of tourism vs natural biophysical factors must be evaluated cautiously.',
-        'Immediate physical conditions are observable; long-term trajectory depends on regional climate drivers and local adaptation measures.'
+        'The question may be scientifically relevant to the selected territory, but the current deterministic prototype does not contain a curated assessment that resolves it.',
+        'A defensible answer requires evidence explicitly matched to the variables and claim in the custom question.'
       ],
       plausibleMechanisms:
-        'Biophysical coupling between regional climatic baseline, local built/topographic environment, and seasonal human spatial occupancy.'
+        'Not assessed for this custom query. Mechanisms should be specified only after the exposure, outcome, and relevant confounders are defined.'
     },
     evidenceLimit: {
       strictlyForbiddenInferences: [
-        'CRITICAL ANTI-CAUSALITY RULE: NEVER CONVERT CORRELATION INTO CAUSATION.',
-        'DO NOT assume observed trends will continue linearly without continuous monitoring.',
-        'DO NOT treat this demonstration analysis as a substitute for on-site environmental impact assessments.'
+        'DO NOT treat generic territorial indicators as evidence for an unmatched custom claim.',
+        'DO NOT invent statistical significance, effect sizes, causal shares, or trend persistence.',
+        'DO NOT convert demonstration context into an operational recommendation.'
       ],
       unobservedVariables: [
-        'Micro-scale sub-canopy wind flow vectors and deep groundwater table dynamics.'
+        'The variables explicitly required to answer the custom question.',
+        'A query-specific comparison or baseline where relevant.'
       ],
-      spatialTemporalGaps: 'Intermittent satellite overpass intervals require temporal interpolation between dates.'
+      spatialTemporalGaps: 'No query-specific evidence design is loaded for this custom question.'
     },
     competingExplanations: [
       {
-        category: 'Macro-Climatic Baseline',
-        explanation: 'Regional synoptic trends and weather variability govern broad territorial shifts.',
-        evaluation: 'Contextually supported hypothesis',
-        reasoning: 'Macro-scale weather explains the baseline pattern across the landscape.',
-        investigationNeeded: 'Compare against regional climatological averages.'
-      },
-      {
-        category: 'Local Topography & Materials',
-        explanation: 'Surface materials, albedo, and aspect govern localized energy and moisture balance.',
-        evaluation: 'Plausible competing explanation',
-        reasoning: 'Physical properties directly control heat absorption and water retention.',
-        investigationNeeded: 'Conduct ground material spectroscopy.'
-      },
-      {
-        category: 'Visitor Spatial Footprint',
-        explanation: 'Direct impact from seasonal visitor concentration.',
-        evaluation: 'Requires field validation',
-        reasoning: 'Requires controlled exclosure plots to isolate human impact from environmental factors.',
-        investigationNeeded: 'Deploy paired exclosure experiments.'
+        category: 'Unspecified Alternative Explanations',
+        explanation: 'Potential mechanisms and confounders depend on the exact custom claim and cannot be ranked from generic demonstration context.',
+        evaluation: 'Confounded / indeterminate',
+        reasoning: 'The prototype has no matched assessment for this query.',
+        investigationNeeded: 'Define the outcome, exposure, comparison, spatial unit, and temporal window before evaluating alternatives.'
       }
     ],
     confidence: {
-      level: 'Moderate',
+      level: 'Low',
       justification: [
-        'The reasoning structure follows established scientific principles for uncertainty, confounding, and causal attribution; numerical values remain demonstration proxies.'
+        'Confidence is Low because the query does not map to a curated assessment and no query-specific analysis is performed.'
       ],
-      marginOrInterval: 'Demonstration estimate: Requires operational validation'
+      marginOrInterval: 'No effect estimate computed'
     },
     decisionImplication: {
       managerialConsiderations: [
-        'If field teams seek to reduce uncertainty, targeted monitoring transects along specific geographic sectors could be considered.',
-        'Developing transparent evidence summaries with explicit uncertainty bounds could be prioritized for institutional stakeholders.'
+        'Treat the current output as a scoping response, not an evidence finding.',
+        'Translate the question into a measurable hypothesis before considering a management response.'
       ],
       cautionsAndGuardrails: [
-        'Do not alter policy solely on the basis of demonstration data.',
-        'Ensure scientific defensibility before allocating capital improvement budgets.'
+        'Do not alter policy solely on the basis of demonstration context.',
+        'Do not cite the prototype as having measured a variable that is not present in the curated assessment.'
       ],
       policyPerspective: [
-        'Integrate evidence-based thresholds into the territorial Tourism Management Plan once validated data is available.'
+        'Use explicit evidence thresholds and documented provenance before moving from exploratory questions to operational decisions.'
       ]
     },
     dataNeededNext: [
-      'Quality-controlled field observations with documented calibration and provenance in place of demonstration proxies.',
-      'Controlled field validation isolating specific management interventions.',
-      'Longitudinal multi-season data capture.'
+      'A query-specific definition of the outcome and exposure variables.',
+      'Appropriate observations or datasets with documented provenance.',
+      'A comparison strategy and uncertainty analysis suitable for the decision context.'
     ],
     provenance: [
       {
-        sensorOrPlatform: territory.satelliteBands[0] || 'Earth Observation Satellite Proxy',
-        spatialResolution: '10–30m spatial grid',
-        temporalCoverage: 'Demonstration Multi-temporal',
-        processingLevel: 'Demonstration proxy processing',
-        sourceAuthority: 'Reference evidence source — not runtime-ingested',
+        sensorOrPlatform: 'Tourism Intelligence Desk Deterministic Query Router',
+        spatialResolution: 'No query-specific analytical resolution defined',
+        temporalCoverage: 'Runtime prototype query',
+        processingLevel: 'Curated-assessment matching and boundary guardrail',
+        sourceAuthority: 'Tourism Intelligence Desk Prototype',
         isCalibratedProxy: false,
         dataStatus: 'Demonstration'
       }
