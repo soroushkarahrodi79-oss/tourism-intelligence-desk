@@ -144,7 +144,7 @@ export default function App() {
                       <span className="text-[10px] font-mono text-amber-400">Urban Core</span>
                     </div>
                     <div className="text-[11px] text-zinc-400 mt-0.5 truncate">
-                      Urban Heat & Pedestrian Exposure
+                      Thermal-Method Sensitivity & Opportunity Screening
                     </div>
                   </div>
                 </button>
