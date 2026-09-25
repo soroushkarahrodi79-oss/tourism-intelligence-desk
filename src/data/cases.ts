@@ -406,9 +406,9 @@ export const EVIDENCE_ASSESSMENTS: Record<string, EvidenceAssessment> = {
       {
         category: 'Tourism Visitation Footfall',
         explanation: 'Pedestrian metabolic heat emission as a candidate factor.',
-        evaluation: 'Unlikely based on physics / data',
-        reasoning: 'Human metabolic heat flux (~100 W/person) represents less than 5% of net incident solar radiation (approx. 900+ W/m²).',
-        investigationNeeded: 'Energy balance modeling indicates metabolic heat flux is physically negligible at plaza scale.'
+        evaluation: 'Requires field validation',
+        reasoning: 'Human metabolic heat is physically possible, but its local contribution has not been quantified with validated pedestrian-density and energy-balance observations in this prototype.',
+        investigationNeeded: 'Measure pedestrian density and construct a validated local energy balance before estimating any attributable contribution.'
       }
     ],
     confidence: {
@@ -466,109 +466,110 @@ export const EVIDENCE_ASSESSMENTS: Record<string, EvidenceAssessment> = {
     id: 'madrid-hati-q2',
     territoryId: 'madrid-hati',
     question: 'Can high tourist density in Puerta del Sol be identified as the cause of urban heat island intensity?',
-    status: 'CORRELATION_WARNING',
-    statusHeadline: 'Available Evidence Does Not Establish Causation: Physical Confounders Rule Out Direct Tourism Causality',
+    status: 'INSUFFICIENT_EVIDENCE',
+    statusHeadline: 'INSUFFICIENT EVIDENCE: Co-location Does Not Establish Direct Tourism Causality',
     dataStatus: 'Demonstration',
     signal: {
       observation:
-        'A spatial and temporal association is observed between high pedestrian counts and elevated land surface temperatures in Puerta del Sol during summer afternoons.',
+        'The demonstration fixture places high pedestrian activity and elevated surface temperature in the same central plaza during summer afternoons.',
       spatialScope: 'Puerta del Sol pedestrian plaza area.',
       temporalWindow: 'Demonstration afternoon sampling interval (13:00 – 17:00 CET).',
-      summary: 'High footfall and high surface temperatures co-occur in the same central location, but physical analysis demonstrates they are independent effects of urban geography.'
+      summary: 'The co-location is compatible with several shared spatial drivers. The current prototype does not estimate a causal contribution from visitor density.'
     },
     evidence: {
       supportingDatasets: [
-        'Statistical co-occurrence shows both high pedestrian footfall and elevated surface temperatures cluster in central civic plazas.',
-        'Thermodynamic energy balance calculation demonstrates incident solar shortwave radiation accounts for ~900+ W/m² of thermal loading.',
-        'Human metabolic heat flux for peak crowd density accounts for less than 6% of the energy flux across the plaza.',
-        'Nocturnal thermal imaging demonstrates that surface heat anomalies persist late at night when pedestrian presence drops to near zero.'
+        'Demonstration footfall and surface-temperature fixtures are co-located in the same central civic plaza.',
+        'Urban material properties, solar exposure, sky-view geometry, and anthropogenic heat are plausible components of an urban energy balance.',
+        'No validated plaza-scale flux partition, matched low-footfall control period, or intervention study is loaded for this question.'
       ],
       metrics: [
-        { label: 'Spatial Association', value: 'Co-located', unit: 'spatial', baseline: 'Independent factors', delta: 'Spurious correlation', trend: 'alert', isDemonstration: true },
-        { label: 'Incident Solar Flux', value: '>900', unit: 'W/m²', baseline: '0 W/m² (night)', delta: 'Dominant physical driver', trend: 'stable', isDemonstration: true },
-        { label: 'Pedestrian Metabolic Flux', value: '<60', unit: 'W/m²', baseline: '0 W/m²', delta: '<6% of total energy balance', trend: 'down', isDemonstration: true },
-        { label: 'Data Status', value: 'DEMONSTRATION', unit: 'mode', baseline: 'Demonstration data', delta: 'Illustrative proxy analysis', trend: 'stable', isDemonstration: true }
+        { label: 'Spatial Association', value: 'CO-LOCATED', unit: 'status', baseline: 'Independent evidence needed', delta: 'Association only', trend: 'alert', isDemonstration: true },
+        { label: 'Causal Attribution', value: 'NOT ESTABLISHED', unit: 'status', baseline: 'Validated attribution design', delta: 'INSUFFICIENT EVIDENCE', trend: 'alert', isDemonstration: true },
+        { label: 'Energy Flux Partition', value: 'NOT ESTIMATED', unit: 'status', baseline: 'Measured flux components', delta: 'Validation required', trend: 'stable', isDemonstration: true },
+        { label: 'Data Status', value: 'DEMONSTRATION', unit: 'mode', baseline: 'Operational observations', delta: 'Illustrative fixture', trend: 'stable', isDemonstration: true }
       ],
       spatialCoordinates: '40.4168° N, 3.7038° W, Elevation 650m',
-      sampleSize: 'Demonstration microclimate and footfall distribution model.',
-      dataIntegrityNotes: 'DEMONSTRATION DATA: Illustrative values used to demonstrate the analytical workflow. Not an operational project result.'
+      sampleSize: 'Demonstration microclimate and footfall fixtures; no query-specific causal sample.',
+      dataIntegrityNotes: 'DEMONSTRATION DATA: No attributable fraction, causal effect size, or significance test is computed for tourist density.'
     },
     interpretation: {
       inferences: [
-        'The co-location of high visitor volume and high surface temperature is an association, not a causal relationship.',
-        'Both phenomena relate independently to central urban characteristics: civic plazas concentrate human activity while also featuring extensive unshaded, mineral-paved areas with high solar gain.'
+        'High visitor volume and high surface temperature can co-occur because central plazas concentrate both people and solar-exposed mineral surfaces.',
+        'The current demonstration evidence is sufficient to flag a causal-attribution trap, not to quantify the contribution of tourism to urban heat.'
       ],
       plausibleMechanisms:
-        'Mineral pavements absorb solar shortwave radiation and re-radiate sensible heat. The heat anomaly occurs whether pedestrians are present or absent.'
+        'Solar exposure, surface material properties, urban geometry, building heat rejection, and human activity are candidate components whose relative contributions require measurement.'
     },
     evidenceLimit: {
       strictlyForbiddenInferences: [
-        'CRITICAL ANTI-CAUSALITY RULE: DO NOT INFER THAT TOURIST PEDESTRIANS ARE RESPONSIBLE FOR THE URBAN HEAT ISLAND.',
-        'DO NOT recommend restricting tourist numbers as a method to reduce urban temperatures.',
-        'DO NOT present statistical co-location as scientific evidence of causation.'
+        'CRITICAL ANTI-CAUSALITY RULE: DO NOT INFER THAT TOURIST PEDESTRIANS ARE THE CAUSE OF THE URBAN HEAT SIGNAL FROM CO-LOCATION ALONE.',
+        'DO NOT invent a percentage contribution for pedestrian metabolic heat.',
+        'DO NOT recommend visitor restrictions as an urban-cooling measure without validated attribution evidence.'
       ],
       unobservedVariables: [
-        'Sub-surface geological and utility heat dissipation beneath the plaza paving.',
-        'Localized building HVAC condenser heat expulsion plumes into the immediate pedestrian envelope.'
+        'Validated radiative, sensible, latent, storage, and anthropogenic heat-flux components at plaza scale.',
+        'Matched low-footfall control periods under comparable meteorological conditions.',
+        'Building HVAC heat rejection and material thermal properties.'
       ],
-      spatialTemporalGaps: 'Requires micro-scale eddy covariance flux towers to directly measure sensible vs latent heat flux partitions.'
+      spatialTemporalGaps: 'The demonstration fixture is not a controlled causal design and does not resolve relative heat-flux contributions.'
     },
     competingExplanations: [
       {
-        category: 'Solar Radiation & Pavement Thermal Inertia',
-        explanation: 'Direct solar shortwave absorption by dark mineral granite slabs.',
-        evaluation: 'Contextually supported hypothesis',
-        reasoning: 'Standard thermodynamics indicates solar irradiance accounts for over 90% of surface temperature elevation.',
-        investigationNeeded: 'Measure material albedo and subsurface thermal conductivity.'
-      },
-      {
-        category: 'Urban Geometry (Sky View Factor)',
-        explanation: 'Open plaza geometry maximizes direct sun exposure during midday.',
+        category: 'Solar Radiation & Surface Materials',
+        explanation: 'Solar exposure and thermal properties of mineral paving may contribute to elevated surface temperature.',
         evaluation: 'Plausible competing explanation',
-        reasoning: 'Absence of tree canopy or structural shade exposes the entire ground plane to peak solar angles.',
-        investigationNeeded: 'Analyze 3D hemispherical canopy photography across plaza points.'
+        reasoning: 'This mechanism is physically plausible but is not quantitatively partitioned in the current demonstration fixture.',
+        investigationNeeded: 'Measure shortwave radiation, albedo, surface temperature, and storage heat flux under controlled conditions.'
       },
       {
-        category: 'HVAC Waste Heat',
-        explanation: 'Commercial air-conditioning condenser exhaust from surrounding retail facades.',
-        evaluation: 'Plausible secondary factor',
-        reasoning: 'Rejection of heat from interior cooling contributes to localized air warming in street canyons.',
-        investigationNeeded: 'Audit external condenser locations and thermal exhaust flow rates.'
+        category: 'Urban Geometry',
+        explanation: 'Sky-view factor and shade availability may shape local radiative loading.',
+        evaluation: 'Plausible competing explanation',
+        reasoning: 'Open plaza geometry can alter exposure, but its contribution has not been isolated in this prototype.',
+        investigationNeeded: 'Combine 3D urban geometry with measured radiative conditions.'
+      },
+      {
+        category: 'Building & Human Anthropogenic Heat',
+        explanation: 'HVAC rejection and pedestrian metabolic heat are candidate anthropogenic components.',
+        evaluation: 'Requires field validation',
+        reasoning: 'The current prototype does not contain validated flux measurements capable of separating these components.',
+        investigationNeeded: 'Measure building heat rejection, pedestrian density, and local flux components over matched periods.'
       }
     ],
     confidence: {
-      level: 'High',
+      level: 'Moderate',
       justification: [
-        'High confidence that tourism footfall does NOT account for the thermal anomaly: basic physical thermodynamics rules out human body warmth as the driver of square-kilometer urban heat anomalies.'
+        'Confidence is Moderate that co-location alone is insufficient for causal attribution; confidence in the relative contribution of specific heat sources remains Low without validated flux measurements.'
       ],
-      marginOrInterval: 'Physical causality refutes pedestrian metabolic heat dominance'
+      marginOrInterval: 'No causal effect or attributable heat share estimated'
     },
     decisionImplication: {
       managerialConsiderations: [
-        'If proposals arise to restrict visitor numbers as an urban cooling measure, decision-makers should note that thermodynamics indicates negligible impact on surface temperature.',
-        'If physical microclimate adaptations are considered, resources could be directed toward material albedo, shade structures, and hydration amenities.',
-        'Visitor management protocols could focus on thermal welfare guidance rather than treating visitor density as a causative factor for urban heat.'
+        'Do not use this demonstration association to justify visitor restrictions as an urban-cooling intervention.',
+        'If urban heat mitigation is being considered, validate the relevant physical drivers before selecting a management response.',
+        'Tourism-facing actions may focus on heat-risk communication and comfort only when supported by operational heat observations.'
       ],
       cautionsAndGuardrails: [
-        'Do not alter tourism policy on the assumption that crowd reduction would lower surface temperatures.',
-        'Ensure public communications accurately distinguish between climate vulnerability and crowd congestion.'
+        'Keep crowd-management objectives separate from urban-heat attribution unless evidence explicitly links them.',
+        'Do not communicate demonstration co-location as a quantified tourism contribution to urban heat.'
       ],
       policyPerspective: [
-        'Advise municipal partners that urban cooling requires architectural and urban forestry solutions rather than tourism restrictions.'
+        'Use measured urban energy-balance evidence to distinguish climate adaptation, public-realm design, and visitor-management decisions.'
       ]
     },
     dataNeededNext: [
-      'In-situ eddy covariance flux measurements to quantify relative anthropogenic vs solar heat contributions.',
-      'Continuous thermal imaging before, during, and after major pedestrian events to isolate residual thermal mass.'
+      'Validated plaza-scale energy-balance observations covering radiative, storage, turbulent, and anthropogenic heat components.',
+      'Matched high- and low-footfall observation periods under comparable meteorological conditions.',
+      'Material albedo, surface temperature, shade, HVAC heat-rejection, and pedestrian-density measurements with documented provenance.'
     ],
     provenance: [
       {
-        sensorOrPlatform: 'Biometeorological Energy Balance Model & Telemetry Proxy',
-        spatialResolution: 'Plaza zone boundary',
-        temporalCoverage: 'Demonstration observation epoch',
-        processingLevel: 'Physical Heat Flux Estimation',
-        sourceAuthority: 'Tourism Intelligence Desk Analytical Engine',
-        isCalibratedProxy: true,
+        sensorOrPlatform: 'Tourism Intelligence Desk Causal-Guardrail Demonstration Fixture',
+        spatialResolution: 'Puerta del Sol plaza context',
+        temporalCoverage: 'Demonstration observation window',
+        processingLevel: 'Deterministic causal-boundary assessment',
+        sourceAuthority: 'Tourism Intelligence Desk Prototype',
+        isCalibratedProxy: false,
         dataStatus: 'Demonstration'
       }
     ]
