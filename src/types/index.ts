@@ -2,7 +2,7 @@ export type TerritoryId = 'madrid-hati' | 'guadarrama-snto';
 
 export type EvidenceConfidence = 'Low' | 'Moderate' | 'High';
 
-export type DataStatus = 'Demonstration' | 'Proxy' | 'Validated' | 'Observed' | 'Model-derived' | 'Reproduced';
+export type DataStatus = 'Demonstration' | 'Proxy' | 'Derived' | 'Validated' | 'Observed' | 'Model-derived' | 'Reproduced';
 
 export interface DataProvenance {
   sensorOrPlatform: string;
