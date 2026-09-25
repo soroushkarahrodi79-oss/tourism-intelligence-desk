@@ -183,9 +183,10 @@ export const MapWorkspace: React.FC<MapWorkspaceProps> = ({
     // 2. Render published/reference points (for evidence cases such as HATI).
     if (showStations && territory.referencePoints) {
       territory.referencePoints.forEach((point) => {
+        const referenceColor = territory.id === 'madrid-hati' ? '#f59e0b' : '#34d399';
         const marker = L.circleMarker([point.lat, point.lng], {
           radius: 5,
-          color: '#f59e0b',
+          color: referenceColor,
           weight: 1.5,
           opacity: 0.95,
           fillColor: '#18181b',
@@ -201,7 +202,7 @@ export const MapWorkspace: React.FC<MapWorkspaceProps> = ({
             <div class="font-semibold text-zinc-100">${point.name}</div>
             <div class="text-[11px] font-mono text-zinc-400">${point.code}</div>
             <div class="mt-1.5 border-t border-zinc-800 pt-1.5 text-[10px] font-mono">${metadata}</div>
-            <div class="mt-1.5 text-[10px] text-emerald-300 font-mono">LOCKED PILOT REFERENCE ASSET</div>
+            <div class="mt-1.5 text-[10px] text-emerald-300 font-mono">${territory.id === 'madrid-hati' ? 'LOCKED PILOT REFERENCE ASSET' : 'REAL SENTINEL-2 CAMPAIGN ASSET · REPRESENTATIVE DISPLAY POINT'}</div>
           </div>`,
           { className: 'leaflet-tooltip-dark', sticky: true }
         );
@@ -331,7 +332,13 @@ export const MapWorkspace: React.FC<MapWorkspaceProps> = ({
             className={`px-2 py-1 rounded font-medium transition-colors flex items-center gap-1.5 ${
               showStations ? 'bg-zinc-800 text-zinc-200' : 'text-zinc-500 line-through'
             }`}
-            title={territory.referencePoints?.length ? 'Toggle locked pilot study assets' : 'Toggle Sampling Locations'}
+            title={
+              territory.referencePoints?.length
+                ? territory.id === 'madrid-hati'
+                  ? 'Toggle locked pilot study assets'
+                  : 'Toggle real Sentinel-2 campaign assets'
+                : 'Toggle Sampling Locations'
+            }
           >
             <Crosshair className="w-3.5 h-3.5" />
             <span>
@@ -347,7 +354,13 @@ export const MapWorkspace: React.FC<MapWorkspaceProps> = ({
       <div className="absolute top-3 right-3 z-[400]">
         <div className="px-2.5 py-1 rounded bg-zinc-900/95 backdrop-blur-sm border border-zinc-700/80 text-[11px] font-mono text-zinc-300 flex items-center gap-1.5">
           <span className={`w-1.5 h-1.5 rounded-full ${territory.referencePoints?.length ? 'bg-emerald-400' : 'bg-amber-400'}`}></span>
-          <span>{territory.referencePoints?.length ? 'LOCKED PILOT ASSET LOCATIONS' : 'DEMONSTRATION GEOMETRY'}</span>
+          <span>
+            {territory.referencePoints?.length
+              ? territory.id === 'madrid-hati'
+                ? 'LOCKED PILOT ASSET LOCATIONS'
+                : 'REAL CAMPAIGN ASSETS · REPRESENTATIVE POINTS'
+              : 'DEMONSTRATION GEOMETRY'}
+          </span>
         </div>
       </div>
 
@@ -387,8 +400,12 @@ export const MapWorkspace: React.FC<MapWorkspaceProps> = ({
         <div className="flex items-center gap-4 text-[11px] font-mono">
           {territory.referencePoints?.length ? (
             <div className="flex items-center gap-1.5">
-              <span className="w-2.5 h-2.5 rounded-full bg-zinc-900 inline-block border border-amber-400"></span>
-              <span className="text-zinc-400">Published HATI Study Asset</span>
+              <span className={`w-2.5 h-2.5 rounded-full bg-zinc-900 inline-block border ${
+                territory.id === 'madrid-hati' ? 'border-amber-400' : 'border-emerald-400'
+              }`}></span>
+              <span className="text-zinc-400">
+                {territory.id === 'madrid-hati' ? 'Published HATI Study Asset' : 'SNTO Sentinel-2 Campaign Asset'}
+              </span>
             </div>
           ) : (
             <>
