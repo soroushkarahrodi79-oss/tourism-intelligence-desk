@@ -2,6 +2,7 @@ import React from 'react';
 import { TerritoryId } from '../types';
 import { TERRITORY_CASES } from '../data/cases';
 import { ShieldCheck, FileText, MapPin, Activity, Github } from 'lucide-react';
+import { BUILD_INFO, shortBuildSha } from '../data/buildInfo';
 
 interface HeaderProps {
   activeTerritoryId: TerritoryId;
@@ -35,6 +36,12 @@ export const Header: React.FC<HeaderProps> = ({
                 <span className="text-zinc-600 text-xs hidden sm:inline">|</span>
                 <span className="text-xs text-zinc-400 font-normal hidden sm:inline">
                   Evidence → Decision → Action
+                </span>
+                <span
+                  className="hidden xl:inline text-[10px] font-mono text-zinc-500 border border-zinc-800 rounded px-1.5 py-0.5"
+                  title={`Build ${BUILD_INFO.gitSha} · ${BUILD_INFO.evidenceManifestVersion}`}
+                >
+                  v{BUILD_INFO.appVersion} · {shortBuildSha}
                 </span>
               </div>
               <div className="text-[11px] text-zinc-400 font-mono flex items-center gap-2">

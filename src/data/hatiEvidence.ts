@@ -1,15 +1,18 @@
 import { ReferencePoint } from '../types';
+import { HATI_IMMUTABLE, EVIDENCE_MANIFEST } from './evidenceManifest';
 
 export const HATI_EVIDENCE_SOURCE = {
   repository: 'soroushkarahrodi79-oss/heat-adaptive-tourism-madrid',
   lockedLayerStatus: 'RELEASE_LOCKED',
-  freezeBaseCommit: 'fcbb9b6',
-  reproductionReportBaseCommit: 'c69688e',
+  freezeBaseCommit: HATI_IMMUTABLE.scienceFreezeCommit,
+  reproductionReportBaseCommit: HATI_IMMUTABLE.reproductionBaseCommit,
+  reproductionEvidenceCommit: HATI_IMMUTABLE.reproductionEvidenceCommit,
   studyDate: '2023-08-21',
   studyArea: 'Prado–Retiro–Atocha, central Madrid',
   doi: '10.5281/zenodo.22707470',
   researchGateTitle:
     'Thermal representation as a decision variable in heat-adaptive tourism opportunity screening: evidence from a Madrid pilot',
+  immutableProvenance: EVIDENCE_MANIFEST['madrid-hati'].immutableSources,
   evidenceCeiling:
     'The screening chain was independently re-executed from committed model outputs and open-data inputs. SOLWEIG/Tmrt/UTCI remain model-derived and are not field-validated thermal truth.'
 } as const;

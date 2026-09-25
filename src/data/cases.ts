@@ -243,7 +243,7 @@ export const EVIDENCE_ASSESSMENTS: Record<string, EvidenceAssessment> = {
         temporalCoverage: '21 August 2023 · 12:00 / 15:00 / 18:00',
         processingLevel: 'Reproduced from committed model outputs and open-data inputs',
         sourceAuthority: 'HATI-Madrid RELEASE_LOCKED repository / reproduction report',
-        citationUrl: 'https://github.com/soroushkarahrodi79-oss/heat-adaptive-tourism-madrid',
+        citationUrl: HATI_EVIDENCE_SOURCE.immutableProvenance.reproductionReport,
         isCalibratedProxy: false,
         dataStatus: 'Reproduced'
       },
@@ -353,7 +353,7 @@ export const EVIDENCE_ASSESSMENTS: Record<string, EvidenceAssessment> = {
         temporalCoverage: '21 August 2023',
         processingLevel: 'Reproduced descriptive comparison',
         sourceAuthority: 'HATI-Madrid RELEASE_LOCKED',
-        citationUrl: 'https://github.com/soroushkarahrodi79-oss/heat-adaptive-tourism-madrid',
+        citationUrl: HATI_EVIDENCE_SOURCE.immutableProvenance.reproductionReport,
         isCalibratedProxy: false,
         dataStatus: 'Reproduced'
       }
@@ -456,7 +456,7 @@ export const EVIDENCE_ASSESSMENTS: Record<string, EvidenceAssessment> = {
         temporalCoverage: '21 August 2023 scenario set',
         processingLevel: 'Reproduced constraint-first screening',
         sourceAuthority: 'HATI-Madrid RELEASE_LOCKED',
-        citationUrl: 'https://github.com/soroushkarahrodi79-oss/heat-adaptive-tourism-madrid',
+        citationUrl: HATI_EVIDENCE_SOURCE.immutableProvenance.reproductionReport,
         isCalibratedProxy: false,
         dataStatus: 'Reproduced'
       }
@@ -557,7 +557,7 @@ export const EVIDENCE_ASSESSMENTS: Record<string, EvidenceAssessment> = {
         temporalCoverage: '21 August 2023',
         processingLevel: 'Reproduced uncertainty envelope and decision stability',
         sourceAuthority: 'HATI-Madrid RELEASE_LOCKED',
-        citationUrl: 'https://github.com/soroushkarahrodi79-oss/heat-adaptive-tourism-madrid',
+        citationUrl: HATI_EVIDENCE_SOURCE.immutableProvenance.reproductionReport,
         isCalibratedProxy: false,
         dataStatus: 'Reproduced'
       }
@@ -658,7 +658,7 @@ export const EVIDENCE_ASSESSMENTS: Record<string, EvidenceAssessment> = {
         temporalCoverage: 'Locked publication layer',
         processingLevel: 'Evidence-ceiling verification',
         sourceAuthority: 'HATI-Madrid canonical status record',
-        citationUrl: 'https://github.com/soroushkarahrodi79-oss/heat-adaptive-tourism-madrid/blob/main/PROJECT_STATUS.md',
+        citationUrl: HATI_EVIDENCE_SOURCE.immutableProvenance.projectStatus,
         isCalibratedProxy: false,
         dataStatus: 'Reproduced'
       }
@@ -773,7 +773,7 @@ export const EVIDENCE_ASSESSMENTS: Record<string, EvidenceAssessment> = {
         temporalCoverage: '2021-01 to 2026-06',
         processingLevel: 'Observed surface reflectance source',
         sourceAuthority: 'SNTO public repository / Google Earth Engine campaign export',
-        citationUrl: 'https://github.com/soroushkarahrodi79-oss/snto-smart-tourism-observatory',
+        citationUrl: SNTO_EVIDENCE_SOURCE.immutableProvenance.sourceSnapshotCommit,
         isCalibratedProxy: false,
         dataStatus: 'Observed'
       },
@@ -783,7 +783,7 @@ export const EVIDENCE_ASSESSMENTS: Record<string, EvidenceAssessment> = {
         temporalCoverage: '2021-01 to 2026-06',
         processingLevel: 'Derived environmental trend',
         sourceAuthority: 'SNTO committed trend-analysis artifact',
-        citationUrl: 'https://github.com/soroushkarahrodi79-oss/snto-smart-tourism-observatory/blob/main/clean_assets/timeseries/analysis/mk_trends_pnsg.json',
+        citationUrl: SNTO_EVIDENCE_SOURCE.immutableProvenance.trendArtifact,
         isCalibratedProxy: false,
         dataStatus: 'Derived'
       }
@@ -905,7 +905,7 @@ export const EVIDENCE_ASSESSMENTS: Record<string, EvidenceAssessment> = {
         temporalCoverage: '2021-01 to 2026-06',
         processingLevel: 'Derived trend from real observations',
         sourceAuthority: 'SNTO committed mk_trends_pnsg.json',
-        citationUrl: 'https://github.com/soroushkarahrodi79-oss/snto-smart-tourism-observatory/blob/main/clean_assets/timeseries/analysis/mk_trends_pnsg.json',
+        citationUrl: SNTO_EVIDENCE_SOURCE.immutableProvenance.trendArtifact,
         isCalibratedProxy: false,
         dataStatus: 'Derived'
       }
@@ -1012,7 +1012,7 @@ export const EVIDENCE_ASSESSMENTS: Record<string, EvidenceAssessment> = {
         temporalCoverage: 'Current main evidence state',
         processingLevel: 'Decision-use authorization',
         sourceAuthority: 'SNTO canonical scientific contract',
-        citationUrl: 'https://github.com/soroushkarahrodi79-oss/snto-smart-tourism-observatory/blob/main/docs/phase1/SCIENTIFIC_PRODUCT_CONTRACT.md',
+        citationUrl: SNTO_EVIDENCE_SOURCE.immutableProvenance.scientificProductContract,
         isCalibratedProxy: false,
         dataStatus: 'Derived'
       }
@@ -1117,7 +1117,7 @@ export const EVIDENCE_ASSESSMENTS: Record<string, EvidenceAssessment> = {
         temporalCoverage: 'Two-scene seasonal comparison',
         processingLevel: 'Derived environmental early-warning layer',
         sourceAuthority: 'SNTO PNSG Pipeline A',
-        citationUrl: 'https://github.com/soroushkarahrodi79-oss/snto-smart-tourism-observatory',
+        citationUrl: SNTO_EVIDENCE_SOURCE.immutableProvenance.sourceSnapshotCommit,
         isCalibratedProxy: false,
         dataStatus: 'Derived'
       }
@@ -1223,7 +1223,7 @@ export const EVIDENCE_ASSESSMENTS: Record<string, EvidenceAssessment> = {
         temporalCoverage: 'Current project state',
         processingLevel: 'Evidence-gap audit',
         sourceAuthority: 'SNTO canonical documentation',
-        citationUrl: 'https://github.com/soroushkarahrodi79-oss/snto-smart-tourism-observatory/blob/main/docs/PNSG_DECISION_EVIDENCE_BRIEF.md',
+        citationUrl: SNTO_EVIDENCE_SOURCE.immutableProvenance.decisionEvidenceBrief,
         isCalibratedProxy: false,
         dataStatus: 'Derived'
       }

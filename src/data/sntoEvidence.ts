@@ -1,13 +1,15 @@
 import { ReferencePoint } from '../types';
+import { SNTO_IMMUTABLE, EVIDENCE_MANIFEST } from './evidenceManifest';
 
 export const SNTO_EVIDENCE_SOURCE = {
   repository: 'soroushkarahrodi79-oss/snto-smart-tourism-observatory',
-  snapshotCommit: '2c65fe2ac9a09662cddef4cfa68290e0cd6e1278',
+  snapshotCommit: SNTO_IMMUTABLE.snapshotCommit,
   stableRelease: 'v2.0.0',
   doi: '10.5281/zenodo.20818269',
   observationWindow: '2021-01 to 2026-06',
   evidenceCeiling: 'L5a monitoring / inspection only; no tourism-impact causality, closure, quota, restoration or budget commitment.',
-  fieldValidationGate: 'Issue #26 has not run; no satellite-to-field agreement is claimed.'
+  fieldValidationGate: 'Issue #26 has not run; no satellite-to-field agreement is claimed.',
+  immutableProvenance: EVIDENCE_MANIFEST['guadarrama-snto'].immutableSources
 } as const;
 
 export const SNTO_REAL_EVIDENCE_METRICS = {

@@ -1,5 +1,7 @@
 import React from 'react';
-import { X, ShieldCheck, AlertTriangle, ExternalLink } from 'lucide-react';
+import { X, ShieldCheck, AlertTriangle, ExternalLink, GitCommitHorizontal } from 'lucide-react';
+import { EVIDENCE_MANIFEST, EVIDENCE_MANIFEST_VERSION } from '../data/evidenceManifest';
+import { BUILD_INFO, shortBuildSha } from '../data/buildInfo';
 
 interface MethodologyModalProps {
   isOpen: boolean;
@@ -125,6 +127,48 @@ export const MethodologyModal: React.FC<MethodologyModalProps> = ({ isOpen, onCl
             <p className="mt-2 text-xs text-zinc-400">
               The system refuses to force an unjustified recommendation or invent a conclusion.
             </p>
+          </div>
+
+          {/* Immutable Provenance Manifest */}
+          <div className="p-4 rounded-lg bg-zinc-900 border border-zinc-800">
+            <div className="flex items-center justify-between gap-3 mb-3">
+              <div className="flex items-center gap-2 text-zinc-200 font-mono font-semibold text-xs uppercase">
+                <GitCommitHorizontal className="w-4 h-4 text-emerald-400 shrink-0" />
+                <span>5. Immutable Evidence Provenance</span>
+              </div>
+              <span className="text-[10px] font-mono text-zinc-500">{EVIDENCE_MANIFEST_VERSION}</span>
+            </div>
+            <p className="text-xs text-zinc-400 mb-3">
+              Evidence links in the decision engine are pinned to full Git commit SHAs rather than mutable <code>main</code> URLs. A later source-repository edit therefore cannot silently change the evidence snapshot represented by this build.
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {Object.values(EVIDENCE_MANIFEST).map((entry) => {
+                const primaryCommit = Object.values(entry.immutableCommits).at(-1) || '';
+                const primaryUrl = Object.values(entry.immutableSources)[0];
+                return (
+                  <div key={entry.caseId} className="p-3 rounded bg-zinc-950 border border-zinc-800">
+                    <div className="text-xs font-semibold text-zinc-200">{entry.caseId === 'madrid-hati' ? 'HATI Madrid' : 'SNTO Guadarrama'}</div>
+                    <div className="mt-1 text-[10px] text-zinc-500 font-mono">{entry.snapshotRole}</div>
+                    <div className="mt-2 text-[10px] font-mono text-zinc-400 break-all">
+                      SHA: <span className="text-emerald-300">{primaryCommit}</span>
+                    </div>
+                    <a
+                      href={primaryUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mt-2 inline-flex items-center gap-1 text-[11px] text-zinc-300 hover:text-white underline"
+                    >
+                      <span>Open immutable source snapshot</span>
+                      <ExternalLink className="w-3 h-3" />
+                    </a>
+                  </div>
+                );
+              })}
+            </div>
+            <div className="mt-3 pt-3 border-t border-zinc-800 flex flex-wrap items-center justify-between gap-2 text-[10px] font-mono text-zinc-500">
+              <span>App v{BUILD_INFO.appVersion} · build {shortBuildSha}</span>
+              <span>Deployment: {BUILD_INFO.deployment}</span>
+            </div>
           </div>
 
           {/* Project Attribution */}
