@@ -22,7 +22,7 @@ import {
 export default function App() {
   const [activeTerritoryId, setActiveTerritoryId] = useState<TerritoryId>('madrid-hati');
   const [activeQuestion, setActiveQuestion] = useState<string>(
-    'Is this area experiencing a meaningful environmental change?'
+    TERRITORY_CASES['madrid-hati'].sampleQuestions[0]
   );
   const [assessment, setAssessment] = useState<EvidenceAssessment>(
     EVIDENCE_ASSESSMENTS['madrid-hati-q1']
@@ -43,8 +43,8 @@ export default function App() {
     setSelectedStation(null);
     setSelectedFeature(null);
 
-    // Default question for selected territory
-    const defaultQ = 'Is this area experiencing a meaningful environmental change?';
+    // Default to the first curated question for the selected evidence case.
+    const defaultQ = TERRITORY_CASES[id].sampleQuestions[0];
     setActiveQuestion(defaultQ);
 
     const defaultAssessmentKey = id === 'madrid-hati' ? 'madrid-hati-q1' : 'guadarrama-snto-q1';
@@ -101,7 +101,7 @@ export default function App() {
           <div className="flex items-center gap-2.5">
             <div className="px-2.5 py-1 rounded bg-zinc-900 border border-zinc-800 text-xs font-mono text-zinc-400 flex items-center gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-              <span>DATA STATUS: DEMONSTRATION</span>
+              <span>DATA STATUS: {currentTerritory.dataStatus.toUpperCase()}</span>
             </div>
             <button
               onClick={() => setIsDecisionBriefOpen(true)}
@@ -172,14 +172,14 @@ export default function App() {
                 </button>
               </div>
 
-              {/* Data Status Disclaimer with Tooltip */}
+              {/* Case-level data status */}
               <div className="mt-3.5 p-2.5 rounded bg-zinc-950/80 border border-zinc-800 text-[11px] text-zinc-400 font-mono">
                 <div className="flex items-center gap-1.5 text-zinc-300 font-semibold mb-1">
-                  <span className="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
-                  <span>DEMONSTRATION DATA</span>
+                  <span className={`w-1.5 h-1.5 rounded-full ${currentTerritory.dataStatus === 'Reproduced' ? 'bg-emerald-400' : 'bg-amber-400'}`}></span>
+                  <span>{currentTerritory.dataStatus === 'Reproduced' ? 'REPRODUCED RESEARCH SNAPSHOT' : 'DEMONSTRATION DATA'}</span>
                 </div>
                 <p className="text-zinc-400 leading-relaxed font-sans text-xs">
-                  Illustrative values used to demonstrate the analytical workflow. Not an operational project result.
+                  {currentTerritory.dataStatusNote}
                 </p>
               </div>
             </div>
@@ -240,16 +240,22 @@ export default function App() {
                   <span className="text-zinc-400">Copernicus / USGS Public Archives</span>
                 </div>
                 <div className="flex items-center justify-between text-[10px]">
-                  <span className="text-zinc-500">Supplied Dataset:</span>
-                  <span className="text-zinc-400">Curated Territorial Demonstration Vector</span>
+                  <span className="text-zinc-500">Evidence Layer:</span>
+                  <span className="text-zinc-400">
+                    {currentTerritory.dataStatus === 'Reproduced' ? 'Locked HATI Research Snapshot' : 'Curated Demonstration Dataset'}
+                  </span>
                 </div>
                 <div className="flex items-center justify-between text-[10px]">
-                  <span className="text-zinc-500">Prototype Input:</span>
-                  <span className="text-zinc-400">Curated Demonstration Geometry & Station Records</span>
+                  <span className="text-zinc-500">Spatial Input:</span>
+                  <span className="text-zinc-400">
+                    {currentTerritory.dataStatus === 'Reproduced' ? '27 Published Study Assets' : 'Demonstration Geometry & Station Records'}
+                  </span>
                 </div>
                 <div className="flex items-center justify-between text-[10px]">
                   <span className="text-zinc-500">Data Status:</span>
-                  <span className="text-amber-400 font-medium">Demonstration Value</span>
+                  <span className={`${currentTerritory.dataStatus === 'Reproduced' ? 'text-emerald-400' : 'text-amber-400'} font-medium`}>
+                    {currentTerritory.dataStatus}
+                  </span>
                 </div>
               </div>
             </div>
