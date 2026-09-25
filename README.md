@@ -1,10 +1,10 @@
 # Tourism Intelligence Desk
 
-**Prototype v0.3 — evidence-status-aware tourism decision support**
+**Prototype v0.4 — evidence-status-aware tourism decision support with immutable provenance**
 
 Tourism Intelligence Desk is a research-oriented prototype for turning tourism and territorial evidence into structured decision-support assessments with explicit uncertainty, evidence limits, competing explanations, provenance, and anti-causality guardrails.
 
-Version 0.3 contains two evidence-backed research cases with different evidence ceilings:
+Version 0.4 contains two evidence-backed research cases with different evidence ceilings and pins every represented research source to immutable Git commit snapshots:
 
 - **HATI Madrid — REPRODUCED RESEARCH.** A bounded snapshot of the public, `RELEASE_LOCKED` HATI-Madrid pilot. The committed screening chain was independently re-executed and all 10 regenerated tables matched the locked references. SOLWEIG/Tmrt/UTCI remains **model-derived**, not field-validated thermal truth.
 - **SNTO Sierra de Guadarrama — REAL OBSERVATIONS + DERIVED INDICATORS.** Real Sentinel-2 observations underpin 2021–2026 NDVI/NDMI/EVI time series and derived trend statistics for 21 PNSG campaign assets, plus official OAPN / PRUG management context. No asset/trail-scale visitor-use target and no completed field-validation campaign are available.
@@ -121,6 +121,18 @@ GitHub Actions runs the same gate:
 - TypeScript typecheck
 - epistemic regression tests
 - production Vite build
+
+## Immutable provenance & public build
+
+Version 0.4 adds a cross-project evidence manifest in `src/data/evidenceManifest.ts`.
+
+The app no longer relies on mutable `blob/main` links for represented evidence. HATI and SNTO provenance links are pinned to full 40-character Git commit SHAs, while archival DOI records remain available alongside the Git snapshots.
+
+The public build is configured for GitHub Pages at:
+
+https://soroushkarahrodi79-oss.github.io/tourism-intelligence-desk/
+
+The Pages workflow runs the same typecheck + epistemic tests + production build before uploading the site. The deployed header exposes the application version and deployed commit SHA.
 
 ## AI Studio origin
 
