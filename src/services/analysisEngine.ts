@@ -57,35 +57,7 @@ export function evaluateAnalyticalQuestion(
       return EVIDENCE_ASSESSMENTS['madrid-hati-q5'];
     }
   } else if (territoryId === 'guadarrama-snto') {
-    if (
-      normalized.includes('what does') ||
-      normalized.includes('real snto') ||
-      normalized.includes('currently show') ||
-      normalized.includes('across the pnsg') ||
-      normalized.includes('trend distribution')
-    ) {
-      return EVIDENCE_ASSESSMENTS['guadarrama-snto-q1'];
-    }
-    if (
-      normalized.includes('maliciosa') ||
-      normalized.includes('tourism damage') ||
-      normalized.includes('tourist damage') ||
-      normalized.includes('ndvi decline prove') ||
-      normalized.includes('trampling')
-    ) {
-      return EVIDENCE_ASSESSMENTS['guadarrama-snto-q2'];
-    }
-    if (
-      normalized.includes('closing trails') ||
-      normalized.includes('close trails') ||
-      normalized.includes('visitor quotas') ||
-      normalized.includes('restricting visitor') ||
-      normalized.includes('restrict access') ||
-      normalized.includes('closure') ||
-      normalized.includes('quota')
-    ) {
-      return EVIDENCE_ASSESSMENTS['guadarrama-snto-q3'];
-    }
+    // Route narrow / high-consequence questions before broad summary language.
     if (
       normalized.includes('218') ||
       normalized.includes('oapn layer') ||
@@ -103,6 +75,35 @@ export function evaluateAnalyticalQuestion(
       normalized.includes('visitor-use evidence')
     ) {
       return EVIDENCE_ASSESSMENTS['guadarrama-snto-q5'];
+    }
+    if (
+      normalized.includes('closing trails') ||
+      normalized.includes('close trails') ||
+      normalized.includes('visitor quotas') ||
+      normalized.includes('restricting visitor') ||
+      normalized.includes('restrict access') ||
+      normalized.includes('closure') ||
+      normalized.includes('quota')
+    ) {
+      return EVIDENCE_ASSESSMENTS['guadarrama-snto-q3'];
+    }
+    if (
+      normalized.includes('maliciosa') ||
+      normalized.includes('tourism damage') ||
+      normalized.includes('tourist damage') ||
+      normalized.includes('ndvi decline prove') ||
+      normalized.includes('trampling')
+    ) {
+      return EVIDENCE_ASSESSMENTS['guadarrama-snto-q2'];
+    }
+    if (
+      normalized.includes('real snto') ||
+      normalized.includes('currently show') ||
+      normalized.includes('across the pnsg') ||
+      normalized.includes('trend distribution') ||
+      normalized.includes('what does the real')
+    ) {
+      return EVIDENCE_ASSESSMENTS['guadarrama-snto-q1'];
     }
   }
 
