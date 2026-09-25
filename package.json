@@ -1,16 +1,16 @@
 {
   "name": "tourism-intelligence-desk",
   "private": true,
-  "version": "0.4.0",
+  "version": "0.5.0",
   "type": "module",
   "scripts": {
     "dev": "vite --port=3000 --host=0.0.0.0",
-    "build": "vite build",
+    "build": "node scripts/write-build-manifest.mjs && vite build",
     "preview": "vite preview",
     "clean": "node -e \"require('node:fs').rmSync('dist', { recursive: true, force: true })\"",
     "lint": "tsc --noEmit",
     "test": "tsx --test tests/analysisEngine.test.ts",
-    "check": "tsc --noEmit && tsx --test tests/analysisEngine.test.ts && vite build"
+    "check": "tsc --noEmit && tsx --test tests/analysisEngine.test.ts && bun run build && node scripts/verify-build-manifest.mjs"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.3.3",

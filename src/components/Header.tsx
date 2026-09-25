@@ -106,11 +106,11 @@ export const Header: React.FC<HeaderProps> = ({
 
           {/* Subtle Project Attribution Link */}
           <a
-            href="https://github.com/soroushkarahrodi79-oss"
+            href="https://github.com/soroushkarahrodi79-oss/tourism-intelligence-desk"
             target="_blank"
             rel="noopener noreferrer"
             className="p-1.5 text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900 rounded border border-zinc-800 transition-colors"
-            title="Research Project Repository"
+            title="Tourism Intelligence Desk source repository"
           >
             <Github className="w-4 h-4" />
           </a>

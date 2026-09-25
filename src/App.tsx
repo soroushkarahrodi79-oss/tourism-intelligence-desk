@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { TerritoryId, MonitoringStation, SpatialFeature, EvidenceAssessment } from './types';
 import { TERRITORY_CASES, EVIDENCE_ASSESSMENTS } from './data/cases';
+import { EVIDENCE_MANIFEST } from './data/evidenceManifest';
 import { evaluateAnalyticalQuestion } from './services/analysisEngine';
 import { Header } from './components/Header';
 import { CaseCardHero } from './components/CaseCardHero';
@@ -36,6 +37,7 @@ export default function App() {
   const [isMethodologyOpen, setIsMethodologyOpen] = useState<boolean>(false);
 
   const currentTerritory = TERRITORY_CASES[activeTerritoryId];
+  const currentEvidenceManifest = EVIDENCE_MANIFEST[activeTerritoryId];
 
   // Handler when user switches territory
   const handleSelectTerritory = (id: TerritoryId) => {
@@ -306,6 +308,63 @@ export default function App() {
               </div>
             </div>
 
+            {/* Audit Snapshot */}
+            <div className="bg-zinc-900/50 border border-zinc-800 rounded-lg p-4">
+              <div className="flex items-center justify-between gap-2 mb-2.5">
+                <div className="text-xs font-mono uppercase tracking-wider text-zinc-400 font-semibold">
+                  Audit Snapshot
+                </div>
+                <span className="text-[10px] px-1.5 py-0.5 rounded bg-zinc-950 border border-zinc-700 text-emerald-300 font-mono">
+                  IMMUTABLE
+                </span>
+              </div>
+
+              <div className="space-y-2 text-[11px]">
+                <div>
+                  <div className="text-zinc-500 font-mono">Evidence Role</div>
+                  <div className="text-zinc-300 mt-0.5">{currentEvidenceManifest.snapshotRole}</div>
+                </div>
+
+                <div>
+                  <div className="text-zinc-500 font-mono">Pinned Commit</div>
+                  <div
+                    className="text-emerald-300 mt-0.5 font-mono break-all"
+                    title={currentEvidenceManifest.primaryCommit}
+                  >
+                    {currentEvidenceManifest.primaryCommit.slice(0, 12)}
+                  </div>
+                </div>
+
+                <div>
+                  <div className="text-zinc-500 font-mono">Evidence Boundary</div>
+                  <div className="text-zinc-400 mt-0.5 leading-relaxed">
+                    {currentEvidenceManifest.evidenceBoundary}
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-3 pt-3 border-t border-zinc-800 flex flex-wrap gap-2">
+                <a
+                  href={currentEvidenceManifest.primarySourceUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 px-2 py-1 rounded bg-zinc-950 border border-zinc-700 text-[10px] font-mono text-zinc-300 hover:text-white hover:border-zinc-600 transition-colors"
+                >
+                  <span>Open pinned source</span>
+                  <ExternalLink className="w-3 h-3" />
+                </a>
+                <a
+                  href={currentEvidenceManifest.archivalRecord}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 px-2 py-1 rounded bg-zinc-950 border border-zinc-700 text-[10px] font-mono text-zinc-300 hover:text-white hover:border-zinc-600 transition-colors"
+                >
+                  <span>Open archival record</span>
+                  <ExternalLink className="w-3 h-3" />
+                </a>
+              </div>
+            </div>
+
             {/* Anti-Causality Reminder Card */}
             <div className="bg-zinc-900/30 border border-zinc-800/80 rounded-lg p-3.5 text-xs">
               <div className="flex items-center gap-2 text-zinc-300 font-medium mb-1">
@@ -402,12 +461,12 @@ export default function App() {
             </button>
             <span className="text-zinc-700">·</span>
             <a
-              href="https://github.com/soroushkarahrodi79-oss"
+              href="https://github.com/soroushkarahrodi79-oss/tourism-intelligence-desk"
               target="_blank"
               rel="noopener noreferrer"
               className="text-zinc-300 hover:text-white flex items-center gap-1 underline"
             >
-              <span>github.com/soroushkarahrodi79-oss</span>
+              <span>Source repository</span>
               <ExternalLink className="w-3 h-3" />
             </a>
           </div>

@@ -60,3 +60,22 @@ jobs:
       - name: Deploy
         id: deployment
         uses: actions/deploy-pages@v4
+
+      - name: Verify deployed build SHA
+        env:
+          EXPECTED_SHA: ${{ github.sha }}
+          BUILD_URL: https://soroushkarahrodi79-oss.github.io/tourism-intelligence-desk/build.json
+        run: |
+          for attempt in {1..18}; do
+            body="$(curl -fsSL --max-time 15 "$BUILD_URL" || true)"
+            if printf '%s' "$body" | grep -F "\"gitSha\": \"$EXPECTED_SHA\"" >/dev/null; then
+              echo "Verified public deployment at $BUILD_URL"
+              exit 0
+            fi
+            echo "Public build not current yet (attempt $attempt/18); retrying..."
+            sleep 5
+          done
+
+          echo "Public site did not expose expected build SHA: $EXPECTED_SHA"
+          curl -fsSL --max-time 15 "$BUILD_URL" || true
+          exit 1
