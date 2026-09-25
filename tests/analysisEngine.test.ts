@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { evaluateAnalyticalQuestion } from '../src/services/analysisEngine';
 import { HATI_REFERENCE_ASSETS } from '../src/data/hatiEvidence';
 import { SNTO_REFERENCE_ASSETS, SNTO_REAL_EVIDENCE_METRICS } from '../src/data/sntoEvidence';
+import { EVIDENCE_MANIFEST } from '../src/data/evidenceManifest';
 
 function dump(value: unknown): string {
   return JSON.stringify(value);
@@ -176,6 +177,33 @@ test('reference maps contain the expected published HATI and real SNTO assets', 
   assert.equal(SNTO_REAL_EVIDENCE_METRICS.significantGreening, 6);
   assert.equal(SNTO_REAL_EVIDENCE_METRICS.noSignificantTrend, 14);
   assert.equal(SNTO_REAL_EVIDENCE_METRICS.significantDecline, 1);
+});
+
+
+test('evidence provenance is pinned to immutable full Git SHAs', () => {
+  const manifests = Object.values(EVIDENCE_MANIFEST);
+
+  assert.equal(manifests.length, 2);
+
+  for (const manifest of manifests) {
+    for (const sha of Object.values(manifest.immutableCommits)) {
+      assert.match(sha, /^[0-9a-f]{40}$/);
+    }
+
+    for (const url of Object.values(manifest.immutableSources)) {
+      assert.doesNotMatch(url, /\/blob\/main\//);
+      assert.doesNotMatch(url, /\/tree\/main(?:\/|$)/);
+    }
+  }
+
+  assert.match(
+    EVIDENCE_MANIFEST['madrid-hati'].immutableSources.reproductionReport,
+    /f132343a7021a38eb1ee3e6123e3b65d5a4c650a/
+  );
+  assert.match(
+    EVIDENCE_MANIFEST['guadarrama-snto'].immutableSources.trendArtifact,
+    /2c65fe2ac9a09662cddef4cfa68290e0cd6e1278/
+  );
 });
 
 test('immediate policy requests stay evidence-state aware', () => {
