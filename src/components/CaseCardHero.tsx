@@ -31,10 +31,10 @@ export const CaseCardHero: React.FC<CaseCardHeroProps> = ({
             Transforming environmental, geospatial and field observations into transparent decision-support assessments with explicit evidence limits and uncertainty.
           </p>
           <div className="mt-3.5 flex flex-wrap items-center gap-2.5 text-xs text-zinc-400 font-mono">
-            <span className="text-zinc-500">Observation Baselines:</span>
-            <span className="bg-zinc-900 px-2 py-0.5 rounded border border-zinc-800">Copernicus Sentinel-2 MSI</span>
-            <span className="bg-zinc-900 px-2 py-0.5 rounded border border-zinc-800">Landsat 9 TIRS-2</span>
-            <span className="bg-zinc-900 px-2 py-0.5 rounded border border-zinc-800">AEMET High-Mountain & Urban Reference</span>
+            <span className="text-zinc-500">Evidence Modes:</span>
+            <span className="bg-zinc-900 px-2 py-0.5 rounded border border-zinc-800">HATI · Reproduced Research</span>
+            <span className="bg-zinc-900 px-2 py-0.5 rounded border border-zinc-800">UTCI · Model-Derived</span>
+            <span className="bg-zinc-900 px-2 py-0.5 rounded border border-zinc-800">SNTO · Demonstration</span>
           </div>
         </div>
 
@@ -61,7 +61,7 @@ export const CaseCardHero: React.FC<CaseCardHeroProps> = ({
                   <span className="text-xs font-normal text-zinc-400 font-mono">({madridCase.code})</span>
                 </h2>
                 <div className="text-xs text-zinc-300 mt-0.5">
-                  Urban Heat & Pedestrian Exposure
+                  Thermal-Method Sensitivity & Opportunity Screening
                 </div>
               </div>
               <div className="p-2 rounded bg-zinc-800/80 border border-zinc-700 text-amber-400 shrink-0">
@@ -76,14 +76,14 @@ export const CaseCardHero: React.FC<CaseCardHeroProps> = ({
             {/* Quick Metrics Matrix */}
             <div className="mt-4 grid grid-cols-2 gap-2 text-xs font-mono">
               <div className="p-2.5 rounded bg-zinc-950 border border-zinc-800">
-                <div className="text-[10px] text-zinc-400 uppercase">Max Surface Temp (LST)</div>
+                <div className="text-[10px] text-zinc-400 uppercase">{madridCase.keyIndicators[0].name}</div>
                 <div className="text-sm font-semibold text-zinc-100 mt-0.5">
                   {madridCase.keyIndicators[0].value} {madridCase.keyIndicators[0].unit}
                 </div>
                 <div className="text-[10px] text-amber-400/90">{madridCase.keyIndicators[0].change}</div>
               </div>
               <div className="p-2.5 rounded bg-zinc-950 border border-zinc-800">
-                <div className="text-[10px] text-zinc-400 uppercase">Est. Shade Deficit</div>
+                <div className="text-[10px] text-zinc-400 uppercase">{madridCase.keyIndicators[1].name}</div>
                 <div className="text-sm font-semibold text-zinc-100 mt-0.5">
                   {madridCase.keyIndicators[1].value} {madridCase.keyIndicators[1].unit}
                 </div>
@@ -95,8 +95,8 @@ export const CaseCardHero: React.FC<CaseCardHeroProps> = ({
             <div className="mt-4 pt-3 border-t border-zinc-800/80 flex items-center justify-between text-[11px] text-zinc-400 font-mono">
               <div className="flex items-center gap-2">
                 <span className="text-zinc-400">DATA STATUS:</span>
-                <span className="px-1.5 py-0.5 rounded bg-amber-950/40 border border-amber-600/40 text-amber-300 text-[10px]">
-                  DEMONSTRATION PROXY
+                <span className="px-1.5 py-0.5 rounded bg-emerald-950/40 border border-emerald-600/40 text-emerald-300 text-[10px]">
+                  REPRODUCED · MODEL-DERIVED THERMAL INPUT
                 </span>
               </div>
               <div className="flex items-center gap-1 font-medium text-zinc-300 group-hover:text-amber-300 transition-colors">
@@ -142,14 +142,14 @@ export const CaseCardHero: React.FC<CaseCardHeroProps> = ({
             {/* Quick Metrics Matrix */}
             <div className="mt-4 grid grid-cols-2 gap-2 text-xs font-mono">
               <div className="p-2.5 rounded bg-zinc-950 border border-zinc-800">
-                <div className="text-[10px] text-zinc-400 uppercase">Subalpine NDVI Delta</div>
+                <div className="text-[10px] text-zinc-400 uppercase">{guadarramaCase.keyIndicators[0].name}</div>
                 <div className="text-sm font-semibold text-zinc-100 mt-0.5">
                   {guadarramaCase.keyIndicators[0].value} {guadarramaCase.keyIndicators[0].unit}
                 </div>
                 <div className="text-[10px] text-emerald-400/90">{guadarramaCase.keyIndicators[0].change}</div>
               </div>
               <div className="p-2.5 rounded bg-zinc-950 border border-zinc-800">
-                <div className="text-[10px] text-zinc-400 uppercase">Root Soil Moisture Proxy</div>
+                <div className="text-[10px] text-zinc-400 uppercase">{guadarramaCase.keyIndicators[1].name}</div>
                 <div className="text-sm font-semibold text-zinc-100 mt-0.5">
                   {guadarramaCase.keyIndicators[1].value} {guadarramaCase.keyIndicators[1].unit}
                 </div>
