@@ -1,10 +1,10 @@
 # Tourism Intelligence Desk
 
-**Prototype v0.6 — professional evidence-governed tourism decision support**
+**Prototype v0.7 — professional evidence-governed tourism decision support**
 
 Tourism Intelligence Desk is a research-oriented prototype for turning tourism and territorial evidence into structured decision-support assessments with explicit uncertainty, evidence limits, competing explanations, provenance, and anti-causality guardrails.
 
-Version 0.6 keeps the auditable scientific core and adds a professional evaluation layer so a new reader can understand the problem, product architecture, evidence boundaries and differentiating behaviour in under a minute.
+Version 0.7 keeps the auditable scientific core and the 60-second evaluation path, and adds a canonical professional integration pack so CV, LinkedIn, GitHub and interview wording stay aligned with the same evidence ceiling.
 
 - **HATI Madrid — REPRODUCED RESEARCH.** A bounded snapshot of the public, `RELEASE_LOCKED` HATI-Madrid pilot. The committed screening chain was independently re-executed and all 10 regenerated tables matched the locked references. SOLWEIG/Tmrt/UTCI remains **model-derived**, not field-validated thermal truth.
 - **SNTO Sierra de Guadarrama — REAL OBSERVATIONS + DERIVED INDICATORS.** Real Sentinel-2 observations underpin 2021–2026 NDVI/NDMI/EVI time series and derived trend statistics for 21 PNSG campaign assets, plus official OAPN / PRUG management context. No asset/trail-scale visitor-use target and no completed field-validation campaign are available.
@@ -173,6 +173,17 @@ The GitHub repository is the auditable source of the hardened implementation.
 - SNTO field validation #26 remains pending and visitor-pressure readiness remains insufficient at asset/trail scale.
 - The Decision Support Brief is a research/prototyping output, not an official administrative document.
 - The prototype does not replace field validation, formal environmental assessment, or institutional decision procedures.
+
+## Professional integration
+
+Recruiter-facing copy is versioned with the product rather than maintained as an unrelated narrative:
+
+- [Professional integration pack](professional/PROFESSIONAL_INTEGRATION.md)
+- [CV-ready project entry](professional/CV_ENTRY.md)
+- [LinkedIn Featured / project copy](professional/LINKEDIN_FEATURED.md)
+- [Interview narrative](professional/INTERVIEW_NARRATIVE.md)
+
+The professional layer is deliberately downstream of the evidence layer: it can simplify language, but it cannot upgrade a model-derived result to observed evidence, convert an environmental signal into tourism causality, or turn research output into operational validation.
 
 ## Professional positioning
 

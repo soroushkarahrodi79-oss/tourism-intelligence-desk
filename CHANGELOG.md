@@ -1,5 +1,14 @@
 # Changelog
 
+## v0.7.0 — Professional portfolio integration
+
+- added canonical recruiter-facing positioning for Tourism Intelligence Desk;
+- added exact CV-ready project copy;
+- added LinkedIn Featured, Projects and About copy;
+- added 30-second and 90-second interview narratives with claim-safe answers to common technical questions;
+- added a professional-materials index so downstream portfolio copy stays aligned with the scientific evidence ceiling;
+- synchronized the GitHub profile so Tourism Intelligence Desk appears as the first selected-work integration layer.
+
 ## v0.6.0 — Professional evaluation layer
 
 - added a recruiter/client-friendly “Product in 30 seconds” overview without weakening the research framing;
