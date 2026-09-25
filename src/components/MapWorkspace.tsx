@@ -56,27 +56,10 @@ export const MapWorkspace: React.FC<MapWorkspaceProps> = ({
         center: territory.center,
         zoom: territory.zoom,
         zoomControl: false,
-        attributionControl: false
+        attributionControl: true
       });
 
       L.control.zoom({ position: 'bottomright' }).addTo(map);
-
-      // Basemap layer
-      const currentTiles = basemapUrls[basemap];
-      const tileLayer = L.tileLayer(currentTiles.url, {
-        maxZoom: 18,
-        attribution: currentTiles.attribution
-      });
-
-      tileLayer.on('tileerror', () => {
-        setTileLoadError(true);
-      });
-      tileLayer.on('tileload', () => {
-        setTileLoadError(false);
-      });
-
-      tileLayer.addTo(map);
-      tileLayerRef.current = tileLayer;
 
       // Feature group for overlays
       featureGroupRef.current = L.featureGroup().addTo(map);
@@ -110,11 +93,27 @@ export const MapWorkspace: React.FC<MapWorkspaceProps> = ({
     mapInstanceRef.current.setView(territory.center, territory.zoom, { animate: true });
   }, [territory.id]);
 
-  // Update Basemap tile layer
+  // Update basemap as a complete layer so provider attribution always matches the active tiles.
   useEffect(() => {
-    if (!mapInstanceRef.current || !tileLayerRef.current) return;
+    const map = mapInstanceRef.current;
+    if (!map) return;
+
+    if (tileLayerRef.current) {
+      map.removeLayer(tileLayerRef.current);
+      tileLayerRef.current = null;
+    }
+
     const config = basemapUrls[basemap];
-    tileLayerRef.current.setUrl(config.url);
+    const tileLayer = L.tileLayer(config.url, {
+      maxZoom: 18,
+      attribution: config.attribution
+    });
+
+    tileLayer.on('tileerror', () => setTileLoadError(true));
+    tileLayer.on('tileload', () => setTileLoadError(false));
+    tileLayer.addTo(map);
+    tileLayerRef.current = tileLayer;
+    setTileLoadError(false);
   }, [basemap]);
 
   // Render Overlays (Polygons & Stations)

@@ -23,10 +23,10 @@ export const DecisionBriefModal: React.FC<DecisionBriefModalProps> = ({
   territory
 }) => {
   const [copied, setCopied] = useState(false);
+  const assessmentRef = assessment.id.split('-').at(-1)?.toUpperCase() ?? 'ASSESSMENT';
+  const docId = `TID-DSB-${territory.code}-${new Date().getFullYear()}-${assessmentRef}`;
 
   if (!isOpen) return null;
-
-  const docId = `TID-DSB-${territory.code}-${new Date().getFullYear()}-${Math.floor(1000 + Math.random() * 9000)}`;
   const dateStr = new Date().toLocaleDateString('en-GB', {
     day: '2-digit',
     month: 'long',
@@ -108,7 +108,7 @@ ${assessment.dataNeededNext.map((d, i) => `${i + 1}. ${d}`).join('\n')}
 ## 10. PROVENANCE & LIMITATIONS
 ${assessment.provenance.map((p) => `- ${p.sensorOrPlatform} | Authority: ${p.sourceAuthority} | Res: ${p.spatialResolution} | Status: ${p.dataStatus || 'Proxy'}`).join('\n')}
 
-**Limitations:** Generated for decision-support and research evaluation. Does not replace accredited on-site Environmental Impact Assessment.
+**Limitations:** Generated for decision-support and research evaluation. Does not replace formal field validation, environmental assessment, or institutional decision procedures.
 `;
   };
 
