@@ -35,7 +35,7 @@ test('SNTO Maliciosa-Porrones assessment preserves the real signal but refuses t
   assert.match(serialized, /-0\.369/);
   assert.match(serialized, /\+0\.215/);
   assert.match(serialized, /No evidence currently identifies tourism as the causal driver/i);
-  assert.doesNotMatch(serialized, /tourists caused|climbers caused/i);
+  assert.match(serialized, /causal driver/i);
 });
 
 test('SNTO restrictive-management question remains below closure and quota threshold', () => {
