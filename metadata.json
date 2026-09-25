@@ -1,6 +1,6 @@
 {
   "name": "Tourism Intelligence Desk",
-  "description": "Evidence-status-aware tourism decision-support prototype combining reproduced HATI-Madrid research with real Sentinel-2 and derived SNTO PNSG evidence, immutable commit-pinned provenance, explicit claim ceilings, uncertainty, and anti-causality guardrails.",
+  "description": "Public evidence-auditable tourism decision-support prototype combining reproduced HATI-Madrid research with real Sentinel-2 and derived SNTO PNSG evidence, immutable commit-pinned provenance, explicit claim ceilings, and verified deployment metadata.",
   "requestFramePermissions": [],
   "majorCapabilities": []
 }
