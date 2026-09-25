@@ -221,7 +221,9 @@ export default function App() {
                 </span>
               </div>
               <p className="text-[11px] text-zinc-400 leading-normal">
-                Target satellite bands and observation platforms intended for operational integration:
+                {currentTerritory.dataStatus === 'Reproduced'
+                  ? 'Sources and analytical methods documented in the locked HATI research layer:'
+                  : 'Reference observation platforms intended for future operational integration:'}
               </p>
               <ul className="space-y-1 text-xs font-mono text-zinc-300">
                 {currentTerritory.satelliteBands.map((band, idx) => (
@@ -230,14 +232,20 @@ export default function App() {
                       <span className="w-1 h-1 rounded-full bg-zinc-500"></span>
                       <span>{band}</span>
                     </span>
-                    <span className="text-[10px] text-zinc-500">Intended Spec</span>
+                    <span className="text-[10px] text-zinc-500">
+                      {currentTerritory.dataStatus === 'Reproduced' ? 'Research Source' : 'Intended Spec'}
+                    </span>
                   </li>
                 ))}
               </ul>
               <div className="mt-2 pt-2.5 border-t border-zinc-800/80 space-y-1 text-[11px] font-mono text-zinc-400">
                 <div className="flex items-center justify-between text-[10px]">
                   <span className="text-zinc-500">Reference Source:</span>
-                  <span className="text-zinc-400">Copernicus / USGS Public Archives</span>
+                  <span className="text-zinc-400">
+                    {currentTerritory.dataStatus === 'Reproduced'
+                      ? 'AEMET · OSM · IGN/CNIG · EUMETSAT'
+                      : 'Copernicus / Earth Observation Reference'}
+                  </span>
                 </div>
                 <div className="flex items-center justify-between text-[10px]">
                   <span className="text-zinc-500">Evidence Layer:</span>
