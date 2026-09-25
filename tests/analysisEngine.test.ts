@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { evaluateAnalyticalQuestion } from '../src/services/analysisEngine';
+import { TERRITORY_CASES } from '../src/data/cases';
 import { HATI_REFERENCE_ASSETS } from '../src/data/hatiEvidence';
 import { SNTO_REFERENCE_ASSETS, SNTO_REAL_EVIDENCE_METRICS } from '../src/data/sntoEvidence';
 import { EVIDENCE_MANIFEST } from '../src/data/evidenceManifest';
@@ -207,6 +208,34 @@ test('evidence provenance is pinned to immutable full Git SHAs', () => {
     EVIDENCE_MANIFEST['guadarrama-snto'].immutableSources.trendArtifact,
     /2c65fe2ac9a09662cddef4cfa68290e0cd6e1278/
   );
+});
+
+test('professional 60-second evaluation path stays backed by curated case questions', () => {
+  const guided = [
+    {
+      territoryId: 'madrid-hati' as const,
+      question: 'What did the HATI-Madrid pilot actually demonstrate?',
+      expectedAssessmentId: 'madrid-hati-q1'
+    },
+    {
+      territoryId: 'guadarrama-snto' as const,
+      question: 'Does the Maliciosa-Porrones NDVI decline prove tourism damage?',
+      expectedAssessmentId: 'guadarrama-snto-q2'
+    },
+    {
+      territoryId: 'guadarrama-snto' as const,
+      question: 'Can SNTO justify closing trails or restricting visitor quotas?',
+      expectedAssessmentId: 'guadarrama-snto-q3'
+    }
+  ];
+
+  for (const item of guided) {
+    assert.ok(TERRITORY_CASES[item.territoryId].sampleQuestions.includes(item.question));
+    assert.equal(
+      evaluateAnalyticalQuestion(item.territoryId, item.question).id,
+      item.expectedAssessmentId
+    );
+  }
 });
 
 test('immediate policy requests stay evidence-state aware', () => {

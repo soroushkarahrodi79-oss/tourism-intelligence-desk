@@ -5,6 +5,7 @@ import { EVIDENCE_MANIFEST } from './data/evidenceManifest';
 import { evaluateAnalyticalQuestion } from './services/analysisEngine';
 import { Header } from './components/Header';
 import { CaseCardHero } from './components/CaseCardHero';
+import { ProfessionalOverview } from './components/ProfessionalOverview';
 import { MapWorkspace } from './components/MapWorkspace';
 import { QuestionInput } from './components/QuestionInput';
 import { EvidenceAssessmentPanel } from './components/EvidenceAssessmentPanel';
@@ -53,6 +54,19 @@ export default function App() {
     setAssessment(EVIDENCE_ASSESSMENTS[defaultAssessmentKey]);
   };
 
+  const handleRunGuidedQuestion = (id: TerritoryId, question: string) => {
+    setActiveTerritoryId(id);
+    setSelectedStation(null);
+    setSelectedFeature(null);
+    setActiveQuestion(question);
+    setAssessment(evaluateAnalyticalQuestion(id, question));
+    setIsLoading(false);
+
+    window.setTimeout(() => {
+      document.getElementById('workspace')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 0);
+  };
+
   // Handler when user asks a question
   const handleAskQuestion = (question: string) => {
     setActiveQuestion(question);
@@ -82,8 +96,14 @@ export default function App() {
         onSelectTerritory={handleSelectTerritory}
       />
 
+      <ProfessionalOverview
+        onRunGuidedQuestion={handleRunGuidedQuestion}
+        onOpenMethodology={() => setIsMethodologyOpen(true)}
+        onOpenDecisionBrief={() => setIsDecisionBriefOpen(true)}
+      />
+
       {/* 3. Main Analysis Workspace: LEFT / CENTER / RIGHT */}
-      <main className="flex-1 max-w-[1600px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-7">
+      <main id="workspace" className="flex-1 max-w-[1600px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-7 scroll-mt-20">
         {/* Workspace Title Bar */}
         <div className="mb-6 flex flex-wrap items-center justify-between gap-4 border-b border-zinc-800/80 pb-4">
           <div>
@@ -448,7 +468,7 @@ export default function App() {
               <span className="text-zinc-400">Evidence → Decision → Action</span>
             </div>
             <div className="text-[11px] text-zinc-400 mt-1">
-              Decision-support interface for destination management organisations, tourism analysts, sustainability teams, and researchers.
+              Public research-engineering prototype for destination analysts, geospatial teams, sustainability practitioners, and researchers.
             </div>
           </div>
 

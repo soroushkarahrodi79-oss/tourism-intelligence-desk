@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.6.0 — Professional evaluation layer
+
+- added a recruiter/client-friendly “Product in 30 seconds” overview without weakening the research framing;
+- added a three-step 60-second evaluation path that exercises a reproduced result, a causal boundary, and a high-consequence decision ceiling;
+- added one-click guided questions that switch case, run the deterministic assessment, and move directly to the analytical workspace;
+- clarified the product problem, architecture, differentiator, and deliverables for first-time visitors;
+- improved README professional positioning and live-product evaluation guidance.
+
 ## v0.5.0 — Public trust surface
 
 - added case-level Audit Snapshot cards with immutable source commit, archival record, and evidence boundary;

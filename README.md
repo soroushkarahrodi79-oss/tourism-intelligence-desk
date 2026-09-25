@@ -1,10 +1,10 @@
 # Tourism Intelligence Desk
 
-**Prototype v0.5 — public, evidence-auditable tourism decision support**
+**Prototype v0.6 — professional evidence-governed tourism decision support**
 
 Tourism Intelligence Desk is a research-oriented prototype for turning tourism and territorial evidence into structured decision-support assessments with explicit uncertainty, evidence limits, competing explanations, provenance, and anti-causality guardrails.
 
-Version 0.5 keeps the two evidence-backed research cases and adds a public trust surface: each case exposes its pinned source commit, archival record, evidence boundary, build signature, and verified deployment state.
+Version 0.6 keeps the auditable scientific core and adds a professional evaluation layer so a new reader can understand the problem, product architecture, evidence boundaries and differentiating behaviour in under a minute.
 
 - **HATI Madrid — REPRODUCED RESEARCH.** A bounded snapshot of the public, `RELEASE_LOCKED` HATI-Madrid pilot. The committed screening chain was independently re-executed and all 10 regenerated tables matched the locked references. SOLWEIG/Tmrt/UTCI remains **model-derived**, not field-validated thermal truth.
 - **SNTO Sierra de Guadarrama — REAL OBSERVATIONS + DERIVED INDICATORS.** Real Sentinel-2 observations underpin 2021–2026 NDVI/NDMI/EVI time series and derived trend statistics for 21 PNSG campaign assets, plus official OAPN / PRUG management context. No asset/trail-scale visitor-use target and no completed field-validation campaign are available.
@@ -12,6 +12,21 @@ Version 0.5 keeps the two evidence-backed research cases and adds a public trust
 The central rule is:
 
 > **Reproduced ≠ observed ≠ derived ≠ model-derived ≠ validated ≠ operational.**
+
+## Live product
+
+**Public build:** https://soroushkarahrodi79-oss.github.io/tourism-intelligence-desk/
+
+### 60-second review
+
+A reviewer can evaluate the product without reading the repository first:
+
+1. **HATI — reproduced result:** run “What did the HATI-Madrid pilot actually demonstrate?” to see a bounded positive result with explicit model limits.
+2. **SNTO — causal boundary:** run “Does the Maliciosa-Porrones NDVI decline prove tourism damage?” to see a real environmental signal separated from unsupported tourism attribution.
+3. **SNTO — decision ceiling:** run “Can SNTO justify closing trails or restricting visitor quotas?” to see how the system blocks a high-consequence recommendation when the evidence chain is incomplete.
+
+The public interface also exposes immutable evidence snapshots, archival records, build provenance and a generated Decision Support Brief.
+
 
 ## HATI evidence represented
 
@@ -161,4 +176,13 @@ The GitHub repository is the auditable source of the hardened implementation.
 
 ## Professional positioning
 
-Tourism Intelligence Desk demonstrates an evidence-governance and decision-support pattern at the intersection of **Tourism Intelligence · Geospatial Research · Decision Systems**.
+Tourism Intelligence Desk demonstrates applied work across **Tourism Intelligence · Geospatial Research · Decision Systems**:
+
+- evidence-state modelling and scientific claim governance;
+- reproducible research integration;
+- Earth-observation and geospatial decision support;
+- deterministic analytical guardrails;
+- human-readable management briefs with provenance;
+- CI-guarded public deployment.
+
+The differentiator is not a larger dashboard or a more fluent chatbot. It is the ability to make a useful decision-support product that can also say **“insufficient evidence”** and show exactly why.
