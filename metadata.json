@@ -1,6 +1,6 @@
 {
   "name": "Tourism Intelligence Desk",
-  "description": "Deterministic evidence-guardrail prototype for tourism decision support, demonstrating explicit evidence limits, uncertainty, competing explanations, and anti-causality rules across HATI Madrid and SNTO Sierra de Guadarrama.",
+  "description": "Evidence-status-aware tourism decision-support prototype with reproduced HATI-Madrid research evidence, model-derived thermal provenance, demonstration SNTO workflows, explicit uncertainty, and anti-causality guardrails.",
   "requestFramePermissions": [],
   "majorCapabilities": []
 }

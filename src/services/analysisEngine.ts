@@ -10,14 +10,51 @@ export function evaluateAnalyticalQuestion(
 
   // Check if it matches existing curated assessments directly
   if (territoryId === 'madrid-hati') {
-    if (normalized.includes('meaningful') || normalized.includes('environmental change') || normalized.includes('is this area')) {
+    if (
+      normalized.includes('what did') ||
+      normalized.includes('actually demonstrate') ||
+      normalized.includes('headline result') ||
+      normalized.includes('hati pilot')
+    ) {
       return EVIDENCE_ASSESSMENTS['madrid-hati-q1'];
     }
-    if (normalized.includes('cause of urban heat') || normalized.includes('primary cause') || normalized.includes('heat island') || normalized.includes('puerta del sol')) {
+    if (
+      normalized.includes('thermal method') ||
+      normalized.includes('reclass') ||
+      normalized.includes('proxy') ||
+      normalized.includes('solweig') ||
+      normalized.includes('feasibility classifications')
+    ) {
       return EVIDENCE_ASSESSMENTS['madrid-hati-q2'];
     }
-    if (normalized.includes('displace') || normalized.includes('avoiding') || normalized.includes('footfall') || normalized.includes('pedestrian') || normalized.includes('prove tourists are avoiding') || normalized.includes('gran vía')) {
+    if (
+      normalized.includes('candidate set') ||
+      normalized.includes('constraint-first') ||
+      normalized.includes('nearest-open') ||
+      normalized.includes('no defensible') ||
+      normalized.includes('screening change')
+    ) {
       return EVIDENCE_ASSESSMENTS['madrid-hati-q3'];
+    }
+    if (
+      normalized.includes('robust') ||
+      normalized.includes('uncertainty') ||
+      normalized.includes('boundary') ||
+      normalized.includes('unstable')
+    ) {
+      return EVIDENCE_ASSESSMENTS['madrid-hati-q4'];
+    }
+    if (
+      normalized.includes('tourist behavior') ||
+      normalized.includes('tourist behaviour') ||
+      normalized.includes('avoiding') ||
+      normalized.includes('footfall') ||
+      normalized.includes('pedestrian behavior') ||
+      normalized.includes('pedestrian behaviour') ||
+      normalized.includes('changed their behavior') ||
+      normalized.includes('changed their behaviour')
+    ) {
+      return EVIDENCE_ASSESSMENTS['madrid-hati-q5'];
     }
   } else if (territoryId === 'guadarrama-snto') {
     if (normalized.includes('ndvi decreased') || normalized.includes('18%') || normalized.includes('damaging the park') || normalized.includes('trampling') || normalized.includes('peñalara')) {
@@ -43,6 +80,7 @@ export function evaluateAnalyticalQuestion(
     normalized.includes('immediate intervention');
 
   if (isPolicyChangeQuestion) {
+    const isReproducedHati = territoryId === 'madrid-hati';
     return {
       id,
       territoryId,
@@ -50,27 +88,37 @@ export function evaluateAnalyticalQuestion(
       isCustomQuestion: true,
       status: 'INSUFFICIENT_EVIDENCE',
       statusHeadline: 'Operational Validation Required: Current Evidence Does Not Justify Immediate Policy Alterations',
-      dataStatus: 'Demonstration',
+      dataStatus: isReproducedHati ? 'Reproduced' : 'Demonstration',
       signal: {
-        observation: `Inquiry requests an immediate operational or policy decision based on the currently loaded demonstration evidence for ${territory.shortName}.`,
+        observation: isReproducedHati
+          ? `Inquiry requests an immediate operational or policy decision from the reproduced but single-day, non-operational HATI evidence for ${territory.shortName}.`
+          : `Inquiry requests an immediate operational or policy decision based on the currently loaded demonstration evidence for ${territory.shortName}.`,
         spatialScope: `${territory.shortName} administrative perimeter.`,
         temporalWindow: 'Current prototype evaluation cycle.',
-        summary: 'Decision-support guardrail: Active data includes demonstration datasets and uncalibrated proxies. Epistemic standards prohibit immediate policy change on this basis.'
+        summary: isReproducedHati
+          ? 'Decision-support guardrail: computational reproducibility does not convert a bounded 2023 research pilot into current operational evidence.'
+          : 'Decision-support guardrail: Active data includes demonstration datasets and uncalibrated proxies. Epistemic standards prohibit immediate policy change on this basis.'
       },
       evidence: {
         supportingDatasets: [
-          'The loaded assessment contains demonstration datasets and proxy variables that are not validated for operational policy use.',
-          'No validated operational dataset matched to this custom policy query is available in the current prototype.',
+          isReproducedHati
+            ? 'The HATI screening outputs were reproduced, but the thermal field is model-derived, the study is bounded to one 2023 day, and no operational deployment validation exists.'
+            : 'The loaded assessment contains demonstration datasets and proxy variables that are not validated for operational policy use.',
+          'No current operational dataset matched to this custom policy query is available in the current prototype.',
           'The appropriate validation design depends on the specific decision, territory, and causal claim under consideration.'
         ],
         metrics: [
-          { label: 'Data Status', value: 'DEMONSTRATION', unit: 'mode', baseline: 'Operational validation needed', delta: 'Not validated for policy', trend: 'alert', isDemonstration: true },
+          { label: 'Data Status', value: isReproducedHati ? 'REPRODUCED' : 'DEMONSTRATION', unit: 'mode', baseline: 'Operational validation needed', delta: 'Not validated for policy', trend: 'alert', isDemonstration: !isReproducedHati },
           { label: 'Evidence Confidence', value: 'LOW', unit: 'attribution', baseline: 'High threshold needed', delta: 'Preliminary', trend: 'alert', isDemonstration: true },
           { label: 'Policy Recommendation', value: 'DEFER', unit: 'action', baseline: 'Evidence threshold', delta: 'Maintain current protocols', trend: 'stable', isDemonstration: true }
         ],
         spatialCoordinates: `${territory.center[0]}° N, ${territory.center[1]}° W`,
-        sampleSize: 'Demonstration data catalog.',
-        dataIntegrityNotes: 'DEMONSTRATION DATA: Illustrative values used to demonstrate the analytical workflow. Not an operational project result.'
+        sampleSize: isReproducedHati
+          ? 'Reproduced HATI locked-pilot evidence; no current operational sample.'
+          : 'Demonstration data catalog.',
+        dataIntegrityNotes: isReproducedHati
+          ? 'REPRODUCED RESEARCH EVIDENCE: computationally reproducible, but bounded to the locked 2023 pilot and not validated for current policy action.'
+          : 'DEMONSTRATION DATA: Illustrative values used to demonstrate the analytical workflow. Not an operational project result.'
       },
       interpretation: {
         inferences: [

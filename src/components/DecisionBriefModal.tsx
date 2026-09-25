@@ -34,10 +34,11 @@ export const DecisionBriefModal: React.FC<DecisionBriefModalProps> = ({
   });
 
   const isDemo = assessment.dataStatus === 'Demonstration' || assessment.dataStatus === 'Proxy';
+  const isResearchSnapshot = assessment.dataStatus === 'Reproduced' || assessment.dataStatus === 'Model-derived';
 
   const generateMarkdown = () => {
     return `# TERRITORIAL DECISION SUPPORT BRIEF
-${isDemo ? '> **DEMONSTRATION BRIEF — NOT FOR OPERATIONAL DECISION-MAKING**\n' : ''}
+${isDemo ? '> **DEMONSTRATION BRIEF — NOT FOR OPERATIONAL DECISION-MAKING**\n' : ''}${isResearchSnapshot ? '> **REPRODUCED RESEARCH BRIEF — NOT CURRENT OPERATIONAL EVIDENCE**\n' : ''}
 **DOCUMENT REF:** ${docId}
 **TERRITORY:** ${territory.title} (${territory.code})
 **CASE / PROJECT:** ${territory.shortName}
@@ -191,6 +192,15 @@ ${assessment.provenance.map((p) => `- ${p.sensorOrPlatform} | Authority: ${p.sou
             </div>
           )}
 
+          {isResearchSnapshot && (
+            <div className="p-3 rounded bg-zinc-900 border border-emerald-800/60 text-xs flex items-center justify-between font-mono">
+              <div className="flex items-center gap-2 text-emerald-300 font-semibold">
+                <Check className="w-4 h-4 shrink-0" />
+                <span>REPRODUCED RESEARCH BRIEF — NOT CURRENT OPERATIONAL EVIDENCE</span>
+              </div>
+              <span className="text-zinc-400 hidden sm:inline">MODEL OUTPUTS REMAIN SUBJECT TO THEIR EVIDENCE CEILING</span>
+            </div>
+          )}
           {/* Header Block */}
           <div className="border-b border-zinc-800 print:border-black pb-5">
             <div className="text-xs font-mono text-zinc-400 print:text-zinc-600 mb-2">
@@ -216,7 +226,7 @@ ${assessment.provenance.map((p) => `- ${p.sensorOrPlatform} | Authority: ${p.sou
               </div>
               <div>
                 <span className="text-zinc-400 block text-[10px]">DATA STATUS</span>
-                <span className="text-amber-300 print:text-black font-semibold">{assessment.dataStatus.toUpperCase()}</span>
+                <span className={`${isResearchSnapshot ? 'text-emerald-300' : 'text-amber-300'} print:text-black font-semibold`}>{assessment.dataStatus.toUpperCase()}</span>
               </div>
               <div>
                 <span className="text-zinc-400 block text-[10px]">EVIDENCE CONFIDENCE</span>

@@ -1,185 +1,71 @@
 import { TerritoryCase, EvidenceAssessment } from '../types';
+import { HATI_EVIDENCE_SOURCE, HATI_REPRODUCED_METRICS, HATI_REFERENCE_ASSETS } from './hatiEvidence';
 
 export const TERRITORY_CASES: Record<string, TerritoryCase> = {
   'madrid-hati': {
     id: 'madrid-hati',
     code: 'HATI-MAD',
-    shortName: 'Madrid Urban Core',
+    shortName: 'Madrid HATI Pilot',
     title: 'HATI Madrid: Heat-Aware Tourism Intelligence',
-    subtitle: 'Urban Heat Island, Pedestrian Thermal Exposure & Microclimate Refuges',
+    subtitle: 'Thermal-Method Sensitivity & Constraint-First Tourism Opportunity Screening',
     description:
-      'Thermal radiometry mapping (Landsat 9 TIRS-2 & Sentinel-3 SLSTR) combined with illustrative in-situ urban microclimate nodes and pedestrian distribution proxies across central Madrid tourist axes (Gran Vía, Sol, Plaza Mayor, and Retiro corridor).',
-    focusTheme: 'Urban Thermal Exposure & Pedestrian Biometeorology',
-    center: [40.4168, -3.7038],
+      'Reproduced evidence snapshot from the RELEASE_LOCKED HATI-Madrid pilot: 27 curated tourism assets in the Prado–Retiro–Atocha area, one documented extreme-heat day, two alternative thermal-method operationalisations, eight screening scenarios, and explicit uncertainty / abstention logic.',
+    focusTheme: 'Eligibility Before Ranking · Thermal Representation · Evidence Sufficiency',
+    center: [40.4128, -3.6875],
     zoom: 14,
     bounds: [
-      [40.405, -3.725],
-      [40.435, -3.68]
+      [40.4025, -3.698],
+      [40.4225, -3.6755]
     ],
-    satelliteBands: ['Landsat-9 Band 10 (TIRS-2)', 'Sentinel-3 SLSTR LST', 'Sentinel-2 MSI Red/NIR'],
+    satelliteBands: [
+      'AEMET hazard-band meteorological context',
+      'OpenStreetMap tourism assets & tree-count exposure proxy',
+      'SOLWEIG → Tmrt → UTCI model-derived thermal configuration',
+      'IGN/CNIG LiDAR geometry + EUMETSAT solar-forcing sensitivity'
+    ],
     keyIndicators: [
-      { name: 'Max Land Surface Temp (LST)', value: '47.8', unit: '°C', change: '+4.2°C vs baseline (demo)', isDemo: true },
-      { name: 'Estimated Shade Deficit (Gran Vía)', value: '72.4', unit: '%', change: 'Solar noon model proxy', isDemo: true },
-      { name: 'UTCI Thermal Stress Index', value: '41.5', unit: '°C', change: 'Strong Heat Stress threshold', isDemo: true },
-      { name: 'Pedestrian Flow Shift', value: '-34.2', unit: '%', change: 'Observed association (demo)', isDemo: true }
+      {
+        name: 'Thermal-Method Reclassification',
+        value: `${HATI_REPRODUCED_METRICS.thermalMethodReclassified} / ${HATI_REPRODUCED_METRICS.outdoorObservations}`,
+        unit: 'observations',
+        change: `${HATI_REPRODUCED_METRICS.thermalMethodReclassifiedPct}% · reproduced`,
+        isDemo: false
+      },
+      {
+        name: 'Candidate Set Changed',
+        value: `${HATI_REPRODUCED_METRICS.candidateSetChangedScenarios} / ${HATI_REPRODUCED_METRICS.totalScenarios}`,
+        unit: 'scenarios',
+        change: 'vs proximity-only nearest-open baseline',
+        isDemo: false
+      },
+      {
+        name: 'Decision Confidence',
+        value: `${HATI_REPRODUCED_METRICS.decisionConfidenceRobust}/${HATI_REPRODUCED_METRICS.decisionConfidenceBoundary}/${HATI_REPRODUCED_METRICS.decisionConfidenceUnstable}`,
+        unit: 'R/B/U',
+        change: 'tested uncertainty dimensions only',
+        isDemo: false
+      },
+      {
+        name: 'No-Survivor State',
+        value: HATI_REPRODUCED_METRICS.noSurvivorScenario,
+        unit: 'scenario',
+        change: '0 survivors at 500 m; constraint-contingent',
+        isDemo: false
+      }
     ],
     sampleQuestions: [
-      'Is this area experiencing a meaningful environmental change?',
-      'Does high surface temperature prove tourists are avoiding this street?',
-      'Can high tourist density in Puerta del Sol be identified as the cause of urban heat island intensity?',
-      'Are urban canopy cooling corridors (Paseo del Prado / Retiro) offering measurable thermal relief compared to unshaded retail axes?',
-      'Should the destination authority alter summer tourism campaigns immediately on the basis of this signal?'
+      'What did the HATI-Madrid pilot actually demonstrate?',
+      'Did changing the thermal method change tourism-feasibility classifications?',
+      'Did constraint-first screening change the candidate set versus the nearest-open baseline?',
+      'How robust were the HATI decisions under the tested uncertainty?',
+      'Did HATI prove that tourists changed their behavior because of heat?'
     ],
-    stations: [
-      {
-        id: 'mad-st-01',
-        name: 'Puerta del Sol Central Microclimate Node',
-        code: 'HATI-SOL-01',
-        lat: 40.4168,
-        lng: -3.7038,
-        elevationMeters: 650,
-        type: 'microclimate',
-        readings: { airTempC: 38.6, surfaceTempC: 46.2, relativeHumidity: 19.4, solarRadiationWm2: 940, pedestrianFlowPerHour: 4820 },
-        status: 'active',
-        isDemonstrationStation: true
-      },
-      {
-        id: 'mad-st-02',
-        name: 'Gran Vía / Calle Alcalá Junction',
-        code: 'HATI-GV-02',
-        lat: 40.4192,
-        lng: -3.6991,
-        elevationMeters: 662,
-        type: 'microclimate',
-        readings: { airTempC: 39.1, surfaceTempC: 48.4, relativeHumidity: 18.2, solarRadiationWm2: 980, pedestrianFlowPerHour: 6150 },
-        status: 'active',
-        isDemonstrationStation: true
-      },
-      {
-        id: 'mad-st-03',
-        name: 'Plaza Mayor Colonnade Station',
-        code: 'HATI-PM-03',
-        lat: 40.4154,
-        lng: -3.7074,
-        elevationMeters: 645,
-        type: 'microclimate',
-        readings: { airTempC: 36.8, surfaceTempC: 39.5, relativeHumidity: 22.1, solarRadiationWm2: 410, pedestrianFlowPerHour: 3410 },
-        status: 'active',
-        isDemonstrationStation: true
-      },
-      {
-        id: 'mad-st-04',
-        name: 'Paseo del Prado Canopy Refuge (Botanical)',
-        code: 'HATI-PRD-04',
-        lat: 40.4138,
-        lng: -3.6922,
-        elevationMeters: 635,
-        type: 'microclimate',
-        readings: { airTempC: 33.2, surfaceTempC: 31.8, relativeHumidity: 32.5, solarRadiationWm2: 260, pedestrianFlowPerHour: 1890 },
-        status: 'active',
-        isDemonstrationStation: true
-      },
-      {
-        id: 'mad-st-05',
-        name: 'Parque de El Retiro (Estanque Grande)',
-        code: 'HATI-RET-05',
-        lat: 40.4172,
-        lng: -3.6834,
-        elevationMeters: 668,
-        type: 'microclimate',
-        readings: { airTempC: 32.7, surfaceTempC: 29.4, relativeHumidity: 35.8, solarRadiationWm2: 240, pedestrianFlowPerHour: 2240 },
-        status: 'active',
-        isDemonstrationStation: true
-      },
-      {
-        id: 'mad-st-06',
-        name: 'Madrid Río Pedestrian Footbridge',
-        code: 'HATI-RIO-06',
-        lat: 40.4075,
-        lng: -3.7225,
-        elevationMeters: 590,
-        type: 'microclimate',
-        readings: { airTempC: 34.5, surfaceTempC: 36.2, relativeHumidity: 28.0, solarRadiationWm2: 780, pedestrianFlowPerHour: 1420 },
-        status: 'active',
-        isDemonstrationStation: true
-      }
-    ],
-    features: [
-      {
-        id: 'feat-gv-canyon',
-        name: 'Gran Vía Urban Canyon Thermal Zone',
-        category: 'heat_corridor',
-        coordinates: [
-          [40.4205, -3.708],
-          [40.4201, -3.702],
-          [40.4188, -3.696],
-          [40.4182, -3.697],
-          [40.4195, -3.703],
-          [40.4199, -3.708]
-        ],
-        center: [40.4196, -3.702],
-        properties: {
-          lstAnomalyC: 4.8,
-          shadeIndex: 22,
-          pedestrianDensity: 'High (illustrative)',
-          visitorVolumeHourly: 5900
-        }
-      },
-      {
-        id: 'feat-sol-hotspot',
-        name: 'Puerta del Sol Open Plaza Mineral Zone',
-        category: 'heat_corridor',
-        coordinates: [
-          [40.4175, -3.705],
-          [40.4174, -3.702],
-          [40.4162, -3.702],
-          [40.4163, -3.705]
-        ],
-        center: [40.4168, -3.7035],
-        properties: {
-          lstAnomalyC: 5.4,
-          shadeIndex: 8,
-          pedestrianDensity: 'High density (illustrative)',
-          visitorVolumeHourly: 6800
-        }
-      },
-      {
-        id: 'feat-prado-corridor',
-        name: 'Paseo del Prado Dense Canopy Micro-Refuge',
-        category: 'green_infrastructure',
-        coordinates: [
-          [40.4185, -3.6915],
-          [40.411, -3.6935],
-          [40.4108, -3.695],
-          [40.4182, -3.693]
-        ],
-        center: [40.4145, -3.693],
-        properties: {
-          lstAnomalyC: -3.8,
-          shadeIndex: 78,
-          pedestrianDensity: 'Moderate (illustrative)',
-          visitorVolumeHourly: 2100
-        }
-      },
-      {
-        id: 'feat-retiro-oasis',
-        name: 'El Retiro Historical Urban Oasis',
-        category: 'refuge_area',
-        coordinates: [
-          [40.421, -3.687],
-          [40.411, -3.684],
-          [40.411, -3.676],
-          [40.421, -3.678]
-        ],
-        center: [40.416, -3.681],
-        properties: {
-          lstAnomalyC: -4.5,
-          shadeIndex: 84,
-          pedestrianDensity: 'Dispersed (illustrative)',
-          visitorVolumeHourly: 3500
-        }
-      }
-    ]
+    stations: [],
+    features: [],
+    dataStatus: 'Reproduced',
+    dataStatusNote:
+      'The committed screening chain and 10 result tables were independently re-executed and matched the locked references. SOLWEIG/Tmrt/UTCI remain model-derived and are not field-validated thermal truth.',
+    referencePoints: HATI_REFERENCE_ASSETS
   },
   'guadarrama-snto': {
     id: 'guadarrama-snto',
@@ -331,360 +217,539 @@ export const TERRITORY_CASES: Record<string, TerritoryCase> = {
           visitorVolumeHourly: 420
         }
       }
-    ]
+    ],
+    dataStatus: 'Demonstration',
+    dataStatusNote:
+      'Curated demonstration/proxy values illustrate the analytical workflow. They are not operational SNTO field measurements or live satellite ingestion.'
   }
 };
 
 export const EVIDENCE_ASSESSMENTS: Record<string, EvidenceAssessment> = {
-  // MADRID QUESTION 1: Meaningful environmental change
+  // MADRID QUESTION 1: reproduced headline evidence
   'madrid-hati-q1': {
     id: 'madrid-hati-q1',
     territoryId: 'madrid-hati',
-    question: 'Is this area experiencing a meaningful environmental change?',
-    status: 'OBSERVED_ANOMALY',
-    statusHeadline: 'Observed Surface Thermal Anomaly in Demonstration Dataset',
-    dataStatus: 'Demonstration',
+    question: 'What did the HATI-Madrid pilot actually demonstrate?',
+    status: 'REPRODUCED_RESULT',
+    statusHeadline: 'Reproduced Result: HATI Shows Thermal-Method Sensitivity and Constraint-First Screening Consequences',
+    dataStatus: 'Reproduced',
     signal: {
       observation:
-        'A positive Land Surface Temperature (LST) anomaly of approximately +4.2°C relative to historical baseline averages is recorded across the historic core in demonstration satellite radiometry, with elevated surface temperatures concentrated over unshaded mineral paving.',
-      spatialScope: 'Distrito Centro (Madrid), focal boundary bounded by Gran Vía, Sol, and Atocha corridor.',
-      temporalWindow: 'Demonstration summer composite window (illustrative daytime acquisitions).',
-      summary: 'Observational data indicates microclimatic heat elevation across paved open public spaces compared to tree-shaded corridors.'
+        'The locked HATI-Madrid screening chain was independently re-executed from committed model outputs and open-data inputs. All 10 regenerated tables matched their locked references structurally and numerically.',
+      spatialScope: HATI_EVIDENCE_SOURCE.studyArea,
+      temporalWindow: 'Single documented study day: 21 August 2023 · 12:00 / 15:00 / 18:00.',
+      summary:
+        'The reproduced pilot demonstrates that the operational definition of heat can change tourism-feasibility classifications and that constraint-first screening can materially alter the candidate set relative to a proximity-only comparator.'
     },
     evidence: {
       supportingDatasets: [
-        'Landsat 9 TIRS-2 Band 10 surface radiometry indicates LST median of 46.1°C across unshaded granite plazas in demonstration processing.',
-        'AEMET meteorological station records (Madrid Retiro) provide synoptic temperature context indicating elevated regional summer temperatures.',
-        'In-situ microclimate proxy nodes record elevated daytime Universal Thermal Climate Index (UTCI) stress levels during peak solar azimuth.',
-        'Calculated canopy shade availability across primary shopping axes averages under 20% between 13:00 and 16:00 CET.'
+        '27 curated tourism assets in the Prado–Retiro–Atocha pilot area.',
+        '42 outdoor asset × timestamp observations compared across an operational proxy and a SOLWEIG → Tmrt → UTCI configuration.',
+        'Eight pre-registered screening scenarios plus a proximity-only nearest-open baseline.',
+        'Independent reproduction report: every step exited 0 and all 10 regenerated tables matched the locked references.'
       ],
       metrics: [
-        { label: 'Observed LST Anomaly', value: '+4.2', unit: '°C', baseline: 'Historical mean', delta: '+4.2°C anomaly', trend: 'alert', isDemonstration: true },
-        { label: 'UTCI Peak Condition', value: '41.5', unit: '°C', baseline: 'Moderate comfort (<32°C)', delta: 'Strong thermal stress', trend: 'alert', isDemonstration: true },
-        { label: 'Canopy Shade Proportion', value: '18.4', unit: '%', baseline: '40.0% target', delta: '-21.6% deficit', trend: 'down', isDemonstration: true },
-        { label: 'Data Status', value: 'DEMONSTRATION', unit: 'mode', baseline: 'Demonstration data', delta: 'Requires operational validation', trend: 'stable', isDemonstration: true }
+        { label: 'Thermal-Method Reclassification', value: '14 / 42', unit: 'observations', baseline: 'Two operationalisations compared', delta: '33.3%', trend: 'alert', isDemonstration: false },
+        { label: 'Candidate Set Changed', value: '7 / 8', unit: 'scenarios', baseline: 'Nearest-open comparator', delta: 'Constraint-first consequence', trend: 'alert', isDemonstration: false },
+        { label: 'Nearest-Open Pick Excluded', value: '3 / 8', unit: 'scenarios', baseline: 'Nearest-open pick', delta: 'All OUTDOOR_EXPOSURE_TOO_HIGH', trend: 'alert', isDemonstration: false },
+        { label: 'No-Defensible-Alternative', value: 'S8', unit: 'scenario', baseline: '500 m reach', delta: '0 survivors', trend: 'stable', isDemonstration: false }
       ],
-      spatialCoordinates: '40.4168° N, 3.7038° W, Elevation ~650m a.s.l.',
-      sampleSize: 'Demonstration satellite composite series and sensor telemetry proxies.',
-      dataIntegrityNotes: 'DEMONSTRATION DATA: Values are illustrative to demonstrate the analytical decision-support workflow. Not an operational municipal finding.'
+      spatialCoordinates: 'Prado–Retiro–Atocha bounded pilot, central Madrid.',
+      sampleSize: '27 curated assets; 42 outdoor asset-time observations; 8 screening scenarios.',
+      dataIntegrityNotes:
+        'REPRODUCED RESEARCH SNAPSHOT: computational outputs reproduce the locked tables. This does not field-validate the modelled thermal field.'
     },
     interpretation: {
       inferences: [
-        'The historic center exhibits microclimatic thermal elevation consistent with high thermal inertia of dark granite paving, low vegetative fraction, and solar exposure.',
-        'Thermal conditions during midday hours present physiological heat exposure for pedestrians and tourists navigating unshaded corridors.'
+        'Thermal representation is a decision variable in this bounded pilot: alternative operationalisations changed 14 of 42 outdoor classifications.',
+        'Eligibility-before-ranking can change which opportunities remain admissible and can preserve an explicit no-survivor state.',
+        'The result is a demonstration of decision sensitivity and traceability, not proof that one thermal method is more accurate.'
       ],
       plausibleMechanisms:
-        'High solar irradiance absorption by dense paving materials during peak solar elevation, compounded by urban canyon geometry with limited wind dispersion.'
+        'Different thermal operationalisations encode heat exposure differently; ordered hard constraints then propagate those differences into candidate eligibility.'
     },
     evidenceLimit: {
       strictlyForbiddenInferences: [
-        'DO NOT conclude that tourist presence produces or amplifies the thermal anomaly (surface heating associates primarily with urban material properties and solar meteorology, rather than human metabolic warmth).',
-        'DO NOT extrapolate long-term multi-decadal climate trends from this demonstration seasonal sample.',
-        'DO NOT assume indoor business temperatures match outdoor surface radiometry.'
+        'DO NOT claim that SOLWEIG/UTCI is ground truth or that the physical method corrected proxy errors.',
+        'DO NOT generalise the single-day, ~3.5 km² pilot to Madrid as a whole or to other seasons.',
+        'DO NOT infer tourist behaviour, visitor redistribution, safety outcomes, or health outcomes: none were measured.'
       ],
       unobservedVariables: [
-        'Continuous building interior cooling rejection thermal plumes across narrow streets.',
-        'High-resolution micro-wind turbulence vectors at pedestrian height.'
+        'Field measurements of Tmrt / UTCI for physical validation.',
+        'Observed visitor behaviour or route-choice data.',
+        'Additional study days, seasons, and destination contexts.'
       ],
-      spatialTemporalGaps: 'Satellite revisit cycle provides discrete snapshot observations; continuous temporal dynamics require dense ground station coverage.'
+      spatialTemporalGaps:
+        'The locked publication is one bounded central-Madrid pilot on one extreme-heat day; it is not an operational real-time system.'
     },
     competingExplanations: [
       {
-        category: 'Synoptic Meteorology',
-        explanation: 'Regional synoptic atmospheric heat dome affecting central Spain.',
+        category: 'Thermal-Method Operationalisation',
+        explanation: 'Classification differences can arise from how heat is represented and mapped into decision categories.',
         evaluation: 'Contextually supported hypothesis',
-        reasoning: 'Macro-scale atmospheric conditions govern the broad baseline temperature across the entire Madrid basin.',
-        investigationNeeded: 'Cross-reference with ECMWF regional 850 hPa temperature reanalysis.'
+        reasoning: 'The reproduced comparison directly changes only the thermal-method operationalisation while retaining the bounded screening architecture.',
+        investigationNeeded: 'Field validation would be required to evaluate physical accuracy, which this pilot does not establish.'
       },
       {
-        category: 'Urban Morphology & Materials',
-        explanation: 'Low-albedo paving and lack of vegetative transpiration.',
-        evaluation: 'Plausible competing explanation',
-        reasoning: 'Mineral plazas absorb and store solar energy, elevating surface temperature regardless of human presence.',
-        investigationNeeded: 'Conduct on-site albedo spectrometry and thermal camera ground transects.'
-      },
-      {
-        category: 'Tourism Visitation Footfall',
-        explanation: 'Pedestrian metabolic heat emission as a candidate factor.',
-        evaluation: 'Requires field validation',
-        reasoning: 'Human metabolic heat is physically possible, but its local contribution has not been quantified with validated pedestrian-density and energy-balance observations in this prototype.',
-        investigationNeeded: 'Measure pedestrian density and construct a validated local energy balance before estimating any attributable contribution.'
+        category: 'Scenario Constraint Set',
+        explanation: 'Candidate-set outcomes depend on reach, opening, thermal, evidence, and improvement constraints.',
+        evaluation: 'Contextually supported hypothesis',
+        reasoning: 'The S8 no-survivor state disappears when the reach constraint is relaxed, showing that the result is constraint-contingent.',
+        investigationNeeded: 'Evaluate alternative constraint sets only in a new, explicitly authorised study rather than rewriting the locked pilot.'
       }
     ],
     confidence: {
-      level: 'Moderate',
+      level: 'High',
       justification: [
-        'Physical relationship between solar radiation and paved surface heating is grounded in established thermodynamics.',
-        'Confidence is marked Moderate because specific numerical indicators are currently derived from demonstration datasets requiring field validation.'
+        'Confidence is High in the computational reproduction of the published headline counts because the committed chain regenerated the locked tables and figure assertions.',
+        'This confidence does not extend to physical validation of modelled UTCI/Tmrt.'
       ],
-      marginOrInterval: 'Demonstration estimate: Anomaly magnitude subject to operational sensor calibration'
+      marginOrInterval: 'Reproduction matched locked numerical outputs; physical-validation uncertainty remains outside this claim.'
     },
     decisionImplication: {
       managerialConsiderations: [
-        'If on-site microclimate monitoring corroborates high thermal stress along unshaded corridors, temporary demountable shade interventions could be evaluated.',
-        'If elevated thermal stress forecasts persist, destination managers could prioritise pedestrian welfare advisory information (hydration, shaded transit corridors through Paseo del Prado and Retiro).',
-        'Scheduled shifts for guided outdoor walking tours toward early morning or twilight hours could be piloted as an exploratory adaptation.'
+        'Use HATI as a methodological case for eligibility-first decision support rather than as a live Madrid recommendation engine.',
+        'Keep thermal state, evidence sufficiency, and uncertainty separate when designing operational screening.',
+        'Preserve abstention / no-defensible-alternative as a legitimate output rather than forcing a recommendation.'
       ],
       cautionsAndGuardrails: [
-        'Do not alter long-term capital investment policy solely on the basis of demonstration data.',
-        'Do not confuse visitor density management with urban microclimate mitigation.'
+        'Do not deploy the locked pilot as an operational public-facing recommender without new validation and current data.',
+        'Do not treat reproduced model outputs as observed pedestrian comfort.'
       ],
       policyPerspective: [
-        'Integrate microclimatic shade requirements into urban public realm renovation guidelines.',
-        'Maintain clear institutional distinction between climate risk adaptation and tourism promotion.'
+        'The transferable contribution is the auditable decision architecture, not the literal 2023 candidate list.'
       ]
     },
     dataNeededNext: [
-      'Calibrated ground-truth black globe temperature and wet-bulb globe temperature (WBGT) measurements.',
-      'Continuous pedestrian tracking calibrated against local meteorological parameters over multiple seasons.',
-      'High-resolution airborne or UAV thermal radiometry during heatwave episodes.'
+      'Field validation of modelled thermal exposure if physical accuracy is to be claimed.',
+      'Current operational inputs if the method is ever adapted to live destination management.',
+      'Observed visitor behaviour only if behavioural claims are introduced in a separate study.'
     ],
     provenance: [
       {
-        sensorOrPlatform: 'Landsat-9 OLI-2 / TIRS-2 Surface Temperature (Illustrative Proxy)',
-        spatialResolution: '100m native thermal (resampled to 30m)',
-        temporalCoverage: 'Demonstration summer epoch',
-        processingLevel: 'Level 2 Surface Radiometry Proxy',
-        sourceAuthority: 'Earth Observation Data Reference',
-        isCalibratedProxy: true,
-        dataStatus: 'Demonstration'
+        sensorOrPlatform: 'HATI-Madrid locked screening tables + independent reproduction chain',
+        spatialResolution: '27 assets; outdoor decisions at asset × timestamp level',
+        temporalCoverage: '21 August 2023 · 12:00 / 15:00 / 18:00',
+        processingLevel: 'Reproduced from committed model outputs and open-data inputs',
+        sourceAuthority: 'HATI-Madrid RELEASE_LOCKED repository / reproduction report',
+        citationUrl: 'https://github.com/soroushkarahrodi79-oss/heat-adaptive-tourism-madrid',
+        isCalibratedProxy: false,
+        dataStatus: 'Reproduced'
       },
       {
-        sensorOrPlatform: 'AEMET Station Telemetry (Madrid Retiro #3195 Reference)',
-        spatialResolution: 'Point surface meteorological node',
-        temporalCoverage: 'Climatological baseline reference',
-        processingLevel: 'Quality Controlled Observation Reference',
-        sourceAuthority: 'Agencia Estatal de Meteorología (Reference)',
-        isCalibratedProxy: false,
-        dataStatus: 'Proxy'
+        sensorOrPlatform: 'SOLWEIG → Tmrt → UTCI thermal configuration',
+        spatialResolution: 'Model field sampled to asset buffers',
+        temporalCoverage: '21 August 2023',
+        processingLevel: 'Model-derived; not field validated',
+        sourceAuthority: 'HATI-Madrid locked publication layer',
+        citationUrl: 'https://doi.org/10.5281/zenodo.22707470',
+        isCalibratedProxy: true,
+        dataStatus: 'Model-derived'
       }
     ]
   },
 
-  // MADRID QUESTION 2: CAUSALITY TRAP TEST - Does footfall cause UHI?
+  // MADRID QUESTION 2: thermal-method sensitivity
   'madrid-hati-q2': {
     id: 'madrid-hati-q2',
     territoryId: 'madrid-hati',
-    question: 'Can high tourist density in Puerta del Sol be identified as the cause of urban heat island intensity?',
-    status: 'INSUFFICIENT_EVIDENCE',
-    statusHeadline: 'INSUFFICIENT EVIDENCE: Co-location Does Not Establish Direct Tourism Causality',
-    dataStatus: 'Demonstration',
+    question: 'Did changing the thermal method change tourism-feasibility classifications?',
+    status: 'REPRODUCED_RESULT',
+    statusHeadline: 'Reproduced Result: 14 of 42 Outdoor Classifications Changed Between Thermal Operationalisations',
+    dataStatus: 'Reproduced',
     signal: {
       observation:
-        'The demonstration fixture places high pedestrian activity and elevated surface temperature in the same central plaza during summer afternoons.',
-      spatialScope: 'Puerta del Sol pedestrian plaza area.',
-      temporalWindow: 'Demonstration afternoon sampling interval (13:00 – 17:00 CET).',
-      summary: 'The co-location is compatible with several shared spatial drivers. The current prototype does not estimate a causal contribution from visitor density.'
+        'Switching between the operational proxy and the SOLWEIG/UTCI configuration reclassified 14 of 42 outdoor asset-time observations: 9 with the physical configuration more restrictive and 5 less restrictive.',
+      spatialScope: HATI_EVIDENCE_SOURCE.studyArea,
+      temporalWindow: '21 August 2023 · 12:00 / 15:00 / 18:00.',
+      summary: 'Thermal-method divergence was time-concentrated rather than uniform across the study day.'
     },
     evidence: {
       supportingDatasets: [
-        'Demonstration footfall and surface-temperature fixtures are co-located in the same central civic plaza.',
-        'Urban material properties, solar exposure, sky-view geometry, and anthropogenic heat are plausible components of an urban energy balance.',
-        'No validated plaza-scale flux partition, matched low-footfall control period, or intervention study is loaded for this question.'
+        'Outdoor reclassification rate: 33.3% (14/42).',
+        'Direction: 9 physical-more-restrictive; 5 physical-less-restrictive.',
+        'Timestamp pattern: 12:00 = 64.3%, 15:00 = 0.0%, 18:00 = 35.7%.',
+        'All 42 physical-configuration outdoor observations fell into FEASIBLE WITH CONDITIONS in the locked categorical configuration.'
       ],
       metrics: [
-        { label: 'Spatial Association', value: 'CO-LOCATED', unit: 'status', baseline: 'Independent evidence needed', delta: 'Association only', trend: 'alert', isDemonstration: true },
-        { label: 'Causal Attribution', value: 'NOT ESTABLISHED', unit: 'status', baseline: 'Validated attribution design', delta: 'INSUFFICIENT EVIDENCE', trend: 'alert', isDemonstration: true },
-        { label: 'Energy Flux Partition', value: 'NOT ESTIMATED', unit: 'status', baseline: 'Measured flux components', delta: 'Validation required', trend: 'stable', isDemonstration: true },
-        { label: 'Data Status', value: 'DEMONSTRATION', unit: 'mode', baseline: 'Operational observations', delta: 'Illustrative fixture', trend: 'stable', isDemonstration: true }
+        { label: 'Reclassified', value: '14 / 42', unit: 'observations', baseline: 'Proxy vs physical', delta: '33.3%', trend: 'alert', isDemonstration: false },
+        { label: '12:00 Divergence', value: '64.3', unit: '%', baseline: '14 outdoor assets', delta: 'time-specific', trend: 'alert', isDemonstration: false },
+        { label: '15:00 Divergence', value: '0.0', unit: '%', baseline: '14 outdoor assets', delta: 'full categorical agreement', trend: 'stable', isDemonstration: false },
+        { label: '18:00 Divergence', value: '35.7', unit: '%', baseline: '14 outdoor assets', delta: 'time-specific', trend: 'alert', isDemonstration: false }
       ],
-      spatialCoordinates: '40.4168° N, 3.7038° W, Elevation 650m',
-      sampleSize: 'Demonstration microclimate and footfall fixtures; no query-specific causal sample.',
-      dataIntegrityNotes: 'DEMONSTRATION DATA: No attributable fraction, causal effect size, or significance test is computed for tourist density.'
+      spatialCoordinates: '14 outdoor assets within the Prado–Retiro–Atocha pilot.',
+      sampleSize: '42 outdoor asset × timestamp observations.',
+      dataIntegrityNotes:
+        'Headline values were recomputed from reproduced tables and matched the locked publication values.'
     },
     interpretation: {
       inferences: [
-        'High visitor volume and high surface temperature can co-occur because central plazas concentrate both people and solar-exposed mineral surfaces.',
-        'The current demonstration evidence is sufficient to flag a causal-attribution trap, not to quantify the contribution of tourism to urban heat.'
+        'The operational definition of heat changed categorical tourism-feasibility outputs in this pilot.',
+        'The direction of change was mixed, so the result does not support a simple claim that the physical method is systematically stricter or better.'
       ],
       plausibleMechanisms:
-        'Solar exposure, surface material properties, urban geometry, building heat rejection, and human activity are candidate components whose relative contributions require measurement.'
+        'The proxy combines ambient hazard bands with nearby tree-count exposure, whereas the physical path uses SOLWEIG-derived Tmrt and UTCI; their category mappings therefore respond differently across times and places.'
     },
     evidenceLimit: {
       strictlyForbiddenInferences: [
-        'CRITICAL ANTI-CAUSALITY RULE: DO NOT INFER THAT TOURIST PEDESTRIANS ARE THE CAUSE OF THE URBAN HEAT SIGNAL FROM CO-LOCATION ALONE.',
-        'DO NOT invent a percentage contribution for pedestrian metabolic heat.',
-        'DO NOT recommend visitor restrictions as an urban-cooling measure without validated attribution evidence.'
+        'DO NOT call the physical configuration more accurate or ground truth without field validation.',
+        'DO NOT describe reclassification as correction of proxy errors.',
+        'DO NOT claim richer categorical discrimination from the physical method in this locked configuration.'
       ],
       unobservedVariables: [
-        'Validated radiative, sensible, latent, storage, and anthropogenic heat-flux components at plaza scale.',
-        'Matched low-footfall control periods under comparable meteorological conditions.',
-        'Building HVAC heat rejection and material thermal properties.'
+        'In-situ thermal measurements for model validation.',
+        'Alternative category mappings or thresholds outside the locked design.'
       ],
-      spatialTemporalGaps: 'The demonstration fixture is not a controlled causal design and does not resolve relative heat-flux contributions.'
+      spatialTemporalGaps: 'Single pilot day and bounded central-Madrid study area.'
     },
     competingExplanations: [
       {
-        category: 'Solar Radiation & Surface Materials',
-        explanation: 'Solar exposure and thermal properties of mineral paving may contribute to elevated surface temperature.',
-        evaluation: 'Plausible competing explanation',
-        reasoning: 'This mechanism is physically plausible but is not quantitatively partitioned in the current demonstration fixture.',
-        investigationNeeded: 'Measure shortwave radiation, albedo, surface temperature, and storage heat flux under controlled conditions.'
-      },
-      {
-        category: 'Urban Geometry',
-        explanation: 'Sky-view factor and shade availability may shape local radiative loading.',
-        evaluation: 'Plausible competing explanation',
-        reasoning: 'Open plaza geometry can alter exposure, but its contribution has not been isolated in this prototype.',
-        investigationNeeded: 'Combine 3D urban geometry with measured radiative conditions.'
-      },
-      {
-        category: 'Building & Human Anthropogenic Heat',
-        explanation: 'HVAC rejection and pedestrian metabolic heat are candidate anthropogenic components.',
-        evaluation: 'Requires field validation',
-        reasoning: 'The current prototype does not contain validated flux measurements capable of separating these components.',
-        investigationNeeded: 'Measure building heat rejection, pedestrian density, and local flux components over matched periods.'
+        category: 'Category Mapping',
+        explanation: 'Part of the divergence reflects different end-to-end operationalisations, including how continuous thermal values are mapped to feasibility states.',
+        evaluation: 'Contextually supported hypothesis',
+        reasoning: 'All physical outdoor observations occupied one feasibility category while the proxy used three-state banding.',
+        investigationNeeded: 'Any alternative mapping would constitute a new study and should not be retrofitted into the locked release.'
       }
     ],
     confidence: {
-      level: 'Moderate',
+      level: 'High',
       justification: [
-        'Confidence is Moderate that co-location alone is insufficient for causal attribution; confidence in the relative contribution of specific heat sources remains Low without validated flux measurements.'
+        'The 14/42 count, direction split, and timestamp rates were independently recomputed from the reproduced tables.'
       ],
-      marginOrInterval: 'No causal effect or attributable heat share estimated'
+      marginOrInterval: 'Descriptive pilot result; no population inference.'
     },
     decisionImplication: {
       managerialConsiderations: [
-        'Do not use this demonstration association to justify visitor restrictions as an urban-cooling intervention.',
-        'If urban heat mitigation is being considered, validate the relevant physical drivers before selecting a management response.',
-        'Tourism-facing actions may focus on heat-risk communication and comfort only when supported by operational heat observations.'
+        'Treat thermal representation as an explicit design choice in decision-support systems.',
+        'Audit whether category mappings create decision changes before presenting a ranking or recommendation.'
       ],
       cautionsAndGuardrails: [
-        'Keep crowd-management objectives separate from urban-heat attribution unless evidence explicitly links them.',
-        'Do not communicate demonstration co-location as a quantified tourism contribution to urban heat.'
+        'Method sensitivity is not method superiority.',
+        'Do not generalise the timestamp pattern beyond this study day.'
       ],
       policyPerspective: [
-        'Use measured urban energy-balance evidence to distinguish climate adaptation, public-realm design, and visitor-management decisions.'
+        'Decision systems should document how environmental indicators become operational eligibility states.'
       ]
     },
     dataNeededNext: [
-      'Validated plaza-scale energy-balance observations covering radiative, storage, turbulent, and anthropogenic heat components.',
-      'Matched high- and low-footfall observation periods under comparable meteorological conditions.',
-      'Material albedo, surface temperature, shade, HVAC heat-rejection, and pedestrian-density measurements with documented provenance.'
+      'Field validation if comparing physical accuracy rather than decision sensitivity.',
+      'Replication on additional days / destinations before discussing generalisation.'
     ],
     provenance: [
       {
-        sensorOrPlatform: 'Tourism Intelligence Desk Causal-Guardrail Demonstration Fixture',
-        spatialResolution: 'Puerta del Sol plaza context',
-        temporalCoverage: 'Demonstration observation window',
-        processingLevel: 'Deterministic causal-boundary assessment',
-        sourceAuthority: 'Tourism Intelligence Desk Prototype',
+        sensorOrPlatform: 'Reproduced phase2_asset_thermal_exposure.csv',
+        spatialResolution: '14 outdoor assets × 3 timestamps',
+        temporalCoverage: '21 August 2023',
+        processingLevel: 'Reproduced descriptive comparison',
+        sourceAuthority: 'HATI-Madrid RELEASE_LOCKED',
+        citationUrl: 'https://github.com/soroushkarahrodi79-oss/heat-adaptive-tourism-madrid',
         isCalibratedProxy: false,
-        dataStatus: 'Demonstration'
+        dataStatus: 'Reproduced'
       }
     ]
   },
 
-  // MADRID QUESTION 3: Does heat cause displacement?
+  // MADRID QUESTION 3: screening consequence
   'madrid-hati-q3': {
     id: 'madrid-hati-q3',
     territoryId: 'madrid-hati',
-    question: 'Does high surface temperature prove tourists are avoiding this street?',
-    status: 'ASSOCIATION_ONLY',
-    statusHeadline: 'Observed Association: Thermal Exposure Coincides with Footfall Shifts, but Behavioral Causation Requires Validation',
-    dataStatus: 'Demonstration',
+    question: 'Did constraint-first screening change the candidate set versus the nearest-open baseline?',
+    status: 'REPRODUCED_RESULT',
+    statusHeadline: 'Reproduced Result: Candidate Set Changed in 7 of 8 Scenarios',
+    dataStatus: 'Reproduced',
     signal: {
       observation:
-        'In demonstration footfall monitoring, a drop in pedestrian counts along unshaded south-facing segments of Gran Vía coincides with afternoon peak surface temperatures, while counts in shaded arcades remain stable or increase.',
-      spatialScope: 'Gran Vía corridor transect (Plaza de España to Alcalá).',
-      temporalWindow: 'Demonstration high-temperature afternoon hours (>38°C ambient).',
-      summary: 'Observational data shows an association between high surface temperatures and reduced pedestrian presence on unshaded sidewalks.'
+        'Relative to a proximity-only nearest-open comparator, the constraint-first candidate set changed in 7 of 8 pre-registered scenarios.',
+      spatialScope: HATI_EVIDENCE_SOURCE.studyArea,
+      temporalWindow: 'Eight locked scenarios on 21 August 2023.',
+      summary:
+        'The screening architecture excluded the nearest-open baseline pick in 3 of 8 scenarios, removed 23 open in-radius options on thermal/evidence grounds, and preserved an explicit no-survivor state in S8.'
     },
     evidence: {
       supportingDatasets: [
-        'Demonstration optical footfall counts show lower volume on sunlit sidewalks during peak solar angles compared to morning baseline.',
-        'Pedestrian counts in shaded colonnades along Calle Mayor exhibit higher relative stability during the same time window.',
-        'Thermal camera transects confirm substantial surface temperature differentials between sun-exposed pavement and building shade.',
-        'Mobility proxies indicate simultaneous increases in indoor shopping and transit hub dwell time.'
+        '7/8 scenarios changed candidate set relative to nearest-open.',
+        '3/8 nearest-open picks were excluded; all three exclusions were OUTDOOR_EXPOSURE_TOO_HIGH under the locked rule chain.',
+        '23 open, in-radius candidates were removed by thermal/evidence gates across the scenarios.',
+        'S8 returned NO_DEFENSIBLE_ALTERNATIVE at 500 m reach; at 800 m two alternatives existed and at 1200 m seven existed.'
       ],
       metrics: [
-        { label: 'Unshaded Sidewalk Count Shift', value: '-34.2', unit: '%', baseline: 'Morning baseline', delta: 'Observed drop in demo data', trend: 'down', isDemonstration: true },
-        { label: 'Shaded Arcade Stability', value: '+14.5', unit: '%', baseline: 'Morning baseline', delta: 'Relative shift in demo data', trend: 'up', isDemonstration: true },
-        { label: 'Sun vs Shade Surface Delta', value: '~14', unit: '°C', baseline: 'Uniform target', delta: 'Microclimatic gradient', trend: 'alert', isDemonstration: true },
-        { label: 'Data Status', value: 'DEMONSTRATION', unit: 'mode', baseline: 'Demonstration data', delta: 'Illustrative proxy analysis', trend: 'stable', isDemonstration: true }
+        { label: 'Candidate Set Changed', value: '7 / 8', unit: 'scenarios', baseline: 'Nearest-open', delta: 'Constraint-first', trend: 'alert', isDemonstration: false },
+        { label: 'Baseline Pick Excluded', value: '3 / 8', unit: 'scenarios', baseline: 'Nearest-open pick', delta: 'Thermal gate', trend: 'alert', isDemonstration: false },
+        { label: 'Candidates Removed', value: '23', unit: 'open in-radius options', baseline: 'Before thermal/evidence gates', delta: 'Removed', trend: 'alert', isDemonstration: false },
+        { label: 'S8 Survivors @ 500 m', value: '0', unit: 'candidates', baseline: '500 m reach', delta: 'NO_DEFENSIBLE_ALTERNATIVE', trend: 'stable', isDemonstration: false }
       ],
-      spatialCoordinates: '40.4201° N, 3.7025° W, Elevation 662m',
-      sampleSize: 'Demonstration optical gate samples and simulated mobility logs.',
-      dataIntegrityNotes: 'DEMONSTRATION DATA: Illustrative values used to demonstrate the analytical workflow. Not an operational project result.'
+      spatialCoordinates: 'Eight source-specific scenarios across the bounded pilot.',
+      sampleSize: '8 pre-registered scenarios; 208 scenario-candidate rows in the reproduced table.',
+      dataIntegrityNotes:
+        'The result compares against a minimal proximity-only nearest-open baseline; it is not evidence of superiority over all heat-aware decision systems.'
     },
     interpretation: {
       inferences: [
-        'Pedestrian movement patterns correlate with microclimatic shade availability during extreme thermal conditions.',
-        'However, observing fewer pedestrians on an unshaded sidewalk does not establish that thermal stress alone explains the observed shift without controlling for daily commercial and dining schedules.'
+        'Ordered eligibility constraints can materially alter the candidate set relative to a nearest-open heuristic.',
+        'The architecture can abstain when no candidate satisfies the active constraints.',
+        'The no-survivor result is explicitly constraint-contingent rather than a claim that no alternative existed generally.'
       ],
       plausibleMechanisms:
-        'Pedestrians likely seek cooler routes (isothermal navigation) to avoid direct solar irradiance and radiant surface heat.'
+        'Opening, reach, thermal feasibility, evidence sufficiency, and improvement gates are evaluated before any ranking among survivors.'
     },
     evidenceLimit: {
       strictlyForbiddenInferences: [
-        'DO NOT conclude that total tourist spend or visitation has dropped based solely on sidewalk counts (activity may shift indoors or to evening hours).',
-        'DO NOT infer that all observed midday decreases are heat-induced without accounting for cultural lunch and retail operating schedules.',
-        'DO NOT assume tourists and residents exhibit identical thermal threshold responses.'
+        'DO NOT claim algorithmic superiority over other heat-aware systems from the 7/8 result.',
+        'DO NOT describe S8 as proof that no alternative existed in Madrid; it is conditional on the 500 m constraint set.',
+        'DO NOT treat the nearest-open comparator as a state-of-the-art competing system.'
       ],
       unobservedVariables: [
-        'Pedestrian demographic composition (age, acclimatization, tourist vs resident status).',
-        'Store receipt velocities and indoor retail footfall logs.'
+        'User preferences and behavioural response.',
+        'Alternative operational decision architectures not tested in the locked study.'
       ],
-      spatialTemporalGaps: 'Pedestrian sensor locations are concentrated on primary avenues; secondary alleyways lack continuous counting.'
+      spatialTemporalGaps: 'Eight designed scenarios on one study day.'
     },
     competingExplanations: [
       {
-        category: 'Microclimatic Thermal Avoidance',
-        explanation: 'Pedestrians actively avoid extreme solar irradiance and radiant heat.',
+        category: 'Constraint Definition',
+        explanation: 'Candidate-set differences are produced by the particular locked sequence and thresholds.',
         evaluation: 'Contextually supported hypothesis',
-        reasoning: 'Movement patterns align with the moving shadow edge created by building geometry.',
-        investigationNeeded: 'Conduct intercepted pedestrian surveys verifying route selection motives.'
-      },
-      {
-        category: 'Cultural & Commercial Schedules',
-        explanation: 'Traditional Spanish midday lunch, siesta, and store closing hours reduce pedestrian traffic.',
-        evaluation: 'Plausible secondary factor',
-        reasoning: 'Midday footfall drops occur even on temperate spring days, though the magnitude is more pronounced during extreme heat.',
-        investigationNeeded: 'Compare footfall curves between mild spring days and extreme summer days.'
-      },
-      {
-        category: 'Indoor Commercial Migration',
-        explanation: 'Visitors migrate inside air-conditioned museums, cafes, and shopping galleries.',
-        evaluation: 'Plausible secondary factor',
-        reasoning: 'Indoor mobility telemetry suggests dwell times increase in climate-controlled spaces during peak heat.',
-        investigationNeeded: 'Cross-reference with museum entry gate logs.'
+        reasoning: 'The architecture is intentionally constraint-first; changing thresholds or reach changes admissibility.',
+        investigationNeeded: 'Sensitivity to alternative operational constraints would require a new authorised analysis.'
       }
     ],
     confidence: {
-      level: 'Moderate',
+      level: 'High',
       justification: [
-        'The physical and behavioral plausibility of thermal avoidance is high, but distinguishing thermal avoidance from cultural activity schedules requires operational field verification.'
+        'Scenario outputs, baseline comparison, exclusion counts, and accessibility sensitivity were reproduced from committed inputs.'
       ],
-      marginOrInterval: 'Association supported; causal proportion remains uncalibrated'
+      marginOrInterval: 'Descriptive scenario result; comparator scope is deliberately narrow.'
     },
     decisionImplication: {
       managerialConsiderations: [
-        'If mobility surveys corroborate systematic thermal avoidance, "Cool Route" pedestrian wayfinding through shaded corridors could be piloted.',
-        'If extreme heatwave episodes are declared, extending evening operating hours for cultural attractions could be explored in consultation with venues.',
-        'If pedestrian thermal comfort along shopping axes is verified as a concern, destination teams could collaborate with merchant associations to evaluate exterior awning maintenance.'
+        'Separate candidate eligibility from ranking in any future operational implementation.',
+        'Record a machine-readable first-failing reason for each exclusion.',
+        'Allow an explicit no-defensible-alternative state when constraints eliminate all candidates.'
       ],
       cautionsAndGuardrails: [
-        'Do not assume retail failure based solely on midday street counts without reviewing evening and indoor sales data.',
-        'Do not implement drastic urban circulation changes without multi-season validation.'
+        'Do not force a least-bad recommendation simply because a ranking interface expects one.',
+        'State the comparator and constraint set whenever reporting screening consequences.'
       ],
       policyPerspective: [
-        'Incorporate pedestrian shade continuity into urban mobility planning guidelines.'
+        'Transparent abstention is a governance feature, not a system failure.'
       ]
     },
     dataNeededNext: [
-      'Paired indoor/outdoor pedestrian sensors to track migration between street corridors and air-conditioned venues.',
-      'Representative pedestrian intercept surveys to isolate thermal motivation from cultural scheduling.',
-      'Comparison against non-heatwave summer control days with identical commercial schedules.'
+      'Operational stakeholder requirements before translating the research architecture into a live system.',
+      'Current opening, access, and thermal inputs for any real-world deployment.'
     ],
     provenance: [
       {
-        sensorOrPlatform: 'Pedestrian Gate Telemetry Proxy & Microclimate Overlay',
-        spatialResolution: 'Gran Vía transect gates',
-        temporalCoverage: 'Demonstration summer observation',
-        processingLevel: 'Associational Flow Estimation',
-        sourceAuthority: 'Tourism Intelligence Desk Analytical Prototype',
-        isCalibratedProxy: true,
-        dataStatus: 'Demonstration'
+        sensorOrPlatform: 'Reproduced phase3_scenarios.csv + phase3_hati_vs_baseline.csv + accessibility sensitivity',
+        spatialResolution: 'Scenario-candidate level',
+        temporalCoverage: '21 August 2023 scenario set',
+        processingLevel: 'Reproduced constraint-first screening',
+        sourceAuthority: 'HATI-Madrid RELEASE_LOCKED',
+        citationUrl: 'https://github.com/soroushkarahrodi79-oss/heat-adaptive-tourism-madrid',
+        isCalibratedProxy: false,
+        dataStatus: 'Reproduced'
+      }
+    ]
+  },
+
+  // MADRID QUESTION 4: tested uncertainty
+  'madrid-hati-q4': {
+    id: 'madrid-hati-q4',
+    territoryId: 'madrid-hati',
+    question: 'How robust were the HATI decisions under the tested uncertainty?',
+    status: 'REPRODUCED_RESULT',
+    statusHeadline: 'Reproduced Result: 35 ROBUST, 6 BOUNDARY, 1 UNSTABLE Under the Tested Uncertainty Dimensions',
+    dataStatus: 'Reproduced',
+    signal: {
+      observation:
+        'Decision confidence across the 42 outdoor asset-time rows was 35 ROBUST, 6 BOUNDARY, and 1 UNSTABLE under the specific uncertainty dimensions tested in the locked pilot.',
+      spatialScope: '14 outdoor assets within the HATI pilot.',
+      temporalWindow: '21 August 2023 · three timestamps.',
+      summary:
+        'A satellite-derived irradiance realization changed 1 of 42 decisions; ±10% and ±20% irradiance perturbations changed none.'
+    },
+    evidence: {
+      supportingDatasets: [
+        'Decision-confidence table reproduced exactly at the structural/numeric level.',
+        'ROBUST / BOUNDARY / UNSTABLE = 35 / 6 / 1.',
+        '1/42 decision changed under the satellite-derived irradiance realization.',
+        'No decisions changed under the tested ±10% and ±20% irradiance perturbations.'
+      ],
+      metrics: [
+        { label: 'ROBUST', value: '35', unit: 'decisions', baseline: '42 outdoor rows', delta: 'tested dimensions only', trend: 'stable', isDemonstration: false },
+        { label: 'BOUNDARY', value: '6', unit: 'decisions', baseline: '42 outdoor rows', delta: 'near decision boundary', trend: 'alert', isDemonstration: false },
+        { label: 'UNSTABLE', value: '1', unit: 'decision', baseline: '42 outdoor rows', delta: 'A24 · 18:00', trend: 'alert', isDemonstration: false },
+        { label: 'Satellite Realization Changes', value: '1 / 42', unit: 'decisions', baseline: 'baseline realization', delta: '2.4%', trend: 'alert', isDemonstration: false }
+      ],
+      spatialCoordinates: 'Outdoor HATI assets across the bounded pilot.',
+      sampleSize: '42 outdoor asset × timestamp decisions.',
+      dataIntegrityNotes:
+        'ROBUST means stable under the tested uncertainty dimensions; it does not mean accurate, validated, or certain.'
+    },
+    interpretation: {
+      inferences: [
+        'Most categorical decisions were stable under the uncertainty dimensions actually tested.',
+        'At least one decision crossed the safety-critical boundary, demonstrating that uncertainty labels carry decision relevance.'
+      ],
+      plausibleMechanisms:
+        'Solar-forcing and targeted canopy-geometry perturbations shift model-derived UTCI values relative to locked decision thresholds.'
+    },
+    evidenceLimit: {
+      strictlyForbiddenInferences: [
+        'DO NOT translate ROBUST into validated or physically accurate.',
+        'DO NOT imply that all relevant uncertainty sources were tested.',
+        'DO NOT use the stability distribution as a probability of correctness.'
+      ],
+      unobservedVariables: [
+        'Field-measurement error because no field Tmrt/UTCI validation exists.',
+        'Unmodelled uncertainty sources outside the tested solar and targeted geometry perturbations.'
+      ],
+      spatialTemporalGaps: 'Uncertainty analysis is bounded to the locked realizations and single-day pilot.'
+    },
+    competingExplanations: [
+      {
+        category: 'Untested Model Error',
+        explanation: 'A decision can remain stable under tested perturbations while still being biased by untested model or input errors.',
+        evaluation: 'Requires field validation',
+        reasoning: 'Stability is not equivalent to external validity.',
+        investigationNeeded: 'Compare modelled thermal fields with calibrated in-situ measurements.'
+      }
+    ],
+    confidence: {
+      level: 'High',
+      justification: [
+        'The stability labels and sensitivity counts were reproduced from committed tables and figure assertions.'
+      ],
+      marginOrInterval: 'High confidence in the reproduced stability classification; no claim of physical validation.'
+    },
+    decisionImplication: {
+      managerialConsiderations: [
+        'Expose uncertainty state alongside thermal state rather than hiding it inside a score.',
+        'Treat BOUNDARY and UNSTABLE cases as candidates for additional evidence or abstention.'
+      ],
+      cautionsAndGuardrails: [
+        'Do not market ROBUST as certified accuracy.',
+        'Keep the phrase "tested uncertainty dimensions" attached to the result.'
+      ],
+      policyPerspective: [
+        'Decision-support interfaces should distinguish stability under perturbation from empirical validation.'
+      ]
+    },
+    dataNeededNext: [
+      'Calibrated field measurements for external validation.',
+      'Additional uncertainty dimensions if the method is operationalised beyond the locked pilot.'
+    ],
+    provenance: [
+      {
+        sensorOrPlatform: 'Reproduced phase2_2_decision_confidence.csv',
+        spatialResolution: 'Asset × timestamp',
+        temporalCoverage: '21 August 2023',
+        processingLevel: 'Reproduced uncertainty envelope and decision stability',
+        sourceAuthority: 'HATI-Madrid RELEASE_LOCKED',
+        citationUrl: 'https://github.com/soroushkarahrodi79-oss/heat-adaptive-tourism-madrid',
+        isCalibratedProxy: false,
+        dataStatus: 'Reproduced'
+      }
+    ]
+  },
+
+  // MADRID QUESTION 5: behavioral claim ceiling
+  'madrid-hati-q5': {
+    id: 'madrid-hati-q5',
+    territoryId: 'madrid-hati',
+    question: 'Did HATI prove that tourists changed their behavior because of heat?',
+    status: 'INSUFFICIENT_EVIDENCE',
+    statusHeadline: 'Evidence Ceiling: HATI Did Not Measure Tourist Behaviour, Redistribution, or Outcomes',
+    dataStatus: 'Reproduced',
+    signal: {
+      observation:
+        'The reproduced HATI pilot contains thermal-method, asset, screening, scenario, and uncertainty outputs. It does not contain observed tourist behaviour or route-choice outcomes.',
+      spatialScope: HATI_EVIDENCE_SOURCE.studyArea,
+      temporalWindow: 'Locked 21 August 2023 pilot.',
+      summary: 'Behavioural causation is outside the evidence collected by the study.'
+    },
+    evidence: {
+      supportingDatasets: [
+        'The canonical HATI status record explicitly states that no tourist behaviour, substitution, or outcome is measured or claimed.',
+        'The reproduction chain regenerates thermal and screening tables, not pedestrian tracking or visitor-response data.',
+        'The later pedestrian-route extension also ended in ABSTAIN / NO ROBUST DIFFERENCE and did not establish observed behavioural change.'
+      ],
+      metrics: [
+        { label: 'Observed Behaviour Data', value: 'NONE', unit: 'dataset', baseline: 'Required for behavioural claim', delta: 'Not measured', trend: 'alert', isDemonstration: false },
+        { label: 'Behavioural Causation', value: 'NOT ESTABLISHED', unit: 'status', baseline: 'Observed outcome design', delta: 'Outside claim ceiling', trend: 'alert', isDemonstration: false },
+        { label: 'Thermal / Screening Reproduction', value: 'PASS', unit: 'status', baseline: 'Locked tables', delta: 'Separate evidence domain', trend: 'stable', isDemonstration: false }
+      ],
+      spatialCoordinates: 'HATI pilot area.',
+      sampleSize: 'No behavioural sample exists in the locked pilot.',
+      dataIntegrityNotes:
+        'This is a verified evidence absence / claim-ceiling statement, not a claim that heat never affects tourist behaviour.'
+    },
+    interpretation: {
+      inferences: [
+        'HATI can support statements about decision sensitivity and screening outputs.',
+        'HATI cannot support statements that tourists avoided, selected, or changed routes because of heat.'
+      ],
+      plausibleMechanisms:
+        'Heat may influence behaviour in reality, but this project did not collect the observed behavioural evidence needed to test that mechanism.'
+    },
+    evidenceLimit: {
+      strictlyForbiddenInferences: [
+        'DO NOT claim that HATI observed tourists avoiding hot streets.',
+        'DO NOT claim that visitor flows were redistributed by the screening system.',
+        'DO NOT infer safety, health, spending, or satisfaction outcomes from modelled thermal exposure.'
+      ],
+      unobservedVariables: [
+        'Observed route choice.',
+        'Tourist/resident classification.',
+        'Stated motivation and thermal perception.',
+        'Counterfactual behaviour under comparable non-heat conditions.'
+      ],
+      spatialTemporalGaps: 'Behavioural outcomes were outside the locked pilot design.'
+    },
+    competingExplanations: [
+      {
+        category: 'Behavioural Response',
+        explanation: 'Heat-related avoidance is a plausible real-world mechanism but was not tested by HATI.',
+        evaluation: 'Requires field validation',
+        reasoning: 'Modelled thermal exposure and screened candidate eligibility are not behavioural observations.',
+        investigationNeeded: 'Collect consented mobility / intercept-survey data under a dedicated behavioural study design.'
+      }
+    ],
+    confidence: {
+      level: 'High',
+      justification: [
+        'Confidence is High in the evidence-ceiling statement because the canonical project status and locked research design explicitly exclude behavioural claims.'
+      ],
+      marginOrInterval: 'No behavioural effect estimate exists.'
+    },
+    decisionImplication: {
+      managerialConsiderations: [
+        'Use HATI to demonstrate evidence-aware screening architecture, not visitor-response prediction.',
+        'Commission a separate behavioural study before making claims about tourist adaptation to heat.'
+      ],
+      cautionsAndGuardrails: [
+        'Absence of behavioural evidence is not evidence of no behavioural effect.',
+        'Keep model-derived exposure, decision outputs, and observed human behaviour as separate evidence layers.'
+      ],
+      policyPerspective: [
+        'Operational tourism adaptation should distinguish model-based risk screening from verified visitor behaviour.'
+      ]
+    },
+    dataNeededNext: [
+      'Observed pedestrian route-choice or destination-choice data collected with appropriate privacy safeguards.',
+      'Matched meteorological / thermal exposure data.',
+      'A causal or quasi-experimental design capable of separating heat effects from time-of-day, opening-hours, and trip-purpose confounders.'
+    ],
+    provenance: [
+      {
+        sensorOrPlatform: 'HATI-Madrid PROJECT_STATUS.md claim ceiling + reproduced screening chain',
+        spatialResolution: 'Project-level evidence audit',
+        temporalCoverage: 'Locked publication layer',
+        processingLevel: 'Evidence-ceiling verification',
+        sourceAuthority: 'HATI-Madrid canonical status record',
+        citationUrl: 'https://github.com/soroushkarahrodi79-oss/heat-adaptive-tourism-madrid/blob/main/PROJECT_STATUS.md',
+        isCalibratedProxy: false,
+        dataStatus: 'Reproduced'
       }
     ]
   },

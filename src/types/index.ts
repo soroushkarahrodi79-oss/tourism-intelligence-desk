@@ -2,7 +2,7 @@ export type TerritoryId = 'madrid-hati' | 'guadarrama-snto';
 
 export type EvidenceConfidence = 'Low' | 'Moderate' | 'High';
 
-export type DataStatus = 'Demonstration' | 'Proxy' | 'Validated' | 'Observed';
+export type DataStatus = 'Demonstration' | 'Proxy' | 'Validated' | 'Observed' | 'Model-derived' | 'Reproduced';
 
 export interface DataProvenance {
   sensorOrPlatform: string;
@@ -47,7 +47,7 @@ export interface EvidenceAssessment {
   isCustomQuestion?: boolean;
   
   // Epistemic assessment status
-  status: 'OBSERVED_ANOMALY' | 'INSUFFICIENT_EVIDENCE' | 'CORRELATION_WARNING' | 'ASSOCIATION_ONLY';
+  status: 'OBSERVED_ANOMALY' | 'INSUFFICIENT_EVIDENCE' | 'CORRELATION_WARNING' | 'ASSOCIATION_ONLY' | 'REPRODUCED_RESULT' | 'MODEL_DERIVED_RESULT';
   statusHeadline: string;
   dataStatus: DataStatus;
   
@@ -118,6 +118,16 @@ export interface MonitoringStation {
   isDemonstrationStation?: boolean;
 }
 
+export interface ReferencePoint {
+  id: string;
+  name: string;
+  code: string;
+  lat: number;
+  lng: number;
+  kind: 'tourism_asset' | 'reference_site';
+  metadata: Record<string, string | number>;
+}
+
 export interface SpatialFeature {
   id: string;
   name: string;
@@ -151,4 +161,7 @@ export interface TerritoryCase {
   stations: MonitoringStation[];
   features: SpatialFeature[];
   sampleQuestions: string[];
+  dataStatus: DataStatus;
+  dataStatusNote: string;
+  referencePoints?: ReferencePoint[];
 }

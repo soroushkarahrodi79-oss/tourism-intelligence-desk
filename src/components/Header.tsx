@@ -59,7 +59,7 @@ export const Header: React.FC<HeaderProps> = ({
                   ? 'bg-zinc-800 text-zinc-100 shadow-sm border border-zinc-700/60'
                   : 'text-zinc-400 hover:text-zinc-200'
               }`}
-              title="HATI Madrid: Urban Heat & Pedestrian Exposure"
+              title="HATI Madrid: Thermal-Method Sensitivity & Opportunity Screening"
             >
               <MapPin className="w-3.5 h-3.5 text-amber-400" />
               <span>Madrid (HATI)</span>

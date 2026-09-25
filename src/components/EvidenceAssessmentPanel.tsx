@@ -51,8 +51,12 @@ export const EvidenceAssessmentPanel: React.FC<EvidenceAssessmentPanelProps> = (
           <div className="space-y-1.5 max-w-xl">
             <div className="flex flex-wrap items-center gap-2 text-xs font-mono">
               <span className="text-zinc-400">DATA STATUS:</span>
-              <span className="px-2 py-0.5 rounded bg-zinc-800 border border-zinc-700 text-amber-300 font-semibold text-[11px]">
-                {assessment.dataStatus.toUpperCase()} DATA
+              <span className={`px-2 py-0.5 rounded bg-zinc-800 border border-zinc-700 font-semibold text-[11px] ${
+                assessment.dataStatus === 'Reproduced' || assessment.dataStatus === 'Model-derived'
+                  ? 'text-emerald-300'
+                  : 'text-amber-300'
+              }`}>
+                {assessment.dataStatus.toUpperCase()}
               </span>
               <span className="text-zinc-600">·</span>
               <span className="text-zinc-400">ID: {assessment.id}</span>
