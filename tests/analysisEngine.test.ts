@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { evaluateAnalyticalQuestion } from '../src/services/analysisEngine';
+import { HATI_REFERENCE_ASSETS } from '../src/data/hatiEvidence';
 
 function dump(value: unknown): string {
   return JSON.stringify(value);
@@ -75,16 +76,64 @@ test('immediate policy requests are deferred when only demonstration evidence is
 });
 
 
-test('Madrid heat causality fixture does not invent attributable heat shares', () => {
+test('HATI headline assessment exposes reproduced locked-pilot evidence', () => {
   const result = evaluateAnalyticalQuestion(
     'madrid-hati',
-    'Can high tourist density in Puerta del Sol be identified as the cause of urban heat island intensity?'
+    'What did the HATI-Madrid pilot actually demonstrate?'
+  );
+  const serialized = dump(result);
+
+  assert.equal(result.status, 'REPRODUCED_RESULT');
+  assert.equal(result.dataStatus, 'Reproduced');
+  assert.match(serialized, /14 \/ 42/);
+  assert.match(serialized, /7 \/ 8/);
+  assert.match(serialized, /all 10 regenerated tables matched/i);
+  assert.match(serialized, /not field-validate/i);
+});
+
+test('HATI thermal-method sensitivity is reported without superiority claims', () => {
+  const result = evaluateAnalyticalQuestion(
+    'madrid-hati',
+    'Did changing the thermal method change tourism-feasibility classifications?'
+  );
+  const serialized = dump(result);
+
+  assert.equal(result.status, 'REPRODUCED_RESULT');
+  assert.match(serialized, /14 of 42|14 \/ 42/i);
+  assert.match(serialized, /9.*more restrictive/i);
+  assert.match(serialized, /5.*less restrictive/i);
+  assert.doesNotMatch(serialized, /physical method is more accurate/i);
+  assert.doesNotMatch(serialized, /corrected proxy errors/i);
+});
+
+test('HATI behavior question respects the published claim ceiling', () => {
+  const result = evaluateAnalyticalQuestion(
+    'madrid-hati',
+    'Did HATI prove that tourists changed their behavior because of heat?'
   );
   const serialized = dump(result);
 
   assert.equal(result.status, 'INSUFFICIENT_EVIDENCE');
-  assert.match(serialized, /Causal Attribution.*NOT ESTABLISHED/i);
-  assert.match(serialized, /Energy Flux Partition.*NOT ESTIMATED/i);
-  assert.doesNotMatch(serialized, /less than 6%|over 90%|<60|>900/i);
-  assert.doesNotMatch(serialized, /rules out human body warmth/i);
+  assert.equal(result.dataStatus, 'Reproduced');
+  assert.match(serialized, /Did Not Measure Tourist Behaviour|does not contain observed tourist behaviour/i);
+  assert.match(serialized, /Observed Behaviour Data.*NONE/i);
+  assert.doesNotMatch(serialized, /tourists avoided hot streets/i);
+});
+
+test('HATI map snapshot contains the 27 published study assets', () => {
+  assert.equal(HATI_REFERENCE_ASSETS.length, 27);
+  assert.equal(new Set(HATI_REFERENCE_ASSETS.map((asset) => asset.code)).size, 27);
+});
+
+test('immediate HATI policy requests distinguish reproduction from operational validation', () => {
+  const result = evaluateAnalyticalQuestion(
+    'madrid-hati',
+    'Should we change policy immediately?'
+  );
+  const serialized = dump(result);
+
+  assert.equal(result.status, 'INSUFFICIENT_EVIDENCE');
+  assert.equal(result.dataStatus, 'Reproduced');
+  assert.match(serialized, /computational reproducibility does not convert/i);
+  assert.match(serialized, /single-day|2023/i);
 });
