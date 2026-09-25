@@ -47,7 +47,7 @@ export interface EvidenceAssessment {
   isCustomQuestion?: boolean;
   
   // Epistemic assessment status
-  status: 'OBSERVED_ANOMALY' | 'INSUFFICIENT_EVIDENCE' | 'CORRELATION_WARNING' | 'ASSOCIATION_ONLY' | 'REPRODUCED_RESULT' | 'MODEL_DERIVED_RESULT';
+  status: 'OBSERVED_ANOMALY' | 'INSUFFICIENT_EVIDENCE' | 'CORRELATION_WARNING' | 'ASSOCIATION_ONLY' | 'REPRODUCED_RESULT' | 'DERIVED_RESULT' | 'MODEL_DERIVED_RESULT';
   statusHeadline: string;
   dataStatus: DataStatus;
   
