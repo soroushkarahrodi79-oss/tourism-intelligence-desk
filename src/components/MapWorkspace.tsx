@@ -180,7 +180,37 @@ export const MapWorkspace: React.FC<MapWorkspaceProps> = ({
       });
     }
 
-    // 2. Render In-Situ Stations (Markers)
+    // 2. Render published/reference points (for evidence cases such as HATI).
+    if (showStations && territory.referencePoints) {
+      territory.referencePoints.forEach((point) => {
+        const marker = L.circleMarker([point.lat, point.lng], {
+          radius: 5,
+          color: '#f59e0b',
+          weight: 1.5,
+          opacity: 0.95,
+          fillColor: '#18181b',
+          fillOpacity: 0.9
+        });
+
+        const metadata = Object.entries(point.metadata)
+          .map(([key, value]) => `<div><span class="text-zinc-400">${key}:</span> <span class="text-zinc-200">${value}</span></div>`)
+          .join('');
+
+        marker.bindTooltip(
+          `<div class="text-xs font-sans min-w-[180px]">
+            <div class="font-semibold text-zinc-100">${point.name}</div>
+            <div class="text-[11px] font-mono text-zinc-400">${point.code}</div>
+            <div class="mt-1.5 border-t border-zinc-800 pt-1.5 text-[10px] font-mono">${metadata}</div>
+            <div class="mt-1.5 text-[10px] text-emerald-300 font-mono">LOCKED PILOT REFERENCE ASSET</div>
+          </div>`,
+          { className: 'leaflet-tooltip-dark', sticky: true }
+        );
+
+        featureGroupRef.current?.addLayer(marker);
+      });
+    }
+
+    // 3. Render In-Situ Stations (Markers)
     if (showStations && territory.stations) {
       territory.stations.forEach((station) => {
         const isSelected = selectedStation?.id === station.id;
@@ -284,34 +314,40 @@ export const MapWorkspace: React.FC<MapWorkspaceProps> = ({
 
         {/* Layer Toggles */}
         <div className="flex items-center p-0.5 bg-zinc-900/95 backdrop-blur-sm border border-zinc-800 rounded-md text-xs">
-          <button
-            onClick={() => setShowSpatialFeatures(!showSpatialFeatures)}
-            className={`px-2 py-1 rounded font-medium transition-colors flex items-center gap-1.5 ${
-              showSpatialFeatures ? 'bg-zinc-800 text-zinc-200' : 'text-zinc-500 line-through'
-            }`}
-            title="Toggle Earth Observation Zonal Layers"
-          >
-            <Layers className="w-3.5 h-3.5" />
-            <span>{territory.id === 'madrid-hati' ? 'Thermal Anomaly Zone' : 'NDVI Buffer Zone'}</span>
-          </button>
+          {territory.features.length > 0 && (
+            <button
+              onClick={() => setShowSpatialFeatures(!showSpatialFeatures)}
+              className={`px-2 py-1 rounded font-medium transition-colors flex items-center gap-1.5 ${
+                showSpatialFeatures ? 'bg-zinc-800 text-zinc-200' : 'text-zinc-500 line-through'
+              }`}
+              title="Toggle Earth Observation Zonal Layers"
+            >
+              <Layers className="w-3.5 h-3.5" />
+              <span>NDVI Buffer Zone</span>
+            </button>
+          )}
           <button
             onClick={() => setShowStations(!showStations)}
             className={`px-2 py-1 rounded font-medium transition-colors flex items-center gap-1.5 ${
               showStations ? 'bg-zinc-800 text-zinc-200' : 'text-zinc-500 line-through'
             }`}
-            title="Toggle Sampling Locations"
+            title={territory.referencePoints?.length ? 'Toggle locked pilot study assets' : 'Toggle Sampling Locations'}
           >
             <Crosshair className="w-3.5 h-3.5" />
-            <span>Sampling Nodes ({territory.stations.length})</span>
+            <span>
+              {territory.referencePoints?.length
+                ? `Study Assets (${territory.referencePoints.length})`
+                : `Sampling Nodes (${territory.stations.length})`}
+            </span>
           </button>
         </div>
       </div>
 
-      {/* Top Right: Demonstration Label */}
+      {/* Top Right: Spatial evidence label */}
       <div className="absolute top-3 right-3 z-[400]">
         <div className="px-2.5 py-1 rounded bg-zinc-900/95 backdrop-blur-sm border border-zinc-700/80 text-[11px] font-mono text-zinc-300 flex items-center gap-1.5">
-          <span className="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
-          <span>DEMONSTRATION GEOMETRY</span>
+          <span className={`w-1.5 h-1.5 rounded-full ${territory.referencePoints?.length ? 'bg-emerald-400' : 'bg-amber-400'}`}></span>
+          <span>{territory.referencePoints?.length ? 'LOCKED PILOT ASSET LOCATIONS' : 'DEMONSTRATION GEOMETRY'}</span>
         </div>
       </div>
 
@@ -349,17 +385,11 @@ export const MapWorkspace: React.FC<MapWorkspaceProps> = ({
 
         {/* Legend */}
         <div className="flex items-center gap-4 text-[11px] font-mono">
-          {territory.id === 'madrid-hati' ? (
-            <>
-              <div className="flex items-center gap-1.5">
-                <span className="w-2.5 h-2.5 rounded-sm bg-red-600/70 inline-block border border-red-500"></span>
-                <span className="text-zinc-400">Surface Heat Zone</span>
-              </div>
-              <div className="flex items-center gap-1.5">
-                <span className="w-2.5 h-2.5 rounded-sm bg-emerald-600/70 inline-block border border-emerald-500"></span>
-                <span className="text-zinc-400">Canopy Cool Refuge</span>
-              </div>
-            </>
+          {territory.referencePoints?.length ? (
+            <div className="flex items-center gap-1.5">
+              <span className="w-2.5 h-2.5 rounded-full bg-zinc-900 inline-block border border-amber-400"></span>
+              <span className="text-zinc-400">Published HATI Study Asset</span>
+            </div>
           ) : (
             <>
               <div className="flex items-center gap-1.5">
@@ -370,12 +400,12 @@ export const MapWorkspace: React.FC<MapWorkspaceProps> = ({
                 <span className="w-2.5 h-2.5 rounded-sm bg-lime-600/70 inline-block border border-lime-500"></span>
                 <span className="text-zinc-400">Subalpine Scrub Zone</span>
               </div>
+              <div className="flex items-center gap-1.5">
+                <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 inline-block border border-white"></span>
+                <span className="text-zinc-400">Sampling Node</span>
+              </div>
             </>
           )}
-          <div className="flex items-center gap-1.5">
-            <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 inline-block border border-white"></span>
-            <span className="text-zinc-400">Sampling Node</span>
-          </div>
         </div>
       </div>
 
