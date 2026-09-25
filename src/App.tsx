@@ -468,7 +468,7 @@ export default function App() {
               <span className="text-zinc-400">Evidence → Decision → Action</span>
             </div>
             <div className="text-[11px] text-zinc-400 mt-1">
-              Decision-support interface for destination management organisations, tourism analysts, sustainability teams, and researchers.
+              Public research-engineering prototype for destination analysts, geospatial teams, sustainability practitioners, and researchers.
             </div>
           </div>
 
