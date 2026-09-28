@@ -178,6 +178,25 @@ export default function App() {
                 selectedFeature={selectedFeature}
                 onSelectFeature={setSelectedFeature}
               />
+
+              {/* Always-visible epistemic safeguard — the causal boundary must
+                  never be hidden behind disclosure. Calm, secondary, not an alert. */}
+              <div className="flex items-start gap-2.5 rounded-lg border border-data/20 bg-data-soft/40 px-3.5 py-2.5">
+                <ShieldCheck className="w-4 h-4 text-data shrink-0 mt-0.5" />
+                <p className="text-xs text-ink-soft leading-relaxed">
+                  <span className="font-semibold text-ink">
+                    Observed spatial or environmental association ≠ demonstrated tourism causality.
+                  </span>{' '}
+                  Competing explanations — meteorology, drought, phenology, land management and sensor
+                  effects — are screened before any causal claim.{' '}
+                  <button
+                    onClick={() => setIsMethodologyOpen(true)}
+                    className="font-medium text-data hover:text-data-strong underline-offset-2 hover:underline"
+                  >
+                    Read the epistemic charter
+                  </button>
+                </p>
+              </div>
             </div>
 
             {/* Analytical question */}
@@ -215,7 +234,7 @@ export default function App() {
               <summary className="flex items-center justify-between gap-3 px-4 sm:px-5 py-3.5 cursor-pointer list-none">
                 <span className="flex items-center gap-2 text-sm font-semibold text-ink">
                   <GitCommitHorizontal className="w-4 h-4 text-data" />
-                  Evidence sources, provenance &amp; safeguards
+                  Evidence sources, provenance &amp; audit
                 </span>
                 <ChevronRight className="w-4 h-4 text-muted transition-transform group-open:rotate-90" />
               </summary>
@@ -309,26 +328,6 @@ export default function App() {
                       <ExternalLink className="w-3 h-3" />
                     </a>
                   </div>
-                </div>
-
-                {/* Anti-causality safeguard */}
-                <div className="border-t border-hairline pt-5">
-                  <div className="flex items-center gap-2 mb-1.5">
-                    <ShieldCheck className="w-4 h-4 text-brand" />
-                    <h4 className="text-xs font-semibold text-ink">Anti-causality rule active</h4>
-                  </div>
-                  <p className="text-xs text-muted leading-relaxed">
-                    Correlation is never converted into causation. Environmental changes (such as NDVI
-                    decline or urban heat) consider all competing hypotheses: meteorology, drought,
-                    phenology, wildfire, land management, and sensor effects.
-                  </p>
-                  <button
-                    onClick={() => setIsMethodologyOpen(true)}
-                    className="mt-2 inline-flex items-center gap-1 text-xs font-medium text-brand hover:text-brand-strong"
-                  >
-                    <span>Read epistemic charter</span>
-                    <ChevronRight className="w-3.5 h-3.5" />
-                  </button>
                 </div>
               </div>
             </details>
