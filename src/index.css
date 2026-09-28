@@ -1,53 +1,196 @@
 @import "tailwindcss";
 @import "leaflet/dist/leaflet.css";
 
+/* =============================================================================
+   TOURISM INTELLIGENCE DESK — GEOSPATIAL RESEARCH STUDIO VISUAL SYSTEM
+   A light editorial/research interface with dark spatial (map) modules.
+   Colour tokens carry stable meaning:
+     brand   → intelligence / identity      (teal)
+     hati    → thermal case                 (amber)
+     snto    → environmental monitoring     (forest)
+     data    → evidence / provenance        (blue)
+     spatial → dark map environment         (charcoal)
+     danger  → real warning / error only    (red)
+   ========================================================================== */
+
+@theme {
+  /* Editorial neutrals */
+  --color-canvas: #f5f7f4;
+  --color-surface: #ffffff;
+  --color-surface-sunken: #eef2ef;
+  --color-ink: #17201f;
+  --color-ink-soft: #2f3b38;
+  --color-muted: #66736f;
+  --color-faint: #8b958f;
+  --color-hairline: #dce4e0;
+  --color-hairline-strong: #c8d2cd;
+
+  /* Semantic identity colours */
+  --color-brand: #0f766e;
+  --color-brand-strong: #0b5c55;
+  --color-brand-soft: #e2efed;
+
+  --color-hati: #a65b0b;
+  --color-hati-strong: #874a08;
+  --color-hati-soft: #f6ecdc;
+
+  --color-snto: #087f5b;
+  --color-snto-strong: #066a4c;
+  --color-snto-soft: #e0f0e9;
+
+  --color-data: #3b67d4;
+  --color-data-strong: #2f53ad;
+  --color-data-soft: #e6ecfb;
+
+  --color-spatial: #0e171a;
+  --color-spatial-soft: #16232739;
+
+  --color-danger: #b42318;
+  --color-danger-soft: #fbeae8;
+
+  /* Typography */
+  --font-sans: "Manrope", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", monospace;
+
+  /* Elevation */
+  --shadow-card: 0 1px 2px rgba(23, 32, 31, 0.04), 0 1px 3px rgba(23, 32, 31, 0.06);
+  --shadow-lift: 0 8px 24px -8px rgba(23, 32, 31, 0.16);
+}
+
 @layer base {
-  body {
-    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  html {
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
   }
-  
-  code, pre, .font-mono {
-    font-family: 'JetBrains Mono', monospace;
+
+  body {
+    font-family: var(--font-sans);
+    background-color: var(--color-canvas);
+    color: var(--color-ink);
+    letter-spacing: -0.006em;
+  }
+
+  code,
+  pre,
+  .font-mono {
+    font-family: var(--font-mono);
+    font-feature-settings: "tnum" 1;
+  }
+
+  h1,
+  h2,
+  h3 {
+    letter-spacing: -0.02em;
+  }
+
+  /* Visible, calm keyboard focus everywhere */
+  :focus-visible {
+    outline: 2px solid var(--color-brand);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  ::selection {
+    background: color-mix(in srgb, var(--color-brand) 18%, transparent);
+    color: var(--color-brand-strong);
   }
 }
 
-/* Custom leaflet map adjustments for dark research interface */
+@layer components {
+  /* A card only where a real conceptual object exists. */
+  .studio-card {
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-hairline);
+    border-radius: 14px;
+    box-shadow: var(--shadow-card);
+  }
+
+  /* Small technical metadata label (mono, sentence-case, quiet). */
+  .meta-label {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.01em;
+    color: var(--color-muted);
+  }
+
+  /* Section eyebrow — sans, not uppercase-shouty. */
+  .eyebrow {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    color: var(--color-muted);
+  }
+}
+
+/* =============================================================================
+   SPATIAL (MAP) MODULE — deliberate dark canvas inside the light interface
+   ========================================================================== */
 .leaflet-container {
-  background: #09090b !important;
-  font-family: inherit;
+  background: var(--color-spatial) !important;
+  font-family: var(--font-sans);
 }
 
 .leaflet-control-zoom {
-  border: 1px solid #27272a !important;
-  box-shadow: none !important;
-  border-radius: 6px !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35) !important;
+  border-radius: 8px !important;
   overflow: hidden;
 }
 
 .leaflet-control-zoom a {
-  background-color: #18181b !important;
-  color: #e4e4e7 !important;
-  border-bottom: 1px solid #27272a !important;
+  background-color: #16232788 !important;
+  backdrop-filter: blur(4px);
+  color: #eef2ef !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12) !important;
 }
 
 .leaflet-control-zoom a:hover {
-  background-color: #27272a !important;
-  color: #fafafa !important;
+  background-color: #1e2f34 !important;
+  color: #ffffff !important;
 }
 
-.leaflet-popup-content-wrapper {
-  background: #18181b !important;
-  color: #f4f4f5 !important;
-  border: 1px solid #27272a !important;
-  border-radius: 8px !important;
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5) !important;
+.leaflet-popup-content-wrapper,
+.leaflet-tooltip.leaflet-tooltip-dark {
+  background: #16232f !important;
+  color: #eef2ef !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  border-radius: 10px !important;
+  box-shadow: 0 12px 28px -8px rgba(0, 0, 0, 0.55) !important;
+}
+
+.leaflet-tooltip.leaflet-tooltip-dark::before {
+  border-top-color: #16232f !important;
+  border-bottom-color: #16232f !important;
 }
 
 .leaflet-popup-tip {
-  background: #18181b !important;
+  background: #16232f !important;
 }
 
-/* Custom print styles for Decision Brief */
+.leaflet-container a.leaflet-popup-close-button {
+  color: #94a3a0 !important;
+}
+
+.leaflet-control-attribution {
+  background: rgba(14, 23, 26, 0.72) !important;
+  color: #94a3a0 !important;
+}
+
+.leaflet-control-attribution a {
+  color: #cbd5d1 !important;
+}
+
+/* Subtle geographic signature: a faint contour/grid motif for hero surfaces. */
+.studio-grid-motif {
+  background-image:
+    linear-gradient(to right, rgba(15, 118, 110, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(15, 118, 110, 0.04) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+/* =============================================================================
+   PRINT — Decision Brief keeps its dedicated light print treatment
+   ========================================================================== */
 @media print {
   body {
     background: #ffffff !important;

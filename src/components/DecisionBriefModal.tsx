@@ -135,30 +135,30 @@ ${assessment.provenance.map((p) => `- ${p.sensorOrPlatform} | Authority: ${p.sou
     window.print();
   };
 
+  const sectionLabel = 'text-xs font-semibold text-muted uppercase tracking-wide';
+
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-black/80 backdrop-blur-sm flex justify-center p-3 sm:p-6 lg:p-8 animate-in fade-in duration-200">
-      <div className="relative w-full max-w-4xl bg-zinc-950 border border-zinc-700 rounded-xl shadow-2xl overflow-hidden flex flex-col my-auto text-zinc-100">
-        {/* Modal Top Actions Toolbar (Hidden on print) */}
-        <div className="no-print bg-zinc-900 border-b border-zinc-800 px-5 py-3 flex items-center justify-between">
+    <div className="fixed inset-0 z-50 overflow-y-auto bg-ink/40 backdrop-blur-sm flex justify-center p-3 sm:p-6 lg:p-8">
+      <div className="relative w-full max-w-4xl studio-card shadow-[var(--shadow-lift)] overflow-hidden flex flex-col my-auto">
+        {/* Toolbar (hidden on print) */}
+        <div className="no-print bg-surface-sunken border-b border-hairline px-5 py-3 flex items-center justify-between gap-3">
           <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
-            <span className="text-xs font-mono font-semibold uppercase tracking-wider text-zinc-300">
-              Decision Support Brief Generator
-            </span>
+            <span className="w-2 h-2 rounded-full bg-brand" />
+            <span className="text-sm font-semibold text-ink">Decision support brief</span>
           </div>
 
           <div className="flex items-center gap-2">
             <button
               onClick={handleCopy}
-              className="px-2.5 py-1.5 rounded bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-xs font-medium flex items-center gap-1.5 transition-colors cursor-pointer"
-              title="Copy Brief in Markdown"
+              className="inline-flex items-center gap-1.5 rounded-md border border-hairline bg-surface px-2.5 py-1.5 text-xs font-medium text-ink-soft hover:border-hairline-strong transition-colors"
+              title="Copy brief in Markdown"
             >
-              {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+              {copied ? <Check className="w-3.5 h-3.5 text-brand" /> : <Copy className="w-3.5 h-3.5" />}
               <span>{copied ? 'Copied' : 'Copy MD'}</span>
             </button>
             <button
               onClick={handleDownload}
-              className="px-2.5 py-1.5 rounded bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-xs font-medium flex items-center gap-1.5 transition-colors cursor-pointer"
+              className="inline-flex items-center gap-1.5 rounded-md border border-hairline bg-surface px-2.5 py-1.5 text-xs font-medium text-ink-soft hover:border-hairline-strong transition-colors"
               title="Download JSON"
             >
               <Download className="w-3.5 h-3.5" />
@@ -166,257 +166,228 @@ ${assessment.provenance.map((p) => `- ${p.sensorOrPlatform} | Authority: ${p.sou
             </button>
             <button
               onClick={handlePrint}
-              className="px-3 py-1.5 rounded bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-medium flex items-center gap-1.5 transition-colors cursor-pointer"
-              title="Print or Save PDF"
+              className="inline-flex items-center gap-1.5 rounded-md bg-brand px-3 py-1.5 text-xs font-semibold text-white hover:bg-brand-strong transition-colors"
+              title="Print or save PDF"
             >
               <Printer className="w-3.5 h-3.5" />
               <span>Print / PDF</span>
             </button>
             <button
               onClick={onClose}
-              className="p-1.5 rounded text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800 transition-colors cursor-pointer ml-1"
+              className="p-1.5 rounded-md text-muted hover:text-ink hover:bg-surface transition-colors ml-1"
+              aria-label="Close"
             >
               <X className="w-5 h-5" />
             </button>
           </div>
         </div>
 
-        {/* Printable Document Content */}
-        <div className="p-6 sm:p-10 space-y-6 bg-zinc-950 text-zinc-100 print:text-black print:bg-white text-left font-sans overflow-y-auto max-h-[80vh]">
-          {/* Demonstration Watermark Banner */}
+        {/* Printable document */}
+        <div className="p-6 sm:p-10 space-y-6 bg-surface text-ink text-left overflow-y-auto max-h-[80vh]">
+          {/* Status banners */}
           {isDemo && (
-            <div className="p-3 rounded bg-zinc-900 border border-zinc-700 text-xs flex items-center justify-between font-mono">
-              <div className="flex items-center gap-2 text-amber-400 font-semibold">
+            <div className="flex items-center justify-between gap-3 rounded-lg bg-hati-soft border border-hati/25 p-3 text-xs">
+              <div className="flex items-center gap-2 text-hati-strong font-semibold">
                 <AlertTriangle className="w-4 h-4 shrink-0" />
-                <span>DEMONSTRATION BRIEF — NOT FOR OPERATIONAL DECISION-MAKING</span>
+                <span>Demonstration brief — not for operational decision-making</span>
               </div>
-              <span className="text-zinc-400 hidden sm:inline">DATA STATUS: DEMONSTRATION / PROXY</span>
+              <span className="text-hati-strong/80 hidden sm:inline font-mono">Data status: {assessment.dataStatus}</span>
             </div>
           )}
 
           {isResearchSnapshot && (
-            <div className="p-3 rounded bg-zinc-900 border border-emerald-800/60 text-xs flex items-center justify-between font-mono">
-              <div className="flex items-center gap-2 text-emerald-300 font-semibold">
+            <div className="flex items-center justify-between gap-3 rounded-lg bg-brand-soft border border-brand/20 p-3 text-xs">
+              <div className="flex items-center gap-2 text-brand-strong font-semibold">
                 <Check className="w-4 h-4 shrink-0" />
                 <span>
                   {isReproduced
-                    ? 'REPRODUCED RESEARCH BRIEF — NOT CURRENT OPERATIONAL EVIDENCE'
-                    : 'REAL / DERIVED RESEARCH EVIDENCE — CLAIM LIMITS APPLY'}
+                    ? 'Reproduced research brief — not current operational evidence'
+                    : 'Real / derived research evidence — claim limits apply'}
                 </span>
               </div>
-              <span className="text-zinc-400 hidden sm:inline">
+              <span className="text-brand-strong/75 hidden sm:inline font-mono">
                 {isReproduced
-                  ? 'MODEL OUTPUTS REMAIN SUBJECT TO THEIR EVIDENCE CEILING'
-                  : 'ENVIRONMENTAL SIGNAL ≠ TOURISM IMPACT OR FIELD VALIDATION'}
+                  ? 'Model outputs remain subject to their evidence ceiling'
+                  : 'Environmental signal ≠ tourism impact'}
               </span>
             </div>
           )}
-          {/* Header Block */}
-          <div className="border-b border-zinc-800 print:border-black pb-5">
-            <div className="text-xs font-mono text-zinc-400 print:text-zinc-600 mb-2">
-              TOURISM INTELLIGENCE DESK · DECISION SUPPORT SYSTEM
-            </div>
 
-            <h1 className="text-xl sm:text-2xl font-semibold tracking-tight text-zinc-100 print:text-black">
-              Territorial Decision Support Brief
+          {/* Header */}
+          <div className="border-b border-hairline pb-5">
+            <div className="meta-label mb-2">Tourism Intelligence Desk · Decision support system</div>
+            <h1 className="text-2xl font-bold tracking-tight text-ink">
+              Territorial decision support brief
             </h1>
-            <p className="mt-1 text-sm text-zinc-300 print:text-zinc-700">
-              Territory: {territory.title} ({territory.code}) · Sub-Topic: {territory.subtitle}
+            <p className="mt-1 text-sm text-muted">
+              Territory: {territory.title} ({territory.code}) · Sub-topic: {territory.subtitle}
             </p>
 
-            {/* Metadata Strip */}
-            <div className="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-xs font-mono bg-zinc-900/60 print:bg-zinc-100 p-2.5 rounded border border-zinc-800 print:border-zinc-300">
+            <dl className="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-3 rounded-lg bg-surface-sunken p-3 text-xs">
               <div>
-                <span className="text-zinc-400 block text-[10px]">DOCUMENT REF</span>
-                <span className="text-zinc-200 print:text-black font-semibold">{docId}</span>
+                <dt className="text-faint text-[10px]">Document ref</dt>
+                <dd className="font-mono font-semibold text-ink break-all">{docId}</dd>
               </div>
               <div>
-                <span className="text-zinc-400 block text-[10px]">DATE ISSUED</span>
-                <span className="text-zinc-200 print:text-black">{dateStr}</span>
+                <dt className="text-faint text-[10px]">Date issued</dt>
+                <dd className="text-ink">{dateStr}</dd>
               </div>
               <div>
-                <span className="text-zinc-400 block text-[10px]">DATA STATUS</span>
-                <span className={`${isDemo ? 'text-amber-300' : 'text-emerald-300'} print:text-black font-semibold`}>{assessment.dataStatus.toUpperCase()}</span>
+                <dt className="text-faint text-[10px]">Data status</dt>
+                <dd className={`font-semibold ${isDemo ? 'text-hati-strong' : 'text-brand-strong'}`}>
+                  {assessment.dataStatus}
+                </dd>
               </div>
               <div>
-                <span className="text-zinc-400 block text-[10px]">EVIDENCE CONFIDENCE</span>
-                <span className="text-zinc-200 print:text-black font-semibold">{assessment.confidence.level.toUpperCase()}</span>
+                <dt className="text-faint text-[10px]">Evidence confidence</dt>
+                <dd className="font-semibold text-ink">{assessment.confidence.level}</dd>
               </div>
-            </div>
+            </dl>
           </div>
 
-          {/* Section 1: Analytical Inquiry */}
-          <div>
-            <div className="text-xs font-mono font-semibold text-zinc-400 uppercase mb-1">
-              1. Analytical Inquiry & Status
+          {/* 1. Inquiry */}
+          <section>
+            <div className={sectionLabel}>1. Analytical inquiry &amp; status</div>
+            <div className="mt-1.5 rounded-lg bg-surface-sunken p-3.5">
+              <div className="text-sm font-medium text-ink">“{assessment.question}”</div>
+              <div className="mt-1.5 text-xs text-muted">Evaluation: {assessment.statusHeadline}</div>
             </div>
-            <div className="p-3.5 rounded bg-zinc-900/70 print:bg-zinc-100 border border-zinc-800 print:border-zinc-300">
-              <div className="text-xs sm:text-sm font-medium text-zinc-200 print:text-black">
-                "{assessment.question}"
-              </div>
-              <div className="mt-1.5 text-xs font-mono text-zinc-300 print:text-black">
-                Evaluation: {assessment.statusHeadline}
-              </div>
-            </div>
-          </div>
+          </section>
 
-          {/* Section 2: Observed Signal */}
-          <div>
-            <div className="text-xs font-mono font-semibold text-zinc-400 uppercase mb-1">
-              2. Observed Signal
-            </div>
-            <p className="text-xs sm:text-sm text-zinc-300 print:text-zinc-800 leading-relaxed">
-              {assessment.signal.observation}
-            </p>
-            <div className="mt-1.5 text-xs font-mono text-zinc-400 print:text-zinc-600 flex flex-wrap gap-4">
+          {/* 2. Observed signal */}
+          <section>
+            <div className={sectionLabel}>2. Observed signal</div>
+            <p className="mt-1.5 text-sm text-ink-soft leading-relaxed">{assessment.signal.observation}</p>
+            <div className="mt-1.5 text-xs text-muted flex flex-wrap gap-x-4 gap-y-1">
               <span>Scope: {assessment.signal.spatialScope}</span>
-              <span>·</span>
+              <span className="text-hairline-strong">·</span>
               <span>Window: {assessment.signal.temporalWindow}</span>
             </div>
-          </div>
+          </section>
 
-          {/* Section 3: Supporting Evidence */}
-          <div>
-            <div className="text-xs font-mono font-semibold text-zinc-400 uppercase mb-1.5">
-              3. Supporting Evidence & Indicators
-            </div>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-3">
+          {/* 3. Supporting evidence */}
+          <section>
+            <div className={sectionLabel}>3. Supporting evidence &amp; indicators</div>
+            <div className="mt-2 grid grid-cols-2 sm:grid-cols-4 gap-2">
               {assessment.evidence.metrics.map((m, idx) => (
-                <div key={idx} className="p-2.5 rounded bg-zinc-900/60 print:bg-zinc-100 border border-zinc-800 print:border-zinc-300 font-mono text-xs">
-                  <div className="text-[10px] text-zinc-400 uppercase truncate">{m.label}</div>
-                  <div className="text-sm font-semibold text-zinc-100 print:text-black mt-0.5">
-                    {m.value} {m.unit}
-                  </div>
-                  <div className="text-[10px] text-zinc-400 mt-0.5">{m.delta}</div>
+                <div key={idx} className="rounded-lg bg-surface-sunken p-2.5">
+                  <div className="text-[10px] text-faint truncate">{m.label}</div>
+                  <div className="mt-0.5 text-sm font-bold font-mono text-ink">{m.value} {m.unit}</div>
+                  <div className="text-[10px] text-muted">{m.delta}</div>
                 </div>
               ))}
             </div>
-            <ul className="space-y-1 text-xs text-zinc-300 print:text-zinc-800">
+            <ul className="mt-3 space-y-1 text-sm text-ink-soft">
               {assessment.evidence.supportingDatasets.map((ds, idx) => (
-                <li key={idx} className="flex items-start gap-1.5">
-                  <span className="text-zinc-400">·</span>
+                <li key={idx} className="flex items-start gap-2">
+                  <span className="text-muted">·</span>
                   <span>{ds}</span>
                 </li>
               ))}
             </ul>
-          </div>
+          </section>
 
-          {/* Section 4: Interpretation & Mechanism */}
-          <div>
-            <div className="text-xs font-mono font-semibold text-zinc-400 uppercase mb-1">
-              4. Scientific Interpretation
-            </div>
-            <ul className="space-y-1 text-xs text-zinc-300 print:text-zinc-800 mb-2">
+          {/* 4. Interpretation */}
+          <section>
+            <div className={sectionLabel}>4. Scientific interpretation</div>
+            <ul className="mt-1.5 space-y-1 text-sm text-ink-soft">
               {assessment.interpretation.inferences.map((inf, idx) => (
-                <li key={idx} className="flex items-start gap-1.5">
-                  <span className="text-zinc-400">→</span>
+                <li key={idx} className="flex items-start gap-2">
+                  <span className="text-data">→</span>
                   <span>{inf}</span>
                 </li>
               ))}
             </ul>
-            <div className="p-2.5 rounded bg-zinc-900/50 print:bg-zinc-100 text-xs text-zinc-400 print:text-zinc-700">
-              <span className="font-semibold text-zinc-300 print:text-black font-mono text-[11px] block">
-                Physical Mechanism:
-              </span>
+            <div className="mt-2 rounded-lg bg-surface-sunken p-2.5 text-xs text-muted">
+              <span className="font-semibold text-ink block mb-0.5">Physical mechanism</span>
               {assessment.interpretation.plausibleMechanisms}
             </div>
-          </div>
+          </section>
 
-          {/* Section 5: Evidence Limits */}
-          <div className="p-3.5 rounded bg-zinc-900 border border-zinc-700 print:border-zinc-300">
-            <div className="text-xs font-mono font-semibold text-amber-300 print:text-amber-800 uppercase mb-1.5">
-              5. Evidence Limits (What Cannot Be Inferred)
+          {/* 5. Evidence limits */}
+          <section className="rounded-lg bg-hati-soft border border-hati/25 p-3.5">
+            <div className="text-xs font-semibold text-hati-strong uppercase tracking-wide mb-1.5">
+              5. Evidence limits (what cannot be inferred)
             </div>
-            <ul className="space-y-1 text-xs text-zinc-300 print:text-zinc-900">
+            <ul className="space-y-1 text-sm text-ink-soft">
               {assessment.evidenceLimit.strictlyForbiddenInferences.map((lim, idx) => (
-                <li key={idx} className="flex items-start gap-1.5">
-                  <span className="text-amber-400 font-bold shrink-0">✕</span>
+                <li key={idx} className="flex items-start gap-2">
+                  <span className="text-hati-strong font-bold shrink-0">✕</span>
                   <span>{lim}</span>
                 </li>
               ))}
             </ul>
-          </div>
+          </section>
 
-          {/* Section 6: Competing Explanations */}
-          <div>
-            <div className="text-xs font-mono font-semibold text-zinc-400 uppercase mb-1.5">
-              6. Competing Explanations / Confounder Screening
-            </div>
-            <div className="divide-y divide-zinc-800 print:divide-zinc-300 border border-zinc-800 print:border-zinc-300 rounded overflow-hidden">
+          {/* 6. Competing explanations */}
+          <section>
+            <div className={sectionLabel}>6. Competing explanations / confounder screening</div>
+            <div className="mt-2 space-y-2">
               {assessment.competingExplanations.map((exp, idx) => (
-                <div key={idx} className="p-2.5 bg-zinc-900/40 print:bg-zinc-50 text-xs">
+                <div key={idx} className="rounded-lg bg-surface-sunken p-2.5">
                   <div className="flex items-center justify-between gap-2 mb-0.5">
-                    <span className="font-medium text-zinc-200 print:text-black">{exp.explanation}</span>
-                    <span className="font-mono text-[10px] px-2 py-0.5 rounded bg-zinc-800 print:bg-zinc-200 text-zinc-300 print:text-black">
+                    <span className="text-sm font-medium text-ink">{exp.explanation}</span>
+                    <span className="meta-label rounded-full border border-hairline bg-surface px-2 py-0.5">
                       {exp.evaluation}
                     </span>
                   </div>
-                  <p className="text-zinc-400 print:text-zinc-700 text-xs">{exp.reasoning}</p>
+                  <p className="text-xs text-muted">{exp.reasoning}</p>
                 </div>
               ))}
             </div>
-          </div>
+          </section>
 
-          {/* Section 7: Decision Implication */}
-          <div>
-            <div className="text-xs font-mono font-semibold text-zinc-400 uppercase mb-1.5">
-              7. Decision Implications for Tourism Management
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <div className="p-3 rounded bg-zinc-900/60 print:bg-zinc-100 border border-zinc-800 print:border-zinc-300">
-                <div className="text-xs font-semibold text-zinc-200 print:text-black mb-1.5 font-mono">
-                  Managerial Considerations:
-                </div>
-                <ul className="space-y-1 text-xs text-zinc-300 print:text-zinc-800">
+          {/* 7. Decision implication */}
+          <section>
+            <div className={sectionLabel}>7. Decision implications for tourism management</div>
+            <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="rounded-lg bg-surface-sunken p-3">
+                <div className="text-xs font-semibold text-ink mb-1.5">Managerial considerations</div>
+                <ul className="space-y-1 text-sm text-ink-soft">
                   {assessment.decisionImplication.managerialConsiderations.map((c, i) => (
-                    <li key={i} className="flex items-start gap-1.5">
-                      <span className="text-zinc-400">{i + 1}.</span>
+                    <li key={i} className="flex items-start gap-2">
+                      <span className="text-muted">{i + 1}.</span>
                       <span>{c}</span>
                     </li>
                   ))}
                 </ul>
               </div>
-
-              <div className="p-3 rounded bg-zinc-900/60 print:bg-zinc-100 border border-zinc-800 print:border-zinc-300">
-                <div className="text-xs font-semibold text-zinc-200 print:text-black mb-1.5 font-mono">
-                  Cautions & Guardrails:
-                </div>
-                <ul className="space-y-1 text-xs text-zinc-400 print:text-zinc-700">
+              <div className="rounded-lg bg-surface-sunken p-3">
+                <div className="text-xs font-semibold text-ink mb-1.5">Cautions &amp; guardrails</div>
+                <ul className="space-y-1 text-sm text-muted">
                   {assessment.decisionImplication.cautionsAndGuardrails.map((cg, i) => (
-                    <li key={i} className="flex items-start gap-1.5">
-                      <span className="text-zinc-500">·</span>
+                    <li key={i} className="flex items-start gap-2">
+                      <span className="text-hati-strong">·</span>
                       <span>{cg}</span>
                     </li>
                   ))}
                 </ul>
               </div>
             </div>
-          </div>
+          </section>
 
-          {/* Section 8: Data Needed Next */}
-          <div>
-            <div className="text-xs font-mono font-semibold text-zinc-400 uppercase mb-1">
-              8. Data Needed Next (To Reduce Uncertainty)
-            </div>
-            <ul className="space-y-1 text-xs text-zinc-300 print:text-zinc-800">
+          {/* 8. Data needed next */}
+          <section>
+            <div className={sectionLabel}>8. Data needed next (to reduce uncertainty)</div>
+            <ul className="mt-1.5 space-y-1 text-sm text-ink-soft">
               {assessment.dataNeededNext.map((d, i) => (
-                <li key={i} className="flex items-start gap-1.5">
-                  <span className="text-zinc-400 font-mono">{i + 1}.</span>
+                <li key={i} className="flex items-start gap-2">
+                  <span className="font-mono text-muted">{i + 1}.</span>
                   <span>{d}</span>
                 </li>
               ))}
             </ul>
-          </div>
+          </section>
 
-          {/* Sign-Off Footer */}
-          <div className="border-t border-zinc-800 print:border-zinc-300 pt-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs font-mono text-zinc-400 print:text-zinc-600">
+          {/* Sign-off */}
+          <div className="border-t border-hairline pt-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-muted">
             <div>
-              <div>System: Tourism Intelligence Desk Prototype</div>
+              <div>System: Tourism Intelligence Desk prototype</div>
               <div>Attribution: github.com/soroushkarahrodi79-oss</div>
             </div>
-            <div className="text-right">
+            <div className="sm:text-right">
               <div>Version: Prototype v0.1</div>
-              <div>Operational Validation Required Prior to Implementation</div>
+              <div>Operational validation required prior to implementation</div>
             </div>
           </div>
         </div>

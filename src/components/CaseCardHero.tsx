@@ -6,173 +6,201 @@ import { Thermometer, Satellite, ArrowRight, ShieldCheck } from 'lucide-react';
 interface CaseCardHeroProps {
   activeTerritoryId: TerritoryId;
   onSelectTerritory: (id: TerritoryId) => void;
+  onOpenMethodology: () => void;
 }
 
 export const CaseCardHero: React.FC<CaseCardHeroProps> = ({
   activeTerritoryId,
-  onSelectTerritory
+  onSelectTerritory,
+  onOpenMethodology
 }) => {
   const madridCase = TERRITORY_CASES['madrid-hati'];
   const guadarramaCase = TERRITORY_CASES['guadarrama-snto'];
 
   return (
-    <section className="border-b border-zinc-800 bg-zinc-950 px-4 sm:px-6 lg:px-8 py-8">
-      <div className="max-w-7xl mx-auto">
-        {/* Hero Headline & Subtitle */}
-        <div className="max-w-3xl mb-7">
-          <div className="flex items-center gap-2 mb-2 text-xs font-mono text-zinc-400 uppercase tracking-wider">
-            <span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-            <span>Decision Support Architecture · Destination Management</span>
+    <section className="relative border-b border-hairline bg-canvas studio-grid-motif">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
+        {/* Headline */}
+        <div className="max-w-2xl">
+          <div className="eyebrow flex items-center gap-2">
+            <span className="w-1.5 h-1.5 rounded-full bg-brand" />
+            <span>Geospatial research · decision systems</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-zinc-100">
+          <h1 className="mt-3 text-3xl sm:text-4xl lg:text-[2.75rem] font-extrabold leading-[1.08] text-ink">
             From territorial signals to defensible tourism decisions.
           </h1>
-          <p className="mt-2.5 text-sm sm:text-base text-zinc-300 leading-relaxed font-normal">
-            Transforming environmental, geospatial and field observations into transparent decision-support assessments with explicit evidence limits and uncertainty.
+          <p className="mt-4 text-base sm:text-lg text-muted leading-relaxed">
+            Environmental, geospatial and tourism evidence transformed into transparent decision
+            support — without hiding uncertainty.
           </p>
-          <div className="mt-3.5 flex flex-wrap items-center gap-2.5 text-xs text-zinc-400 font-mono">
-            <span className="text-zinc-500">Evidence Modes:</span>
-            <span className="bg-zinc-900 px-2 py-0.5 rounded border border-zinc-800">HATI · Reproduced Research</span>
-            <span className="bg-zinc-900 px-2 py-0.5 rounded border border-zinc-800">UTCI · Model-Derived</span>
-            <span className="bg-zinc-900 px-2 py-0.5 rounded border border-zinc-800">SNTO · Real EO / Derived Trends</span>
-          </div>
+          <button
+            onClick={onOpenMethodology}
+            className="mt-5 inline-flex items-center gap-1.5 text-sm font-medium text-brand hover:text-brand-strong"
+          >
+            <ShieldCheck className="w-4 h-4" />
+            <span>Why you can trust it — the epistemic charter</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </button>
         </div>
 
-        {/* Case Studies Interactive Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-          {/* Card 1: HATI Madrid */}
-          <div
-            onClick={() => onSelectTerritory('madrid-hati')}
-            className={`group rounded-lg border p-5 transition-all cursor-pointer text-left ${
-              activeTerritoryId === 'madrid-hati'
-                ? 'bg-zinc-900 border-zinc-600 ring-1 ring-zinc-500'
-                : 'bg-zinc-900/40 border-zinc-800 hover:border-zinc-700 hover:bg-zinc-900/60'
-            }`}
-          >
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <div className="flex items-center gap-2 text-xs font-mono text-amber-400 mb-1">
-                  <span>CASE STUDY 01</span>
-                  <span className="text-zinc-600">·</span>
-                  <span>URBAN CORE</span>
-                </div>
-                <h2 className="text-base sm:text-lg font-semibold text-zinc-100 group-hover:text-amber-300 transition-colors flex items-center gap-2">
-                  <span>HATI Madrid</span>
-                  <span className="text-xs font-normal text-zinc-400 font-mono">({madridCase.code})</span>
-                </h2>
-                <div className="text-xs text-zinc-300 mt-0.5">
-                  Thermal-Method Sensitivity & Opportunity Screening
-                </div>
-              </div>
-              <div className="p-2 rounded bg-zinc-800/80 border border-zinc-700 text-amber-400 shrink-0">
-                <Thermometer className="w-4 h-4" />
-              </div>
-            </div>
+        {/* Research case cards */}
+        <div className="mt-9 grid grid-cols-1 md:grid-cols-2 gap-5">
+          {/* HATI — thermal (amber) */}
+          <CaseCard
+            active={activeTerritoryId === 'madrid-hati'}
+            onSelect={() => onSelectTerritory('madrid-hati')}
+            theme="hati"
+            icon={<Thermometer className="w-5 h-5" />}
+            index="Case study 01"
+            kicker="Urban thermal intelligence"
+            title="HATI Madrid"
+            code={madridCase.code}
+            summary="Thermal-method sensitivity & constraint-first opportunity screening."
+            metricA={{
+              value: madridCase.keyIndicators[0].value,
+              label: 'observations changed classification'
+            }}
+            metricB={{
+              value: madridCase.keyIndicators[1].value,
+              label: 'scenarios changed candidate set'
+            }}
+            footnote="Reproduced research · model-derived thermal data"
+            cta="Explore HATI"
+          />
 
-            <p className="mt-3 text-xs text-zinc-400 leading-relaxed line-clamp-2">
-              {madridCase.description}
-            </p>
-
-            {/* Quick Metrics Matrix */}
-            <div className="mt-4 grid grid-cols-2 gap-2 text-xs font-mono">
-              <div className="p-2.5 rounded bg-zinc-950 border border-zinc-800">
-                <div className="text-[10px] text-zinc-400 uppercase">{madridCase.keyIndicators[0].name}</div>
-                <div className="text-sm font-semibold text-zinc-100 mt-0.5">
-                  {madridCase.keyIndicators[0].value} {madridCase.keyIndicators[0].unit}
-                </div>
-                <div className="text-[10px] text-amber-400/90">{madridCase.keyIndicators[0].change}</div>
-              </div>
-              <div className="p-2.5 rounded bg-zinc-950 border border-zinc-800">
-                <div className="text-[10px] text-zinc-400 uppercase">{madridCase.keyIndicators[1].name}</div>
-                <div className="text-sm font-semibold text-zinc-100 mt-0.5">
-                  {madridCase.keyIndicators[1].value} {madridCase.keyIndicators[1].unit}
-                </div>
-                <div className="text-[10px] text-zinc-400">{madridCase.keyIndicators[1].change}</div>
-              </div>
-            </div>
-
-            {/* Footer Metadata */}
-            <div className="mt-4 pt-3 border-t border-zinc-800/80 flex items-center justify-between text-[11px] text-zinc-400 font-mono">
-              <div className="flex items-center gap-2">
-                <span className="text-zinc-400">DATA STATUS:</span>
-                <span className="px-1.5 py-0.5 rounded bg-emerald-950/40 border border-emerald-600/40 text-emerald-300 text-[10px]">
-                  REPRODUCED · MODEL-DERIVED THERMAL INPUT
-                </span>
-              </div>
-              <div className="flex items-center gap-1 font-medium text-zinc-300 group-hover:text-amber-300 transition-colors">
-                <span>{activeTerritoryId === 'madrid-hati' ? 'Active Case' : 'Select Case'}</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </div>
-            </div>
-          </div>
-
-          {/* Card 2: SNTO Sierra de Guadarrama */}
-          <div
-            onClick={() => onSelectTerritory('guadarrama-snto')}
-            className={`group rounded-lg border p-5 transition-all cursor-pointer text-left ${
-              activeTerritoryId === 'guadarrama-snto'
-                ? 'bg-zinc-900 border-zinc-600 ring-1 ring-zinc-500'
-                : 'bg-zinc-900/40 border-zinc-800 hover:border-zinc-700 hover:bg-zinc-900/60'
-            }`}
-          >
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <div className="flex items-center gap-2 text-xs font-mono text-emerald-400 mb-1">
-                  <span>CASE STUDY 02</span>
-                  <span className="text-zinc-600">·</span>
-                  <span>HIGH-MOUNTAIN PROTECTED AREA</span>
-                </div>
-                <h2 className="text-base sm:text-lg font-semibold text-zinc-100 group-hover:text-emerald-300 transition-colors flex items-center gap-2">
-                  <span>SNTO Sierra de Guadarrama</span>
-                  <span className="text-xs font-normal text-zinc-400 font-mono">({guadarramaCase.code})</span>
-                </h2>
-                <div className="text-xs text-zinc-300 mt-0.5">
-                  Real Sentinel-2 Evidence & Public-Use Decision Limits
-                </div>
-              </div>
-              <div className="p-2 rounded bg-zinc-800/80 border border-zinc-700 text-emerald-400 shrink-0">
-                <Satellite className="w-4 h-4" />
-              </div>
-            </div>
-
-            <p className="mt-3 text-xs text-zinc-400 leading-relaxed line-clamp-2">
-              {guadarramaCase.description}
-            </p>
-
-            {/* Quick Metrics Matrix */}
-            <div className="mt-4 grid grid-cols-2 gap-2 text-xs font-mono">
-              <div className="p-2.5 rounded bg-zinc-950 border border-zinc-800">
-                <div className="text-[10px] text-zinc-400 uppercase">{guadarramaCase.keyIndicators[0].name}</div>
-                <div className="text-sm font-semibold text-zinc-100 mt-0.5">
-                  {guadarramaCase.keyIndicators[0].value} {guadarramaCase.keyIndicators[0].unit}
-                </div>
-                <div className="text-[10px] text-emerald-400/90">{guadarramaCase.keyIndicators[0].change}</div>
-              </div>
-              <div className="p-2.5 rounded bg-zinc-950 border border-zinc-800">
-                <div className="text-[10px] text-zinc-400 uppercase">{guadarramaCase.keyIndicators[1].name}</div>
-                <div className="text-sm font-semibold text-zinc-100 mt-0.5">
-                  {guadarramaCase.keyIndicators[1].value} {guadarramaCase.keyIndicators[1].unit}
-                </div>
-                <div className="text-[10px] text-zinc-400">{guadarramaCase.keyIndicators[1].change}</div>
-              </div>
-            </div>
-
-            {/* Footer Metadata */}
-            <div className="mt-4 pt-3 border-t border-zinc-800/80 flex items-center justify-between text-[11px] text-zinc-400 font-mono">
-              <div className="flex items-center gap-2">
-                <span className="text-zinc-400">DATA STATUS:</span>
-                <span className="px-1.5 py-0.5 rounded bg-emerald-950/40 border border-emerald-600/40 text-emerald-300 text-[10px]">
-                  REAL OBSERVATIONS · DERIVED TRENDS
-                </span>
-              </div>
-              <div className="flex items-center gap-1 font-medium text-zinc-300 group-hover:text-emerald-300 transition-colors">
-                <span>{activeTerritoryId === 'guadarrama-snto' ? 'Active Case' : 'Select Case'}</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </div>
-            </div>
-          </div>
+          {/* SNTO — environmental (forest) */}
+          <CaseCard
+            active={activeTerritoryId === 'guadarrama-snto'}
+            onSelect={() => onSelectTerritory('guadarrama-snto')}
+            theme="snto"
+            icon={<Satellite className="w-5 h-5" />}
+            index="Case study 02"
+            kicker="Environmental monitoring"
+            title="SNTO Sierra de Guadarrama"
+            code={guadarramaCase.code}
+            summary="Real Sentinel-2 evidence & evidence-proportionate public-use limits."
+            metricA={{
+              value: guadarramaCase.keyIndicators[0].value,
+              label: 'monitored time-series assets'
+            }}
+            metricB={{
+              value: guadarramaCase.keyIndicators[1].value,
+              label: 'NDVI trend distribution (↑ / stable / ↓)'
+            }}
+            footnote="Real observations · derived indicators"
+            cta="Explore SNTO"
+          />
         </div>
       </div>
     </section>
+  );
+};
+
+type Theme = 'hati' | 'snto';
+
+interface CaseCardProps {
+  active: boolean;
+  onSelect: () => void;
+  theme: Theme;
+  icon: React.ReactNode;
+  index: string;
+  kicker: string;
+  title: string;
+  code: string;
+  summary: string;
+  metricA: { value: string; label: string };
+  metricB: { value: string; label: string };
+  footnote: string;
+  cta: string;
+}
+
+// Complete literal class strings per theme so the Tailwind JIT resolves them.
+const THEME: Record<Theme, {
+  rail: string;
+  iconWrap: string;
+  kicker: string;
+  ring: string;
+  cta: string;
+}> = {
+  hati: {
+    rail: 'before:bg-hati',
+    iconWrap: 'bg-hati-soft text-hati-strong',
+    kicker: 'text-hati-strong',
+    ring: 'ring-hati/40 border-hati/30',
+    cta: 'text-hati-strong'
+  },
+  snto: {
+    rail: 'before:bg-snto',
+    iconWrap: 'bg-snto-soft text-snto-strong',
+    kicker: 'text-snto-strong',
+    ring: 'ring-snto/40 border-snto/30',
+    cta: 'text-snto-strong'
+  }
+};
+
+const CaseCard: React.FC<CaseCardProps> = ({
+  active,
+  onSelect,
+  theme,
+  icon,
+  index,
+  kicker,
+  title,
+  code,
+  summary,
+  metricA,
+  metricB,
+  footnote,
+  cta
+}) => {
+  const t = THEME[theme];
+  return (
+    <button
+      onClick={onSelect}
+      aria-pressed={active}
+      className={`group relative w-full text-left studio-card p-5 sm:p-6 transition-all overflow-hidden
+        before:absolute before:left-0 before:top-0 before:h-full before:w-1 before:content-[''] ${t.rail}
+        hover:shadow-[var(--shadow-lift)] hover:-translate-y-0.5
+        ${active ? `ring-2 ${t.ring}` : 'hover:border-hairline-strong'}`}
+    >
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <div className={`text-xs font-semibold ${t.kicker}`}>
+            {index} · {kicker}
+          </div>
+          <h2 className="mt-1.5 text-xl font-bold text-ink flex items-baseline gap-2">
+            {title}
+            <span className="text-xs font-medium font-mono text-faint">{code}</span>
+          </h2>
+          <p className="mt-1.5 text-sm text-muted leading-relaxed max-w-md">{summary}</p>
+        </div>
+        <span className={`shrink-0 grid place-items-center w-11 h-11 rounded-xl ${t.iconWrap}`}>
+          {icon}
+        </span>
+      </div>
+
+      <div className="mt-5 grid grid-cols-2 gap-4">
+        <div>
+          <div className="text-2xl font-extrabold text-ink font-mono tracking-tight">
+            {metricA.value}
+          </div>
+          <div className="mt-0.5 text-xs text-muted leading-snug">{metricA.label}</div>
+        </div>
+        <div>
+          <div className="text-2xl font-extrabold text-ink font-mono tracking-tight">
+            {metricB.value}
+          </div>
+          <div className="mt-0.5 text-xs text-muted leading-snug">{metricB.label}</div>
+        </div>
+      </div>
+
+      <div className="mt-5 pt-4 border-t border-hairline flex items-center justify-between gap-3">
+        <span className="text-[11px] text-faint">{footnote}</span>
+        <span className={`inline-flex items-center gap-1 text-sm font-semibold ${t.cta}`}>
+          <span>{active ? 'Active case' : cta}</span>
+          <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
+        </span>
+      </div>
+    </button>
   );
 };

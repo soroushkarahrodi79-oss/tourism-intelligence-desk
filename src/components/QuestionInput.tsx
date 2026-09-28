@@ -25,29 +25,18 @@ export const QuestionInput: React.FC<QuestionInputProps> = ({
   };
 
   return (
-    <div className="bg-zinc-900/60 border border-zinc-800 rounded-lg p-4 sm:p-5">
-      {/* Header */}
-      <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
-        <div className="flex items-center gap-2">
-          <span className="text-xs font-mono uppercase tracking-wider text-zinc-300 font-semibold">
-            Analytical Question Input
-          </span>
-          <span className="text-zinc-600">·</span>
-          <span className="text-xs text-zinc-400 font-normal">Evidence-First Decision Query</span>
-        </div>
-
-        {/* Scientific Rule Safeguards Badge */}
-        <div className="flex items-center gap-2 text-[11px] font-mono text-zinc-400">
-          <span className="flex items-center gap-1 text-emerald-400">
-            <ShieldCheck className="w-3.5 h-3.5" />
-            <span>Anti-Causality Guard Active</span>
-          </span>
-        </div>
+    <div className="studio-card p-4 sm:p-5">
+      <div className="flex flex-wrap items-center justify-between gap-3 mb-3.5">
+        <h3 className="text-sm font-semibold text-ink">Analytical question</h3>
+        <span className="inline-flex items-center gap-1.5 text-xs font-medium text-brand">
+          <ShieldCheck className="w-3.5 h-3.5" />
+          <span>Anti-causality guard active</span>
+        </span>
       </div>
 
-      {/* Curated Questions Selector */}
+      {/* Curated questions */}
       <div className="mb-4">
-        <div className="text-xs text-zinc-400 mb-2 font-medium">Curated Analytical Inquiries:</div>
+        <div className="text-xs text-muted mb-2">Curated inquiries</div>
         <div className="flex flex-wrap gap-2">
           {territory.sampleQuestions.map((q, idx) => {
             const isSelected = activeQuestion.trim().toLowerCase() === q.trim().toLowerCase();
@@ -55,45 +44,46 @@ export const QuestionInput: React.FC<QuestionInputProps> = ({
               <button
                 key={idx}
                 onClick={() => onAskQuestion(q)}
-                className={`text-left text-xs px-3 py-1.5 rounded border transition-all ${
+                aria-pressed={isSelected}
+                className={`text-left text-xs px-3 py-1.5 rounded-full border transition-colors ${
                   isSelected
-                    ? 'bg-zinc-800 border-zinc-500 text-zinc-100 font-medium'
-                    : 'bg-zinc-950/60 border-zinc-800 text-zinc-300 hover:border-zinc-700 hover:text-zinc-100'
+                    ? 'bg-brand-soft border-brand/30 text-brand-strong font-medium'
+                    : 'bg-surface border-hairline text-ink-soft hover:border-hairline-strong'
                 }`}
               >
-                <span>{q}</span>
+                {q}
               </button>
             );
           })}
         </div>
       </div>
 
-      {/* Custom Question Form */}
-      <form onSubmit={handleSubmit} className="relative">
+      {/* Custom question */}
+      <form onSubmit={handleSubmit}>
         <div className="relative flex items-center">
           <input
             type="text"
             value={customInput}
             onChange={(e) => setCustomInput(e.target.value)}
-            placeholder={`Ask an analytical question for ${territory.shortName} (e.g. "NDVI decreased 18%. Are tourists damaging the park?")...`}
-            className="w-full bg-zinc-950 border border-zinc-700 rounded pl-3.5 pr-28 py-2.5 text-xs sm:text-sm text-zinc-100 placeholder-zinc-500 focus:outline-none focus:border-zinc-500 font-sans"
+            placeholder={`Ask an analytical question for ${territory.shortName}…`}
+            className="w-full bg-surface border border-hairline rounded-lg pl-3.5 pr-[7.5rem] py-2.5 text-sm text-ink placeholder-faint focus:outline-none focus:border-brand transition-colors"
           />
           <button
             type="submit"
             disabled={!customInput.trim() || isLoading}
-            className="absolute right-1.5 px-3 py-1.5 rounded bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 disabled:opacity-40 text-zinc-200 text-xs font-medium flex items-center gap-1.5 transition-colors cursor-pointer"
+            className="absolute right-1.5 inline-flex items-center gap-1.5 rounded-md bg-brand px-3 py-1.5 text-xs font-semibold text-white hover:bg-brand-strong disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
           >
-            <span>{isLoading ? 'Assessing...' : 'Run Query'}</span>
+            <span>{isLoading ? 'Assessing…' : 'Run query'}</span>
             <ArrowRight className="w-3.5 h-3.5" />
           </button>
         </div>
 
-        {/* Scientific Rule Notice Below Input */}
-        <div className="mt-2.5 flex items-center justify-between text-[11px] text-zinc-400 font-mono">
-          <div className="flex items-center gap-1.5">
-            <AlertTriangle className="w-3.5 h-3.5 text-amber-500/80 shrink-0" />
-            <span>Anti-Causality Rule: Never convert correlation into causation. If evidence is lacking, system responds "INSUFFICIENT EVIDENCE".</span>
-          </div>
+        <div className="mt-2.5 flex items-start gap-1.5 text-[11px] text-muted leading-relaxed">
+          <AlertTriangle className="w-3.5 h-3.5 text-hati shrink-0 mt-px" />
+          <span>
+            Anti-causality rule: correlation is never converted into causation. If evidence is
+            lacking, the system responds “insufficient evidence”.
+          </span>
         </div>
       </form>
     </div>
