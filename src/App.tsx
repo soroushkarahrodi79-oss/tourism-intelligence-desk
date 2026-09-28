@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { TerritoryId, MonitoringStation, SpatialFeature, EvidenceAssessment } from './types';
 import { TERRITORY_CASES, EVIDENCE_ASSESSMENTS } from './data/cases';
 import { EVIDENCE_MANIFEST } from './data/evidenceManifest';
-import { evaluateAnalyticalQuestion } from './services/analysisEngine';
 import { Header } from './components/Header';
 import { CaseCardHero } from './components/CaseCardHero';
 import { ProfessionalOverview } from './components/ProfessionalOverview';
@@ -11,6 +10,11 @@ import { QuestionInput } from './components/QuestionInput';
 import { EvidenceAssessmentPanel } from './components/EvidenceAssessmentPanel';
 import { DecisionBriefModal } from './components/DecisionBriefModal';
 import { MethodologyModal } from './components/MethodologyModal';
+import { useLocale } from './i18n/LocaleProvider';
+import { localizeAssessment, localizeTerritory } from './i18n/localize';
+import { evaluateLocalizedQuestion, findCuratedQuestionIndex } from './i18n/questionRouting';
+import { localizeEvidenceManifest } from './i18n/evidenceManifest.es';
+import { localizeDataStatusLabel } from './i18n/ui';
 import {
   ShieldCheck,
   ChevronRight,
@@ -21,10 +25,19 @@ import {
 } from 'lucide-react';
 
 export default function App() {
+  const { locale, t } = useLocale();
   const [activeTerritoryId, setActiveTerritoryId] = useState<TerritoryId>('madrid-hati');
-  const [activeQuestion, setActiveQuestion] = useState<string>(
-    TERRITORY_CASES['madrid-hati'].sampleQuestions[0]
-  );
+  // The stable identity of the active curated question — an index into
+  // TERRITORY_CASES[id].sampleQuestions / CURATED_QUESTIONS_ES[id] (the two
+  // are index-aligned across locales), or null for a custom question. Using
+  // an index rather than the literal (locale-dependent) question text is
+  // what keeps the selected chip correct across a language switch: the
+  // displayed text changes, but the index identifying "which curated
+  // question this is" does not.
+  const [activeQuestionIndex, setActiveQuestionIndex] = useState<number | null>(0);
+  // `assessment` is always kept as the CANONICAL (English) EvidenceAssessment.
+  // Localization happens only at render time so a language switch never
+  // resets or re-routes the underlying case/answer.
   const [assessment, setAssessment] = useState<EvidenceAssessment>(
     EVIDENCE_ASSESSMENTS['madrid-hati-q1']
   );
@@ -36,8 +49,8 @@ export default function App() {
   const [isDecisionBriefOpen, setIsDecisionBriefOpen] = useState<boolean>(false);
   const [isMethodologyOpen, setIsMethodologyOpen] = useState<boolean>(false);
 
-  const currentTerritory = TERRITORY_CASES[activeTerritoryId];
-  const currentEvidenceManifest = EVIDENCE_MANIFEST[activeTerritoryId];
+  const currentTerritory = localizeTerritory(TERRITORY_CASES[activeTerritoryId], locale);
+  const currentEvidenceManifest = localizeEvidenceManifest(EVIDENCE_MANIFEST[activeTerritoryId], locale);
   const isHati = activeTerritoryId === 'madrid-hati';
   const isBoundedData =
     currentTerritory.dataStatus === 'Demonstration' || currentTerritory.dataStatus === 'Proxy';
@@ -54,8 +67,9 @@ export default function App() {
     setSelectedFeature(null);
 
     // Default to the first curated question for the selected evidence case.
-    const defaultQ = TERRITORY_CASES[id].sampleQuestions[0];
-    setActiveQuestion(defaultQ);
+    // Index 0 is locale-independent, so this selects the correct chip in
+    // whichever language is currently active.
+    setActiveQuestionIndex(0);
 
     const defaultAssessmentKey = id === 'madrid-hati' ? 'madrid-hati-q1' : 'guadarrama-snto-q1';
     setAssessment(EVIDENCE_ASSESSMENTS[defaultAssessmentKey]);
@@ -65,8 +79,8 @@ export default function App() {
     setActiveTerritoryId(id);
     setSelectedStation(null);
     setSelectedFeature(null);
-    setActiveQuestion(question);
-    setAssessment(evaluateAnalyticalQuestion(id, question));
+    setActiveQuestionIndex(findCuratedQuestionIndex(id, question, locale));
+    setAssessment(evaluateLocalizedQuestion(id, question, locale));
     setIsLoading(false);
 
     window.setTimeout(() => {
@@ -74,14 +88,26 @@ export default function App() {
     }, 0);
   };
 
-  // Handler when user asks a question
-  const handleAskQuestion = (question: string) => {
-    setActiveQuestion(question);
+  // Handler when the user clicks a curated question chip — its index is
+  // already known at the call site, so no lookup is needed.
+  const handleAskCurated = (question: string, index: number) => {
+    setActiveQuestionIndex(index);
     setIsLoading(true);
 
-    // Controlled assessment synthesis
     setTimeout(() => {
-      const result = evaluateAnalyticalQuestion(activeTerritoryId, question);
+      const result = evaluateLocalizedQuestion(activeTerritoryId, question, locale);
+      setAssessment(result);
+      setIsLoading(false);
+    }, 220);
+  };
+
+  // Handler when the user submits a custom typed question.
+  const handleAskCustom = (question: string) => {
+    setActiveQuestionIndex(null);
+    setIsLoading(true);
+
+    setTimeout(() => {
+      const result = evaluateLocalizedQuestion(activeTerritoryId, question, locale);
       setAssessment(result);
       setIsLoading(false);
     }, 220);
@@ -96,10 +122,15 @@ export default function App() {
 
   const evidenceLayerLabel =
     currentTerritory.dataStatus === 'Reproduced'
-      ? 'Locked HATI research snapshot'
+      ? t('app.evidenceLayerLockedHati')
       : currentTerritory.dataStatus === 'Derived'
-        ? 'Real EO + derived trend snapshot'
-        : 'Curated demonstration dataset';
+        ? t('app.evidenceLayerRealDerived')
+        : t('app.evidenceLayerDemo');
+
+  // The displayed assessment is derived at render time from the canonical
+  // state, never stored localized — this is what makes a language switch
+  // change only the displayed strings, not the underlying case/answer.
+  const displayedAssessment = localizeAssessment(assessment, locale, currentTerritory);
 
   return (
     <div className="min-h-screen bg-canvas text-ink flex flex-col">
@@ -133,7 +164,7 @@ export default function App() {
         <div className="mb-7 flex flex-wrap items-end justify-between gap-4">
           <div>
             <div className="eyebrow flex items-center gap-2">
-              <span>Active workspace</span>
+              <span>{t('app.activeWorkspace')}</span>
               <span className="text-hairline-strong">/</span>
               <span className="font-mono text-muted">{currentTerritory.code}</span>
             </div>
@@ -154,7 +185,7 @@ export default function App() {
             <span
               className={`w-1.5 h-1.5 rounded-full ${isBoundedData ? 'bg-hati' : accent.dot}`}
             />
-            <span>Data status · {currentTerritory.dataStatus}</span>
+            <span>{t('app.dataStatusPrefix')} {localizeDataStatusLabel(currentTerritory.dataStatus, locale)}</span>
           </div>
         </div>
 
@@ -166,9 +197,9 @@ export default function App() {
               <div className="flex items-center justify-between gap-3">
                 <h3 className="text-sm font-semibold text-ink flex items-center gap-2">
                   <Satellite className="w-4 h-4 text-brand" />
-                  Spatial context
+                  {t('app.spatialContext')}
                 </h3>
-                <span className="text-xs text-faint">Select polygons or nodes to inspect</span>
+                <span className="text-xs text-faint">{t('app.spatialContextHint')}</span>
               </div>
 
               <MapWorkspace
@@ -185,15 +216,14 @@ export default function App() {
                 <ShieldCheck className="w-4 h-4 text-data shrink-0 mt-0.5" />
                 <p className="text-xs text-ink-soft leading-relaxed">
                   <span className="font-semibold text-ink">
-                    Observed spatial or environmental association ≠ demonstrated tourism causality.
+                    {t('app.safeguardBold')}
                   </span>{' '}
-                  Competing explanations — meteorology, drought, phenology, land management and sensor
-                  effects — are screened before any causal claim.{' '}
+                  {t('app.safeguardExplain')}{' '}
                   <button
                     onClick={() => setIsMethodologyOpen(true)}
                     className="font-medium text-data hover:text-data-strong underline-offset-2 hover:underline"
                   >
-                    Read the epistemic charter
+                    {t('app.readCharter')}
                   </button>
                 </p>
               </div>
@@ -202,17 +232,18 @@ export default function App() {
             {/* Analytical question */}
             <QuestionInput
               territory={currentTerritory}
-              activeQuestion={activeQuestion}
-              onAskQuestion={handleAskQuestion}
+              activeQuestionIndex={activeQuestionIndex}
+              onAskCurated={handleAskCurated}
+              onAskCustom={handleAskCustom}
               isLoading={isLoading}
             />
 
             {/* Territorial indicators — quiet stat row, no boxed sidebar */}
             <div>
               <div className="flex items-baseline justify-between mb-3">
-                <h3 className="text-sm font-semibold text-ink">Territorial indicators</h3>
+                <h3 className="text-sm font-semibold text-ink">{t('app.territorialIndicators')}</h3>
                 <span className="meta-label">
-                  {isBoundedData ? 'Demonstration values' : 'Evidence-bounded values'}
+                  {isBoundedData ? t('app.demonstrationValues') : t('app.evidenceBoundedValues')}
                 </span>
               </div>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
@@ -234,7 +265,7 @@ export default function App() {
               <summary className="flex items-center justify-between gap-3 px-4 sm:px-5 py-3.5 cursor-pointer list-none">
                 <span className="flex items-center gap-2 text-sm font-semibold text-ink">
                   <GitCommitHorizontal className="w-4 h-4 text-data" />
-                  Evidence sources, provenance &amp; audit
+                  {t('app.evidenceSourcesDisclosure')}
                 </span>
                 <ChevronRight className="w-4 h-4 text-muted transition-transform group-open:rotate-90" />
               </summary>
@@ -244,10 +275,10 @@ export default function App() {
                 <div className="rounded-lg bg-surface-sunken p-3.5">
                   <div className="text-xs font-semibold text-ink mb-1">
                     {currentTerritory.dataStatus === 'Reproduced'
-                      ? 'Reproduced research snapshot'
+                      ? t('app.reproducedSnapshotLabel')
                       : currentTerritory.dataStatus === 'Derived'
-                        ? 'Real observations · derived indicators'
-                        : currentTerritory.dataStatus}
+                        ? t('app.realObservationsLabel')
+                        : localizeDataStatusLabel(currentTerritory.dataStatus, locale)}
                   </div>
                   <p className="text-xs text-muted leading-relaxed">
                     {currentTerritory.dataStatusNote}
@@ -256,7 +287,7 @@ export default function App() {
 
                 {/* Reference evidence sources */}
                 <div>
-                  <h4 className="text-xs font-semibold text-ink mb-2">Reference evidence sources</h4>
+                  <h4 className="text-xs font-semibold text-ink mb-2">{t('app.referenceEvidenceSources')}</h4>
                   <ul className="space-y-1.5">
                     {currentTerritory.satelliteBands.map((band, idx) => (
                       <li
@@ -270,11 +301,11 @@ export default function App() {
                   </ul>
                   <dl className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-1.5 text-[11px]">
                     <div className="flex justify-between gap-3">
-                      <dt className="text-faint">Reference source</dt>
+                      <dt className="text-faint">{t('app.referenceSource')}</dt>
                       <dd className="font-mono text-muted text-right">{referenceSourceLabel}</dd>
                     </div>
                     <div className="flex justify-between gap-3">
-                      <dt className="text-faint">Evidence layer</dt>
+                      <dt className="text-faint">{t('app.evidenceLayer')}</dt>
                       <dd className="font-mono text-muted text-right">{evidenceLayerLabel}</dd>
                     </div>
                   </dl>
@@ -284,16 +315,16 @@ export default function App() {
                 <div className="border-t border-hairline pt-5">
                   <div className="flex items-center gap-2 mb-2">
                     <Lock className="w-3.5 h-3.5 text-data" />
-                    <h4 className="text-xs font-semibold text-ink">Audit snapshot</h4>
-                    <span className="ml-auto meta-label text-data">Immutable</span>
+                    <h4 className="text-xs font-semibold text-ink">{t('app.auditSnapshot')}</h4>
+                    <span className="ml-auto meta-label text-data">{t('app.immutable')}</span>
                   </div>
                   <dl className="space-y-2 text-xs">
                     <div>
-                      <dt className="text-faint text-[11px]">Evidence role</dt>
+                      <dt className="text-faint text-[11px]">{t('app.evidenceRole')}</dt>
                       <dd className="text-ink-soft">{currentEvidenceManifest.snapshotRole}</dd>
                     </div>
                     <div>
-                      <dt className="text-faint text-[11px]">Pinned commit</dt>
+                      <dt className="text-faint text-[11px]">{t('app.pinnedCommit')}</dt>
                       <dd
                         className="font-mono text-data break-all"
                         title={currentEvidenceManifest.primaryCommit}
@@ -302,7 +333,7 @@ export default function App() {
                       </dd>
                     </div>
                     <div>
-                      <dt className="text-faint text-[11px]">Evidence boundary</dt>
+                      <dt className="text-faint text-[11px]">{t('app.evidenceBoundary')}</dt>
                       <dd className="text-muted leading-relaxed">
                         {currentEvidenceManifest.evidenceBoundary}
                       </dd>
@@ -315,7 +346,7 @@ export default function App() {
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-1.5 rounded-md border border-hairline bg-surface px-2.5 py-1.5 text-[11px] font-medium text-ink-soft hover:border-data/40 hover:text-data transition-colors"
                     >
-                      <span>Open pinned source</span>
+                      <span>{t('app.openPinnedSource')}</span>
                       <ExternalLink className="w-3 h-3" />
                     </a>
                     <a
@@ -324,7 +355,7 @@ export default function App() {
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-1.5 rounded-md border border-hairline bg-surface px-2.5 py-1.5 text-[11px] font-medium text-ink-soft hover:border-data/40 hover:text-data transition-colors"
                     >
-                      <span>Open archival record</span>
+                      <span>{t('app.openArchivalRecord')}</span>
                       <ExternalLink className="w-3 h-3" />
                     </a>
                   </div>
@@ -336,11 +367,11 @@ export default function App() {
           {/* ================= ASSESSMENT COLUMN (≈35%) ================= */}
           <div className="lg:col-span-1 lg:sticky lg:top-24">
             <div className="mb-3 flex items-center justify-between">
-              <h3 className="text-sm font-semibold text-ink">Evidence assessment</h3>
-              <span className="meta-label">Decision support</span>
+              <h3 className="text-sm font-semibold text-ink">{t('app.evidenceAssessment')}</h3>
+              <span className="meta-label">{t('app.decisionSupport')}</span>
             </div>
             <EvidenceAssessmentPanel
-              assessment={assessment}
+              assessment={displayedAssessment}
               onOpenDecisionBrief={() => setIsDecisionBriefOpen(true)}
             />
           </div>
@@ -354,11 +385,10 @@ export default function App() {
             <div className="flex items-center gap-2 text-sm font-semibold text-ink">
               <span>Tourism Intelligence Desk</span>
               <span className="text-hairline-strong">·</span>
-              <span className="text-muted font-normal">Evidence → Decision → Action</span>
+              <span className="text-muted font-normal">{t('app.footerTagline')}</span>
             </div>
             <p className="text-xs text-muted mt-1 max-w-xl leading-relaxed">
-              Public research-engineering prototype for destination analysts, geospatial teams,
-              sustainability practitioners, and researchers.
+              {t('app.footerDescription')}
             </p>
           </div>
 
@@ -367,7 +397,7 @@ export default function App() {
               onClick={() => setIsMethodologyOpen(true)}
               className="text-muted hover:text-ink transition-colors"
             >
-              Epistemic charter &amp; standards
+              {t('app.footerCharterBtn')}
             </button>
             <span className="text-hairline-strong">·</span>
             <a
@@ -376,7 +406,7 @@ export default function App() {
               rel="noopener noreferrer"
               className="inline-flex items-center gap-1 text-muted hover:text-ink transition-colors"
             >
-              <span>Source repository</span>
+              <span>{t('app.footerSourceRepo')}</span>
               <ExternalLink className="w-3 h-3" />
             </a>
           </div>
@@ -387,7 +417,7 @@ export default function App() {
       <DecisionBriefModal
         isOpen={isDecisionBriefOpen}
         onClose={() => setIsDecisionBriefOpen(false)}
-        assessment={assessment}
+        assessment={displayedAssessment}
         territory={currentTerritory}
       />
 

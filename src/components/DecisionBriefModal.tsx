@@ -8,6 +8,8 @@ import {
   Check,
   AlertTriangle
 } from 'lucide-react';
+import { useLocale } from '../i18n/LocaleProvider';
+import { localizeConfidenceLabel, localizeDataStatusLabel, localizeEvaluationLabel } from '../i18n/ui';
 
 interface DecisionBriefModalProps {
   isOpen: boolean;
@@ -22,12 +24,15 @@ export const DecisionBriefModal: React.FC<DecisionBriefModalProps> = ({
   assessment,
   territory
 }) => {
+  const { locale, t } = useLocale();
   const [copied, setCopied] = useState(false);
   const assessmentRef = assessment.id.split('-').at(-1)?.toUpperCase() ?? 'ASSESSMENT';
   const docId = `TID-DSB-${territory.code}-${new Date().getFullYear()}-${assessmentRef}`;
+  const dataStatusLabel = localizeDataStatusLabel(assessment.dataStatus, locale);
+  const confidenceLevelLabel = localizeConfidenceLabel(assessment.confidence.level, locale);
 
   if (!isOpen) return null;
-  const dateStr = new Date().toLocaleDateString('en-GB', {
+  const dateStr = new Date().toLocaleDateString(locale === 'es' ? 'es-ES' : 'en-GB', {
     day: '2-digit',
     month: 'long',
     year: 'numeric'
@@ -39,79 +44,84 @@ export const DecisionBriefModal: React.FC<DecisionBriefModalProps> = ({
   const isResearchSnapshot = isReproduced || isObservedResearch;
 
   const generateMarkdown = () => {
-    return `# TERRITORIAL DECISION SUPPORT BRIEF
-${isDemo ? '> **DEMONSTRATION BRIEF — NOT FOR OPERATIONAL DECISION-MAKING**\n' : ''}${isReproduced ? '> **REPRODUCED RESEARCH BRIEF — NOT CURRENT OPERATIONAL EVIDENCE**\n' : ''}${isObservedResearch ? '> **REAL / DERIVED RESEARCH EVIDENCE — CHECK CLAIM-SPECIFIC LIMITS BEFORE OPERATIONAL USE**\n' : ''}
-**DOCUMENT REF:** ${docId}
-**TERRITORY:** ${territory.title} (${territory.code})
-**CASE / PROJECT:** ${territory.shortName}
-**DATE:** ${dateStr}
-**DATA STATUS:** ${assessment.dataStatus.toUpperCase()}
-**EVIDENCE CONFIDENCE:** ${assessment.confidence.level.toUpperCase()} (${assessment.confidence.marginOrInterval || 'N/A'})
+    return `${t('decisionBrief.mdTitle')}
+${isDemo ? `${t('decisionBrief.mdDemoBanner')}\n` : ''}${isReproduced ? `${t('decisionBrief.mdReproducedBanner')}\n` : ''}${isObservedResearch ? `${t('decisionBrief.mdResearchBanner')}\n` : ''}
+${t('decisionBrief.mdDocRef')} ${docId}
+${t('decisionBrief.mdTerritory')} ${territory.title} (${territory.code})
+${t('decisionBrief.mdCase')} ${territory.shortName}
+${t('decisionBrief.mdDate')} ${dateStr}
+${t('decisionBrief.mdDataStatus')} ${dataStatusLabel.toUpperCase()}
+${t('decisionBrief.mdConfidence')} ${confidenceLevelLabel.toUpperCase()} (${assessment.confidence.marginOrInterval || 'N/A'})
 
 ---
 
-## 1. ANALYTICAL INQUIRY
+${t('decisionBrief.mdSection1')}
 > "${assessment.question}"
 
-**STATUS:** ${assessment.statusHeadline}
+${t('decisionBrief.mdStatus')} ${assessment.statusHeadline}
 
 ---
 
-## 2. OBSERVED SIGNAL
+${t('decisionBrief.mdSection2')}
 ${assessment.signal.observation}
-- **Spatial Scope:** ${assessment.signal.spatialScope}
-- **Temporal Window:** ${assessment.signal.temporalWindow}
+- ${t('decisionBrief.mdSpatialScope')} ${assessment.signal.spatialScope}
+- ${t('decisionBrief.mdTemporalWindow')} ${assessment.signal.temporalWindow}
 
 ---
 
-## 3. SUPPORTING EVIDENCE
+${t('decisionBrief.mdSection3')}
 ${assessment.evidence.metrics.map((m) => `- **${m.label}:** ${m.value} ${m.unit} (Baseline: ${m.baseline} | Delta: ${m.delta})`).join('\n')}
 
-### Datasets & Indicators:
+${t('decisionBrief.mdDatasetsHeading')}
 ${assessment.evidence.supportingDatasets.map((ds) => `- ${ds}`).join('\n')}
 
 ---
 
-## 4. INTERPRETATION
+${t('decisionBrief.mdSection4')}
 ${assessment.interpretation.inferences.map((inf) => `- ${inf}`).join('\n')}
-*Physical Mechanism:* ${assessment.interpretation.plausibleMechanisms}
+${t('decisionBrief.mdPhysicalMechanism')} ${assessment.interpretation.plausibleMechanisms}
 
 ---
 
-## 5. EVIDENCE LIMIT (WHAT CANNOT BE INFERRED)
+${t('decisionBrief.mdSection5')}
 ${assessment.evidenceLimit.strictlyForbiddenInferences.map((lim) => `- ❌ ${lim}`).join('\n')}
 
 ---
 
-## 6. COMPETING EXPLANATIONS / CONFOUNDERS
-${assessment.competingExplanations.map((exp) => `- **[${exp.evaluation}] ${exp.explanation}**: ${exp.reasoning} (Investigation: ${exp.investigationNeeded})`).join('\n')}
+${t('decisionBrief.mdSection6')}
+${assessment.competingExplanations.map((exp) => `- **[${localizeEvaluationLabel(exp.evaluation, locale)}] ${exp.explanation}**: ${exp.reasoning} (Investigation: ${exp.investigationNeeded})`).join('\n')}
 
 ---
 
-## 7. EVIDENCE CONFIDENCE
-- **Confidence Level:** ${assessment.confidence.level}
+${t('decisionBrief.mdSection7')}
+- ${t('decisionBrief.mdConfidenceLevel')} ${confidenceLevelLabel}
 ${assessment.confidence.justification.map((j) => `- ${j}`).join('\n')}
 
 ---
 
-## 8. DECISION IMPLICATION
-### Managerial Considerations:
+${t('decisionBrief.mdSection8')}
+${t('decisionBrief.mdManagerialHeading')}
 ${assessment.decisionImplication.managerialConsiderations.map((c, i) => `${i + 1}. ${c}`).join('\n')}
 
-### Cautions & Guardrails:
+${t('decisionBrief.mdCautionsHeading')}
 ${assessment.decisionImplication.cautionsAndGuardrails.map((cg, i) => `${i + 1}. ${cg}`).join('\n')}
 
 ---
 
-## 9. DATA NEEDED NEXT
+${t('decisionBrief.mdSection9')}
 ${assessment.dataNeededNext.map((d, i) => `${i + 1}. ${d}`).join('\n')}
 
 ---
 
-## 10. PROVENANCE & LIMITATIONS
-${assessment.provenance.map((p) => `- ${p.sensorOrPlatform} | Authority: ${p.sourceAuthority} | Res: ${p.spatialResolution} | Status: ${p.dataStatus || 'Proxy'}`).join('\n')}
+${t('decisionBrief.mdSection10')}
+${assessment.provenance
+  .map(
+    (p) =>
+      `- ${p.sensorOrPlatform} | ${t('decisionBrief.mdProvAuthority')} ${p.sourceAuthority} | ${t('decisionBrief.mdProvRes')} ${p.spatialResolution} | ${t('decisionBrief.mdProvStatus')} ${localizeDataStatusLabel(p.dataStatus || 'Proxy', locale)}`
+  )
+  .join('\n')}
 
-**Limitations:** Generated for decision-support and research evaluation. Does not replace formal field validation, environmental assessment, or institutional decision procedures.
+${t('decisionBrief.mdLimitations')}
 `;
   };
 
@@ -144,38 +154,38 @@ ${assessment.provenance.map((p) => `- ${p.sensorOrPlatform} | Authority: ${p.sou
         <div className="no-print bg-surface-sunken border-b border-hairline px-5 py-3 flex items-center justify-between gap-3">
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-brand" />
-            <span className="text-sm font-semibold text-ink">Decision support brief</span>
+            <span className="text-sm font-semibold text-ink">{t('decisionBrief.toolbarTitle')}</span>
           </div>
 
           <div className="flex items-center gap-2">
             <button
               onClick={handleCopy}
               className="inline-flex items-center gap-1.5 rounded-md border border-hairline bg-surface px-2.5 py-1.5 text-xs font-medium text-ink-soft hover:border-hairline-strong transition-colors"
-              title="Copy brief in Markdown"
+              title={t('decisionBrief.copyMd')}
             >
               {copied ? <Check className="w-3.5 h-3.5 text-brand" /> : <Copy className="w-3.5 h-3.5" />}
-              <span>{copied ? 'Copied' : 'Copy MD'}</span>
+              <span>{copied ? t('decisionBrief.copied') : t('decisionBrief.copyMd')}</span>
             </button>
             <button
               onClick={handleDownload}
               className="inline-flex items-center gap-1.5 rounded-md border border-hairline bg-surface px-2.5 py-1.5 text-xs font-medium text-ink-soft hover:border-hairline-strong transition-colors"
-              title="Download JSON"
+              title={t('decisionBrief.jsonBtn')}
             >
               <Download className="w-3.5 h-3.5" />
-              <span>JSON</span>
+              <span>{t('decisionBrief.jsonBtn')}</span>
             </button>
             <button
               onClick={handlePrint}
               className="inline-flex items-center gap-1.5 rounded-md bg-brand px-3 py-1.5 text-xs font-semibold text-white hover:bg-brand-strong transition-colors"
-              title="Print or save PDF"
+              title={t('decisionBrief.printBtn')}
             >
               <Printer className="w-3.5 h-3.5" />
-              <span>Print / PDF</span>
+              <span>{t('decisionBrief.printBtn')}</span>
             </button>
             <button
               onClick={onClose}
               className="p-1.5 rounded-md text-muted hover:text-ink hover:bg-surface transition-colors ml-1"
-              aria-label="Close"
+              aria-label={t('decisionBrief.closeAria')}
             >
               <X className="w-5 h-5" />
             </button>
@@ -189,9 +199,9 @@ ${assessment.provenance.map((p) => `- ${p.sensorOrPlatform} | Authority: ${p.sou
             <div className="flex items-center justify-between gap-3 rounded-lg bg-hati-soft border border-hati/25 p-3 text-xs">
               <div className="flex items-center gap-2 text-hati-strong font-semibold">
                 <AlertTriangle className="w-4 h-4 shrink-0" />
-                <span>Demonstration brief — not for operational decision-making</span>
+                <span>{t('decisionBrief.demoBanner')}</span>
               </div>
-              <span className="text-hati-strong/80 hidden sm:inline font-mono">Data status: {assessment.dataStatus}</span>
+              <span className="text-hati-strong/80 hidden sm:inline font-mono">{t('decisionBrief.dataStatusLabel')}: {dataStatusLabel}</span>
             </div>
           )}
 
@@ -201,73 +211,76 @@ ${assessment.provenance.map((p) => `- ${p.sensorOrPlatform} | Authority: ${p.sou
                 <Check className="w-4 h-4 shrink-0" />
                 <span>
                   {isReproduced
-                    ? 'Reproduced research brief — not current operational evidence'
-                    : 'Real / derived research evidence — claim limits apply'}
+                    ? t('decisionBrief.reproducedBanner')
+                    : t('decisionBrief.realDerivedBanner')}
                 </span>
               </div>
               <span className="text-brand-strong/75 hidden sm:inline font-mono">
                 {isReproduced
-                  ? 'Model outputs remain subject to their evidence ceiling'
-                  : 'Environmental signal ≠ tourism impact'}
+                  ? t('decisionBrief.reproducedBannerNote')
+                  : t('decisionBrief.realDerivedBannerNote')}
               </span>
             </div>
           )}
 
           {/* Header */}
           <div className="border-b border-hairline pb-5">
-            <div className="meta-label mb-2">Tourism Intelligence Desk · Decision support system</div>
+            <div className="meta-label mb-2">{t('decisionBrief.headerKicker')}</div>
             <h1 className="text-2xl font-bold tracking-tight text-ink">
-              Territorial decision support brief
+              {t('decisionBrief.title')}
             </h1>
             <p className="mt-1 text-sm text-muted">
-              Territory: {territory.title} ({territory.code}) · Sub-topic: {territory.subtitle}
+              {t('decisionBrief.territorySubtopic')
+                .replace('{title}', territory.title)
+                .replace('{code}', territory.code)
+                .replace('{subtitle}', territory.subtitle)}
             </p>
 
             <dl className="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-3 rounded-lg bg-surface-sunken p-3 text-xs">
               <div>
-                <dt className="text-faint text-[10px]">Document ref</dt>
+                <dt className="text-faint text-[10px]">{t('decisionBrief.documentRefLabel')}</dt>
                 <dd className="font-mono font-semibold text-ink break-all">{docId}</dd>
               </div>
               <div>
-                <dt className="text-faint text-[10px]">Date issued</dt>
+                <dt className="text-faint text-[10px]">{t('decisionBrief.dateIssuedLabel')}</dt>
                 <dd className="text-ink">{dateStr}</dd>
               </div>
               <div>
-                <dt className="text-faint text-[10px]">Data status</dt>
+                <dt className="text-faint text-[10px]">{t('decisionBrief.dataStatusLabel')}</dt>
                 <dd className={`font-semibold ${isDemo ? 'text-hati-strong' : 'text-brand-strong'}`}>
-                  {assessment.dataStatus}
+                  {dataStatusLabel}
                 </dd>
               </div>
               <div>
-                <dt className="text-faint text-[10px]">Evidence confidence</dt>
-                <dd className="font-semibold text-ink">{assessment.confidence.level}</dd>
+                <dt className="text-faint text-[10px]">{t('decisionBrief.evidenceConfidenceLabel')}</dt>
+                <dd className="font-semibold text-ink">{confidenceLevelLabel}</dd>
               </div>
             </dl>
           </div>
 
           {/* 1. Inquiry */}
           <section>
-            <div className={sectionLabel}>1. Analytical inquiry &amp; status</div>
+            <div className={sectionLabel}>{t('decisionBrief.section1')}</div>
             <div className="mt-1.5 rounded-lg bg-surface-sunken p-3.5">
               <div className="text-sm font-medium text-ink">“{assessment.question}”</div>
-              <div className="mt-1.5 text-xs text-muted">Evaluation: {assessment.statusHeadline}</div>
+              <div className="mt-1.5 text-xs text-muted">{t('decisionBrief.evaluationLabel')} {assessment.statusHeadline}</div>
             </div>
           </section>
 
           {/* 2. Observed signal */}
           <section>
-            <div className={sectionLabel}>2. Observed signal</div>
+            <div className={sectionLabel}>{t('decisionBrief.section2')}</div>
             <p className="mt-1.5 text-sm text-ink-soft leading-relaxed">{assessment.signal.observation}</p>
             <div className="mt-1.5 text-xs text-muted flex flex-wrap gap-x-4 gap-y-1">
-              <span>Scope: {assessment.signal.spatialScope}</span>
+              <span>{t('decisionBrief.scopeLabel')} {assessment.signal.spatialScope}</span>
               <span className="text-hairline-strong">·</span>
-              <span>Window: {assessment.signal.temporalWindow}</span>
+              <span>{t('decisionBrief.windowLabel')} {assessment.signal.temporalWindow}</span>
             </div>
           </section>
 
           {/* 3. Supporting evidence */}
           <section>
-            <div className={sectionLabel}>3. Supporting evidence &amp; indicators</div>
+            <div className={sectionLabel}>{t('decisionBrief.section3')}</div>
             <div className="mt-2 grid grid-cols-2 sm:grid-cols-4 gap-2">
               {assessment.evidence.metrics.map((m, idx) => (
                 <div key={idx} className="rounded-lg bg-surface-sunken p-2.5">
@@ -289,7 +302,7 @@ ${assessment.provenance.map((p) => `- ${p.sensorOrPlatform} | Authority: ${p.sou
 
           {/* 4. Interpretation */}
           <section>
-            <div className={sectionLabel}>4. Scientific interpretation</div>
+            <div className={sectionLabel}>{t('decisionBrief.section4')}</div>
             <ul className="mt-1.5 space-y-1 text-sm text-ink-soft">
               {assessment.interpretation.inferences.map((inf, idx) => (
                 <li key={idx} className="flex items-start gap-2">
@@ -299,7 +312,7 @@ ${assessment.provenance.map((p) => `- ${p.sensorOrPlatform} | Authority: ${p.sou
               ))}
             </ul>
             <div className="mt-2 rounded-lg bg-surface-sunken p-2.5 text-xs text-muted">
-              <span className="font-semibold text-ink block mb-0.5">Physical mechanism</span>
+              <span className="font-semibold text-ink block mb-0.5">{t('decisionBrief.physicalMechanismLabel')}</span>
               {assessment.interpretation.plausibleMechanisms}
             </div>
           </section>
@@ -307,7 +320,7 @@ ${assessment.provenance.map((p) => `- ${p.sensorOrPlatform} | Authority: ${p.sou
           {/* 5. Evidence limits */}
           <section className="rounded-lg bg-hati-soft border border-hati/25 p-3.5">
             <div className="text-xs font-semibold text-hati-strong uppercase tracking-wide mb-1.5">
-              5. Evidence limits (what cannot be inferred)
+              {t('decisionBrief.section5')}
             </div>
             <ul className="space-y-1 text-sm text-ink-soft">
               {assessment.evidenceLimit.strictlyForbiddenInferences.map((lim, idx) => (
@@ -321,14 +334,14 @@ ${assessment.provenance.map((p) => `- ${p.sensorOrPlatform} | Authority: ${p.sou
 
           {/* 6. Competing explanations */}
           <section>
-            <div className={sectionLabel}>6. Competing explanations / confounder screening</div>
+            <div className={sectionLabel}>{t('decisionBrief.section6')}</div>
             <div className="mt-2 space-y-2">
               {assessment.competingExplanations.map((exp, idx) => (
                 <div key={idx} className="rounded-lg bg-surface-sunken p-2.5">
                   <div className="flex items-center justify-between gap-2 mb-0.5">
                     <span className="text-sm font-medium text-ink">{exp.explanation}</span>
                     <span className="meta-label rounded-full border border-hairline bg-surface px-2 py-0.5">
-                      {exp.evaluation}
+                      {localizeEvaluationLabel(exp.evaluation, locale)}
                     </span>
                   </div>
                   <p className="text-xs text-muted">{exp.reasoning}</p>
@@ -339,10 +352,10 @@ ${assessment.provenance.map((p) => `- ${p.sensorOrPlatform} | Authority: ${p.sou
 
           {/* 7. Decision implication */}
           <section>
-            <div className={sectionLabel}>7. Decision implications for tourism management</div>
+            <div className={sectionLabel}>{t('decisionBrief.section7')}</div>
             <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div className="rounded-lg bg-surface-sunken p-3">
-                <div className="text-xs font-semibold text-ink mb-1.5">Managerial considerations</div>
+                <div className="text-xs font-semibold text-ink mb-1.5">{t('decisionBrief.managerialConsiderationsLabel')}</div>
                 <ul className="space-y-1 text-sm text-ink-soft">
                   {assessment.decisionImplication.managerialConsiderations.map((c, i) => (
                     <li key={i} className="flex items-start gap-2">
@@ -353,7 +366,7 @@ ${assessment.provenance.map((p) => `- ${p.sensorOrPlatform} | Authority: ${p.sou
                 </ul>
               </div>
               <div className="rounded-lg bg-surface-sunken p-3">
-                <div className="text-xs font-semibold text-ink mb-1.5">Cautions &amp; guardrails</div>
+                <div className="text-xs font-semibold text-ink mb-1.5">{t('decisionBrief.cautionsGuardrailsLabel')}</div>
                 <ul className="space-y-1 text-sm text-muted">
                   {assessment.decisionImplication.cautionsAndGuardrails.map((cg, i) => (
                     <li key={i} className="flex items-start gap-2">
@@ -368,7 +381,7 @@ ${assessment.provenance.map((p) => `- ${p.sensorOrPlatform} | Authority: ${p.sou
 
           {/* 8. Data needed next */}
           <section>
-            <div className={sectionLabel}>8. Data needed next (to reduce uncertainty)</div>
+            <div className={sectionLabel}>{t('decisionBrief.section8')}</div>
             <ul className="mt-1.5 space-y-1 text-sm text-ink-soft">
               {assessment.dataNeededNext.map((d, i) => (
                 <li key={i} className="flex items-start gap-2">
@@ -382,12 +395,12 @@ ${assessment.provenance.map((p) => `- ${p.sensorOrPlatform} | Authority: ${p.sou
           {/* Sign-off */}
           <div className="border-t border-hairline pt-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-muted">
             <div>
-              <div>System: Tourism Intelligence Desk prototype</div>
-              <div>Attribution: github.com/soroushkarahrodi79-oss</div>
+              <div>{t('decisionBrief.signOffSystem')}</div>
+              <div>{t('decisionBrief.signOffAttribution')}</div>
             </div>
             <div className="sm:text-right">
-              <div>Version: Prototype v0.1</div>
-              <div>Operational validation required prior to implementation</div>
+              <div>{t('decisionBrief.signOffVersion')}</div>
+              <div>{t('decisionBrief.signOffValidation')}</div>
             </div>
           </div>
         </div>
