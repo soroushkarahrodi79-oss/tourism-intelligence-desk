@@ -6,15 +6,23 @@ import { CURATED_QUESTIONS_ES } from '../i18n/questionRouting';
 
 interface QuestionInputProps {
   territory: TerritoryCase;
-  activeQuestion: string;
-  onAskQuestion: (question: string) => void;
+  // The stable identity of the currently active curated question — an index
+  // into `displayedQuestions` (which is index-aligned across locales), or
+  // null when a custom question is active. NEVER compare localized question
+  // strings directly: the same curated question's text differs by locale,
+  // so a string comparison silently loses "selected" state across a
+  // language switch even though the underlying question hasn't changed.
+  activeQuestionIndex: number | null;
+  onAskCurated: (question: string, index: number) => void;
+  onAskCustom: (question: string) => void;
   isLoading: boolean;
 }
 
 export const QuestionInput: React.FC<QuestionInputProps> = ({
   territory,
-  activeQuestion,
-  onAskQuestion,
+  activeQuestionIndex,
+  onAskCurated,
+  onAskCustom,
   isLoading
 }) => {
   const { locale, t } = useLocale();
@@ -26,7 +34,7 @@ export const QuestionInput: React.FC<QuestionInputProps> = ({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (customInput.trim()) {
-      onAskQuestion(customInput.trim());
+      onAskCustom(customInput.trim());
     }
   };
 
@@ -45,11 +53,11 @@ export const QuestionInput: React.FC<QuestionInputProps> = ({
         <div className="text-xs text-muted mb-2">{t('questionInput.curatedInquiries')}</div>
         <div className="flex flex-wrap gap-2">
           {displayedQuestions.map((q, idx) => {
-            const isSelected = activeQuestion.trim().toLowerCase() === q.trim().toLowerCase();
+            const isSelected = idx === activeQuestionIndex;
             return (
               <button
                 key={idx}
-                onClick={() => onAskQuestion(q)}
+                onClick={() => onAskCurated(q, idx)}
                 aria-pressed={isSelected}
                 className={`text-left text-xs px-3 py-1.5 rounded-full border transition-colors ${
                   isSelected

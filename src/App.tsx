@@ -12,7 +12,7 @@ import { DecisionBriefModal } from './components/DecisionBriefModal';
 import { MethodologyModal } from './components/MethodologyModal';
 import { useLocale } from './i18n/LocaleProvider';
 import { localizeAssessment, localizeTerritory } from './i18n/localize';
-import { evaluateLocalizedQuestion } from './i18n/questionRouting';
+import { evaluateLocalizedQuestion, findCuratedQuestionIndex } from './i18n/questionRouting';
 import { localizeEvidenceManifest } from './i18n/evidenceManifest.es';
 import { localizeDataStatusLabel } from './i18n/ui';
 import {
@@ -27,9 +27,14 @@ import {
 export default function App() {
   const { locale, t } = useLocale();
   const [activeTerritoryId, setActiveTerritoryId] = useState<TerritoryId>('madrid-hati');
-  const [activeQuestion, setActiveQuestion] = useState<string>(
-    TERRITORY_CASES['madrid-hati'].sampleQuestions[0]
-  );
+  // The stable identity of the active curated question — an index into
+  // TERRITORY_CASES[id].sampleQuestions / CURATED_QUESTIONS_ES[id] (the two
+  // are index-aligned across locales), or null for a custom question. Using
+  // an index rather than the literal (locale-dependent) question text is
+  // what keeps the selected chip correct across a language switch: the
+  // displayed text changes, but the index identifying "which curated
+  // question this is" does not.
+  const [activeQuestionIndex, setActiveQuestionIndex] = useState<number | null>(0);
   // `assessment` is always kept as the CANONICAL (English) EvidenceAssessment.
   // Localization happens only at render time so a language switch never
   // resets or re-routes the underlying case/answer.
@@ -62,8 +67,9 @@ export default function App() {
     setSelectedFeature(null);
 
     // Default to the first curated question for the selected evidence case.
-    const defaultQ = TERRITORY_CASES[id].sampleQuestions[0];
-    setActiveQuestion(defaultQ);
+    // Index 0 is locale-independent, so this selects the correct chip in
+    // whichever language is currently active.
+    setActiveQuestionIndex(0);
 
     const defaultAssessmentKey = id === 'madrid-hati' ? 'madrid-hati-q1' : 'guadarrama-snto-q1';
     setAssessment(EVIDENCE_ASSESSMENTS[defaultAssessmentKey]);
@@ -73,7 +79,7 @@ export default function App() {
     setActiveTerritoryId(id);
     setSelectedStation(null);
     setSelectedFeature(null);
-    setActiveQuestion(question);
+    setActiveQuestionIndex(findCuratedQuestionIndex(id, question, locale));
     setAssessment(evaluateLocalizedQuestion(id, question, locale));
     setIsLoading(false);
 
@@ -82,12 +88,24 @@ export default function App() {
     }, 0);
   };
 
-  // Handler when user asks a question
-  const handleAskQuestion = (question: string) => {
-    setActiveQuestion(question);
+  // Handler when the user clicks a curated question chip — its index is
+  // already known at the call site, so no lookup is needed.
+  const handleAskCurated = (question: string, index: number) => {
+    setActiveQuestionIndex(index);
     setIsLoading(true);
 
-    // Controlled assessment synthesis
+    setTimeout(() => {
+      const result = evaluateLocalizedQuestion(activeTerritoryId, question, locale);
+      setAssessment(result);
+      setIsLoading(false);
+    }, 220);
+  };
+
+  // Handler when the user submits a custom typed question.
+  const handleAskCustom = (question: string) => {
+    setActiveQuestionIndex(null);
+    setIsLoading(true);
+
     setTimeout(() => {
       const result = evaluateLocalizedQuestion(activeTerritoryId, question, locale);
       setAssessment(result);
@@ -214,8 +232,9 @@ export default function App() {
             {/* Analytical question */}
             <QuestionInput
               territory={currentTerritory}
-              activeQuestion={activeQuestion}
-              onAskQuestion={handleAskQuestion}
+              activeQuestionIndex={activeQuestionIndex}
+              onAskCurated={handleAskCurated}
+              onAskCustom={handleAskCustom}
               isLoading={isLoading}
             />
 

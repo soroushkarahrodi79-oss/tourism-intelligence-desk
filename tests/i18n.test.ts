@@ -14,7 +14,8 @@ import { localizeEvidenceManifest } from '../src/i18n/evidenceManifest.es';
 import { TERRITORY_CASES_ES } from '../src/i18n/cases.es';
 import {
   CURATED_QUESTIONS_ES,
-  evaluateLocalizedQuestion
+  evaluateLocalizedQuestion,
+  findCuratedQuestionIndex
 } from '../src/i18n/questionRouting';
 import { evaluateAnalyticalQuestion } from '../src/services/analysisEngine';
 
@@ -388,4 +389,54 @@ test('17. CURATED_QUESTIONS_ES and the territory sampleQuestions ES overlay neve
       `CURATED_QUESTIONS_ES['${id}'] must match TERRITORY_CASES_ES['${id}'].sampleQuestions exactly, or curated-question routing silently breaks`
     );
   });
+});
+
+// ---------------------------------------------------------------------------
+// Regression tests for the stable selected-question identity fix: the
+// "selected" curated chip must be keyed by index (locale-independent), never
+// by comparing localized question text directly — that comparison silently
+// loses the selection across a language switch even though the underlying
+// curated question hasn't changed.
+// ---------------------------------------------------------------------------
+
+test('18. findCuratedQuestionIndex returns the SAME index for a curated question regardless of display language', () => {
+  const enQuestion = TERRITORY_CASES['guadarrama-snto'].sampleQuestions[2];
+  const esQuestion = CURATED_QUESTIONS_ES['guadarrama-snto'][2];
+
+  const idxFromEn = findCuratedQuestionIndex('guadarrama-snto', enQuestion, 'en');
+  const idxFromEs = findCuratedQuestionIndex('guadarrama-snto', esQuestion, 'es');
+
+  assert.equal(idxFromEn, 2);
+  assert.equal(idxFromEs, 2);
+  assert.equal(idxFromEn, idxFromEs, 'the stable identity must survive a language switch');
+});
+
+test('19. findCuratedQuestionIndex returns null for a custom (non-curated) question in either locale', () => {
+  assert.equal(
+    findCuratedQuestionIndex('guadarrama-snto', '¿Se pueden cerrar senderos por el turismo?', 'es'),
+    null
+  );
+  assert.equal(
+    findCuratedQuestionIndex('madrid-hati', 'What is the weather like today?', 'en'),
+    null
+  );
+});
+
+test('20. an EN-selected curated question maps to the equivalent ES chip index, and back to EN', () => {
+  // Simulates: user selects curated question index 3 in English, switches to
+  // Spanish (the identity — the index — must still point at index 3, i.e.
+  // the correct Spanish chip becomes selected), then switches back to
+  // English (index 3 again, still correct).
+  const index = 3;
+  const enText = TERRITORY_CASES['madrid-hati'].sampleQuestions[index];
+  const idxAfterSwitchToEs = findCuratedQuestionIndex('madrid-hati', enText, 'en');
+  assert.equal(idxAfterSwitchToEs, index);
+
+  // The chip the UI would now render as selected in Spanish mode:
+  const esText = CURATED_QUESTIONS_ES['madrid-hati'][idxAfterSwitchToEs!];
+  const idxBackInEs = findCuratedQuestionIndex('madrid-hati', esText, 'es');
+  assert.equal(idxBackInEs, index);
+
+  const idxBackInEn = findCuratedQuestionIndex('madrid-hati', enText, 'en');
+  assert.equal(idxBackInEn, index);
 });

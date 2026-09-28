@@ -92,6 +92,28 @@ const SPANISH_TRIGGER_MAP: [RegExp, string][] = [
   [/criptomoneda/i, 'cryptocurrency']
 ];
 
+// ---------------------------------------------------------------------------
+// findCuratedQuestionIndex — the stable identity for "which curated question
+// (if any) is currently selected", independent of display language. Looks up
+// `displayedQuestion` in whichever curated array matches the given locale
+// (CURATED_QUESTIONS_ES or the canonical English sampleQuestions — the two
+// are guaranteed index-aligned) and returns its index, or null if the text
+// doesn't match any curated question (a custom question). UI code should key
+// "is this chip selected" off this index, never off comparing localized
+// question strings directly — that comparison silently breaks across a
+// language switch, since the displayed text changes but the identity of the
+// underlying curated question does not.
+// ---------------------------------------------------------------------------
+export function findCuratedQuestionIndex(
+  territoryId: TerritoryId,
+  displayedQuestion: string,
+  locale: Locale
+): number | null {
+  const list = locale === 'es' ? CURATED_QUESTIONS_ES[territoryId] : TERRITORY_CASES[territoryId].sampleQuestions;
+  const idx = list.findIndex((q) => q.trim().toLowerCase() === displayedQuestion.trim().toLowerCase());
+  return idx === -1 ? null : idx;
+}
+
 export function canonicalizeSpanishGuardrailTerms(question: string, locale: Locale): string {
   if (locale !== 'es') return question;
   const lower = question.toLowerCase();
@@ -132,10 +154,8 @@ export function evaluateLocalizedQuestion(
   const territory = TERRITORY_CASES[territoryId];
 
   if (locale === 'es') {
-    const curatedIdx = CURATED_QUESTIONS_ES[territoryId].findIndex(
-      (q) => q.trim().toLowerCase() === displayedQuestion.trim().toLowerCase()
-    );
-    if (curatedIdx !== -1) {
+    const curatedIdx = findCuratedQuestionIndex(territoryId, displayedQuestion, locale);
+    if (curatedIdx !== null) {
       // A curated Spanish question maps to its canonical English equivalent
       // by index. The returned object's `.question` is already the correct
       // canonical English text (from EVIDENCE_ASSESSMENTS) — it is returned
