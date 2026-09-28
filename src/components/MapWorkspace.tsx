@@ -33,19 +33,33 @@ export const MapWorkspace: React.FC<MapWorkspaceProps> = ({
   const [cursorCoords, setCursorCoords] = useState<{ lat: number; lng: number } | null>(null);
   const [tileLoadError, setTileLoadError] = useState(false);
 
+  // CARTO requires an API key for external basemap use.
+  // The key is injected at build time by GitHub Actions and restricted by CARTO
+  // to the GitHub Pages host. It is intentionally never hard-coded in the repo.
+  const cartoBasemapKey = import.meta.env.VITE_CARTO_BASEMAP_KEY?.trim();
+
+  const cartoRasterUrl = (style: 'dark_all' | 'light_all') => {
+    const base = `https://basemaps.cartocdn.com/rastertiles/${style}/{z}/{x}/{y}{r}.png`;
+    return cartoBasemapKey ? `${base}?key=${encodeURIComponent(cartoBasemapKey)}` : base;
+  };
+
   // Basemap URLs
   const basemapUrls: Record<BasemapType, { url: string; attribution: string }> = {
     dark: {
-      url: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
-      attribution: '&copy; CARTO &copy; OpenStreetMap'
+      url: cartoRasterUrl('dark_all'),
+      attribution:
+        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, ' +
+        '&copy; <a href="https://carto.com/attribution/">CARTO</a>'
     },
     satellite: {
       url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
       attribution: '&copy; Esri &mdash; Earthstar Geographics'
     },
     positron: {
-      url: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
-      attribution: '&copy; CARTO &copy; OpenStreetMap'
+      url: cartoRasterUrl('light_all'),
+      attribution:
+        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, ' +
+        '&copy; <a href="https://carto.com/attribution/">CARTO</a>'
     }
   };
 
