@@ -23,9 +23,12 @@ export const Header: React.FC<HeaderProps> = ({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
         {/* Brand */}
         <div className="flex items-center gap-3 min-w-0">
-          <span className="grid place-items-center w-9 h-9 rounded-lg bg-brand text-white font-mono font-semibold text-xs shrink-0">
-            TID
-          </span>
+          <img
+            src={`${import.meta.env.BASE_URL}brand/sk-monogram.png`}
+            alt=""
+            aria-hidden="true"
+            className="w-10 h-10 object-contain shrink-0 brightness-0"
+          />
           <div className="min-w-0">
             <div className="font-bold text-ink text-sm sm:text-[15px] leading-tight truncate">
               Tourism Intelligence Desk
