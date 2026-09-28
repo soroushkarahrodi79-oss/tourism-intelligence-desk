@@ -57,7 +57,7 @@ export const TERRITORY_CASES_ES: Record<TerritoryId, TerritoryEsOverlay> = {
       '¿Qué demostró realmente el piloto HATI-Madrid?',
       '¿Cambió la modificación del método térmico las clasificaciones de viabilidad turística?',
       '¿Cambió el cribado basado en restricciones el conjunto de candidatos frente a la línea base del más cercano abierto?',
-      '¿Qué tan robustas fueron las decisiones de HATI bajo la incertidumbre probada?',
+      '¿Hasta qué punto fueron robustas las decisiones de HATI bajo la incertidumbre probada?',
       '¿Demostró HATI que los turistas cambiaron su comportamiento debido al calor?'
     ],
     dataStatusNote:

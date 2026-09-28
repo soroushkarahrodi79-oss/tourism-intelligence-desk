@@ -1,9 +1,17 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 
-import { UI_STRINGS, resolveUiString } from '../src/i18n/ui';
+import {
+  UI_STRINGS,
+  resolveUiString,
+  localizeDataStatusLabel,
+  localizeConfidenceLabel
+} from '../src/i18n/ui';
 import { TERRITORY_CASES, EVIDENCE_ASSESSMENTS } from '../src/data/cases';
+import { EVIDENCE_MANIFEST } from '../src/data/evidenceManifest';
 import { localizeTerritory, localizeAssessment } from '../src/i18n/localize';
+import { localizeEvidenceManifest } from '../src/i18n/evidenceManifest.es';
+import { TERRITORY_CASES_ES } from '../src/i18n/cases.es';
 import {
   CURATED_QUESTIONS_ES,
   evaluateLocalizedQuestion
@@ -197,22 +205,187 @@ test('locale === "en" returns the canonical objects unchanged (identity-safe pas
   assert.equal(localizeAssessment(assessment, 'en'), assessment);
 });
 
-test('guardrail (custom-question) fallback assessments are localized in Spanish without duplicating engine logic', () => {
+test('guardrail (custom-question) fallback assessments route through the same engine and localize only at render time', () => {
   const territory = TERRITORY_CASES['guadarrama-snto'];
   const localizedTerritory = localizeTerritory(territory, 'es');
 
-  const esResult = evaluateLocalizedQuestion(
+  // evaluateLocalizedQuestion NEVER localizes — it always returns the
+  // canonical (English) assessment. Localization is applied separately,
+  // by the caller, at render time.
+  const canonical = evaluateLocalizedQuestion(
     'guadarrama-snto',
     '¿Cuál es el impuesto turístico proyectado para 2050?',
     'es'
   );
 
   // Must still be routed by the SAME deterministic engine (out-of-scope guardrail).
-  assert.equal(esResult.status, 'INSUFFICIENT_EVIDENCE');
-  assert.match(esResult.statusHeadline, /EVIDENCIA INSUFICIENTE/);
-  // The displayed question is the original Spanish text the user saw/typed.
-  assert.equal(esResult.question, '¿Cuál es el impuesto turístico proyectado para 2050?');
-  // Territory-derived interpolations should read in Spanish too.
-  assert.equal(esResult.dataStatus, territory.dataStatus);
-  void localizedTerritory;
+  assert.equal(canonical.status, 'INSUFFICIENT_EVIDENCE');
+  assert.match(canonical.statusHeadline, /INSUFFICIENT EVIDENCE/);
+  // The displayed question is the original Spanish text the user saw/typed,
+  // since this is a genuinely unmatched custom question (dynamic id).
+  assert.equal(canonical.question, '¿Cuál es el impuesto turístico proyectado para 2050?');
+  assert.equal(canonical.dataStatus, territory.dataStatus);
+
+  // Only localizeAssessment (called separately, e.g. at render time in
+  // App.tsx) produces the Spanish text.
+  const esDisplay = localizeAssessment(canonical, 'es', localizedTerritory);
+  assert.match(esDisplay.statusHeadline, /EVIDENCIA INSUFICIENTE/);
+});
+
+// ---------------------------------------------------------------------------
+// Regression tests for the PR #10 correctness review:
+// 1) evaluateLocalizedQuestion must never mutate a canonical
+//    EVIDENCE_ASSESSMENTS object, even when a Spanish custom question routes
+//    (via canonicalizeSpanishGuardrailTerms) to a curated assessment.
+// 2) App state must stay canonical: the same canonical assessment must be
+//    able to render as ES, then EN, then ES again without ever re-running
+//    the scientific engine and without leaking stale-locale text.
+// ---------------------------------------------------------------------------
+
+test('10. a Spanish custom query that routes to a curated assessment never mutates the canonical registry object', () => {
+  const canonicalBefore = JSON.stringify(EVIDENCE_ASSESSMENTS['guadarrama-snto-q3']);
+  const englishQuestionBefore = EVIDENCE_ASSESSMENTS['guadarrama-snto-q3'].question;
+
+  // A paraphrase, NOT an exact CURATED_QUESTIONS_ES match — this exercises
+  // the canonicalizeSpanishGuardrailTerms -> evaluateAnalyticalQuestion path,
+  // which is the path that used to mutate `.question` on the shared object.
+  const result = evaluateLocalizedQuestion(
+    'guadarrama-snto',
+    '¿Se pueden cerrar senderos por el turismo?',
+    'es'
+  );
+  assert.equal(result.id, 'guadarrama-snto-q3');
+
+  const canonicalAfter = JSON.stringify(EVIDENCE_ASSESSMENTS['guadarrama-snto-q3']);
+  assert.equal(canonicalAfter, canonicalBefore, 'the canonical registry object must be byte-identical after routing');
+  assert.equal(
+    EVIDENCE_ASSESSMENTS['guadarrama-snto-q3'].question,
+    englishQuestionBefore,
+    'the canonical English question must be unchanged'
+  );
+  assert.equal(
+    result.question,
+    englishQuestionBefore,
+    'a custom question that resolves to a curated assessment displays the canonical question, not the raw paraphrase'
+  );
+});
+
+test('11. the same canonical assessment renders correctly as ES, then EN, then ES again (no re-run, no leakage)', () => {
+  const territoryEs = localizeTerritory(TERRITORY_CASES['guadarrama-snto'], 'es');
+
+  const canonical = evaluateLocalizedQuestion(
+    'guadarrama-snto',
+    CURATED_QUESTIONS_ES['guadarrama-snto'][2], // "...cierre de senderos..." curated question
+    'es'
+  );
+  assert.equal(canonical.id, 'guadarrama-snto-q3');
+  // The object returned by the routing layer is always canonical/English,
+  // regardless of which locale was used to ask the question.
+  assert.equal(canonical.question, TERRITORY_CASES['guadarrama-snto'].sampleQuestions[2]);
+
+  const es1 = localizeAssessment(canonical, 'es', territoryEs);
+  assert.match(es1.statusHeadline, /Techo de Decisión L5a/);
+
+  const en1 = localizeAssessment(canonical, 'en');
+  assert.equal(en1.statusHeadline, EVIDENCE_ASSESSMENTS['guadarrama-snto-q3'].statusHeadline);
+  assert.equal(en1.question, EVIDENCE_ASSESSMENTS['guadarrama-snto-q3'].question);
+
+  const es2 = localizeAssessment(canonical, 'es', territoryEs);
+  assert.equal(es2.statusHeadline, es1.statusHeadline);
+
+  // The canonical object itself was never touched by any of the three
+  // localize calls above.
+  assert.equal(canonical.statusHeadline, EVIDENCE_ASSESSMENTS['guadarrama-snto-q3'].statusHeadline);
+  assert.equal(JSON.stringify(canonical), JSON.stringify(EVIDENCE_ASSESSMENTS['guadarrama-snto-q3']));
+});
+
+test('12. canonical evidence remains byte-identical after being routed through a curated Spanish question too', () => {
+  const before = JSON.stringify(EVIDENCE_ASSESSMENTS['madrid-hati-q4']);
+  evaluateLocalizedQuestion('madrid-hati', CURATED_QUESTIONS_ES['madrid-hati'][3], 'es');
+  const after = JSON.stringify(EVIDENCE_ASSESSMENTS['madrid-hati-q4']);
+  assert.equal(after, before);
+});
+
+test('13. DataStatus enum values stay canonical internally but display in Spanish', () => {
+  const assessment = EVIDENCE_ASSESSMENTS['guadarrama-snto-q1'];
+  assert.equal(assessment.dataStatus, 'Derived');
+
+  const localized = localizeAssessment(assessment, 'es');
+  // The underlying enum value driving logic must never change.
+  assert.equal(localized.dataStatus, 'Derived');
+
+  // The display-only label helper is what components use to show Spanish text.
+  assert.equal(localizeDataStatusLabel('Demonstration', 'es'), 'Demostración');
+  assert.equal(localizeDataStatusLabel('Proxy', 'es'), 'Proxy');
+  assert.equal(localizeDataStatusLabel('Derived', 'es'), 'Derivado');
+  assert.equal(localizeDataStatusLabel('Validated', 'es'), 'Validado');
+  assert.equal(localizeDataStatusLabel('Observed', 'es'), 'Observado');
+  assert.equal(localizeDataStatusLabel('Model-derived', 'es'), 'Derivado de modelo');
+  assert.equal(localizeDataStatusLabel('Reproduced', 'es'), 'Reproducido');
+  assert.equal(localizeDataStatusLabel('Reproduced', 'en'), 'Reproduced');
+
+  assert.equal(localizeConfidenceLabel('High', 'es'), 'alta');
+  assert.equal(localizeConfidenceLabel('High', 'en'), 'High');
+});
+
+test('14. evidence manifest SHAs/URLs remain identical while snapshotRole/evidenceBoundary localize', () => {
+  const rawHati = EVIDENCE_MANIFEST['madrid-hati'];
+  const localizedHati = localizeEvidenceManifest(rawHati, 'es');
+
+  assert.equal(localizedHati.repository, rawHati.repository);
+  assert.equal(localizedHati.primaryCommit, rawHati.primaryCommit);
+  assert.equal(localizedHati.primarySourceUrl, rawHati.primarySourceUrl);
+  assert.deepEqual(localizedHati.immutableCommits, rawHati.immutableCommits);
+  assert.deepEqual(localizedHati.immutableSources, rawHati.immutableSources);
+  assert.equal(localizedHati.archivalRecord, rawHati.archivalRecord);
+
+  assert.notEqual(localizedHati.snapshotRole, rawHati.snapshotRole);
+  assert.notEqual(localizedHati.evidenceBoundary, rawHati.evidenceBoundary);
+
+  // Never mutates the canonical manifest.
+  const before = JSON.stringify(EVIDENCE_MANIFEST);
+  localizeEvidenceManifest(EVIDENCE_MANIFEST['guadarrama-snto'], 'es');
+  const after = JSON.stringify(EVIDENCE_MANIFEST);
+  assert.equal(after, before);
+});
+
+test('15. Spanish Decision Brief labels (data status, confidence, authority, resolution, status) are localized', () => {
+  assert.equal(resolveUiString(UI_STRINGS, 'decisionBrief.dataStatusLabel', 'es'), 'Estado del dato');
+  assert.equal(resolveUiString(UI_STRINGS, 'decisionBrief.evidenceConfidenceLabel', 'es'), 'Confianza en la evidencia');
+  assert.equal(resolveUiString(UI_STRINGS, 'decisionBrief.mdProvAuthority', 'es'), 'Autoridad:');
+  assert.equal(resolveUiString(UI_STRINGS, 'decisionBrief.mdProvRes', 'es'), 'Res.:');
+  assert.equal(resolveUiString(UI_STRINGS, 'decisionBrief.mdProvStatus', 'es'), 'Estado:');
+  assert.notEqual(
+    resolveUiString(UI_STRINGS, 'decisionBrief.mdProvAuthority', 'en'),
+    resolveUiString(UI_STRINGS, 'decisionBrief.mdProvAuthority', 'es')
+  );
+
+  const assessment = EVIDENCE_ASSESSMENTS['madrid-hati-q1'];
+  assert.equal(localizeDataStatusLabel(assessment.dataStatus, 'es'), 'Reproducido');
+  assert.equal(localizeConfidenceLabel(assessment.confidence.level, 'es'), 'alta');
+  assert.equal(localizeDataStatusLabel(assessment.provenance[0].dataStatus || 'Proxy', 'es'), 'Reproducido');
+});
+
+test('16. existing curated EN/ES equivalence keeps holding after the correction pass', () => {
+  const enResult = evaluateAnalyticalQuestion(
+    'guadarrama-snto',
+    TERRITORY_CASES['guadarrama-snto'].sampleQuestions[2]
+  );
+  const esResult = evaluateLocalizedQuestion(
+    'guadarrama-snto',
+    CURATED_QUESTIONS_ES['guadarrama-snto'][2],
+    'es'
+  );
+  assert.equal(enResult.id, 'guadarrama-snto-q3');
+  assert.equal(esResult.id, enResult.id);
+});
+
+test('17. CURATED_QUESTIONS_ES and the territory sampleQuestions ES overlay never drift apart', () => {
+  (['madrid-hati', 'guadarrama-snto'] as const).forEach((id) => {
+    assert.deepEqual(
+      CURATED_QUESTIONS_ES[id],
+      TERRITORY_CASES_ES[id].sampleQuestions,
+      `CURATED_QUESTIONS_ES['${id}'] must match TERRITORY_CASES_ES['${id}'].sampleQuestions exactly, or curated-question routing silently breaks`
+    );
+  });
 });

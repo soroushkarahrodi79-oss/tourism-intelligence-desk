@@ -9,7 +9,7 @@ import {
   AlertTriangle
 } from 'lucide-react';
 import { useLocale } from '../i18n/LocaleProvider';
-import { localizeEvaluationLabel } from '../i18n/ui';
+import { localizeConfidenceLabel, localizeDataStatusLabel, localizeEvaluationLabel } from '../i18n/ui';
 
 interface DecisionBriefModalProps {
   isOpen: boolean;
@@ -28,6 +28,8 @@ export const DecisionBriefModal: React.FC<DecisionBriefModalProps> = ({
   const [copied, setCopied] = useState(false);
   const assessmentRef = assessment.id.split('-').at(-1)?.toUpperCase() ?? 'ASSESSMENT';
   const docId = `TID-DSB-${territory.code}-${new Date().getFullYear()}-${assessmentRef}`;
+  const dataStatusLabel = localizeDataStatusLabel(assessment.dataStatus, locale);
+  const confidenceLevelLabel = localizeConfidenceLabel(assessment.confidence.level, locale);
 
   if (!isOpen) return null;
   const dateStr = new Date().toLocaleDateString(locale === 'es' ? 'es-ES' : 'en-GB', {
@@ -48,8 +50,8 @@ ${t('decisionBrief.mdDocRef')} ${docId}
 ${t('decisionBrief.mdTerritory')} ${territory.title} (${territory.code})
 ${t('decisionBrief.mdCase')} ${territory.shortName}
 ${t('decisionBrief.mdDate')} ${dateStr}
-${t('decisionBrief.mdDataStatus')} ${assessment.dataStatus.toUpperCase()}
-${t('decisionBrief.mdConfidence')} ${assessment.confidence.level.toUpperCase()} (${assessment.confidence.marginOrInterval || 'N/A'})
+${t('decisionBrief.mdDataStatus')} ${dataStatusLabel.toUpperCase()}
+${t('decisionBrief.mdConfidence')} ${confidenceLevelLabel.toUpperCase()} (${assessment.confidence.marginOrInterval || 'N/A'})
 
 ---
 
@@ -92,7 +94,7 @@ ${assessment.competingExplanations.map((exp) => `- **[${localizeEvaluationLabel(
 ---
 
 ${t('decisionBrief.mdSection7')}
-- ${t('decisionBrief.mdConfidenceLevel')} ${assessment.confidence.level}
+- ${t('decisionBrief.mdConfidenceLevel')} ${confidenceLevelLabel}
 ${assessment.confidence.justification.map((j) => `- ${j}`).join('\n')}
 
 ---
@@ -112,7 +114,12 @@ ${assessment.dataNeededNext.map((d, i) => `${i + 1}. ${d}`).join('\n')}
 ---
 
 ${t('decisionBrief.mdSection10')}
-${assessment.provenance.map((p) => `- ${p.sensorOrPlatform} | Authority: ${p.sourceAuthority} | Res: ${p.spatialResolution} | Status: ${p.dataStatus || 'Proxy'}`).join('\n')}
+${assessment.provenance
+  .map(
+    (p) =>
+      `- ${p.sensorOrPlatform} | ${t('decisionBrief.mdProvAuthority')} ${p.sourceAuthority} | ${t('decisionBrief.mdProvRes')} ${p.spatialResolution} | ${t('decisionBrief.mdProvStatus')} ${localizeDataStatusLabel(p.dataStatus || 'Proxy', locale)}`
+  )
+  .join('\n')}
 
 ${t('decisionBrief.mdLimitations')}
 `;
@@ -194,7 +201,7 @@ ${t('decisionBrief.mdLimitations')}
                 <AlertTriangle className="w-4 h-4 shrink-0" />
                 <span>{t('decisionBrief.demoBanner')}</span>
               </div>
-              <span className="text-hati-strong/80 hidden sm:inline font-mono">{t('decisionBrief.dataStatusLabel')}: {assessment.dataStatus}</span>
+              <span className="text-hati-strong/80 hidden sm:inline font-mono">{t('decisionBrief.dataStatusLabel')}: {dataStatusLabel}</span>
             </div>
           )}
 
@@ -241,12 +248,12 @@ ${t('decisionBrief.mdLimitations')}
               <div>
                 <dt className="text-faint text-[10px]">{t('decisionBrief.dataStatusLabel')}</dt>
                 <dd className={`font-semibold ${isDemo ? 'text-hati-strong' : 'text-brand-strong'}`}>
-                  {assessment.dataStatus}
+                  {dataStatusLabel}
                 </dd>
               </div>
               <div>
                 <dt className="text-faint text-[10px]">{t('decisionBrief.evidenceConfidenceLabel')}</dt>
-                <dd className="font-semibold text-ink">{assessment.confidence.level}</dd>
+                <dd className="font-semibold text-ink">{confidenceLevelLabel}</dd>
               </div>
             </dl>
           </div>

@@ -3,6 +3,7 @@ import { X, ShieldCheck, AlertTriangle, ExternalLink, GitCommitHorizontal } from
 import { EVIDENCE_MANIFEST, EVIDENCE_MANIFEST_VERSION } from '../data/evidenceManifest';
 import { BUILD_INFO, shortBuildSha } from '../data/buildInfo';
 import { useLocale } from '../i18n/LocaleProvider';
+import { localizeEvidenceManifest } from '../i18n/evidenceManifest.es';
 
 interface MethodologyModalProps {
   isOpen: boolean;
@@ -146,7 +147,8 @@ export const MethodologyModal: React.FC<MethodologyModalProps> = ({ isOpen, onCl
               {t('methodology.section5Body')}
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {Object.values(EVIDENCE_MANIFEST).map((entry) => {
+              {Object.values(EVIDENCE_MANIFEST).map((rawEntry) => {
+                const entry = localizeEvidenceManifest(rawEntry, locale);
                 const primaryCommit = Object.values(entry.immutableCommits).at(-1) || '';
                 const primaryUrl = Object.values(entry.immutableSources)[0];
                 return (

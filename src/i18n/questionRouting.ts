@@ -2,7 +2,6 @@ import { EvidenceAssessment, TerritoryId } from '../types';
 import { TERRITORY_CASES } from '../data/cases';
 import { evaluateAnalyticalQuestion } from '../services/analysisEngine';
 import { Locale } from './LocaleProvider';
-import { localizeAssessment, localizeTerritory } from './localize';
 
 // ---------------------------------------------------------------------------
 // CURATED_QUESTIONS_ES — Spanish curated question text, index-aligned with
@@ -14,7 +13,7 @@ export const CURATED_QUESTIONS_ES: Record<TerritoryId, string[]> = {
     '¿Qué demostró realmente el piloto HATI-Madrid?',
     '¿Cambió la modificación del método térmico las clasificaciones de viabilidad turística?',
     '¿Cambió el cribado basado en restricciones el conjunto de candidatos frente a la línea base del más cercano abierto?',
-    '¿Qué tan robustas fueron las decisiones de HATI bajo la incertidumbre probada?',
+    '¿Hasta qué punto fueron robustas las decisiones de HATI bajo la incertidumbre probada?',
     '¿Demostró HATI que los turistas cambiaron su comportamiento debido al calor?'
   ],
   'guadarrama-snto': [
@@ -109,8 +108,21 @@ export function canonicalizeSpanishGuardrailTerms(question: string, locale: Loca
 // ---------------------------------------------------------------------------
 // evaluateLocalizedQuestion — the single entry point App.tsx should call
 // instead of evaluateAnalyticalQuestion directly. It never duplicates the
-// scientific routing/guardrail logic; it only canonicalises the input text
-// and localizes the output.
+// scientific routing/guardrail logic, and it NEVER localizes its result:
+// it always returns the CANONICAL EvidenceAssessment (English narrative
+// fields, whatever `evaluateAnalyticalQuestion` produced). Localization is
+// the caller's job, done at render time via `localizeAssessment` — this is
+// what lets a language switch (EN -> ES -> EN) redisplay the exact same
+// canonical assessment without ever re-running the scientific engine and
+// without ever leaving stale-locale text baked into state.
+//
+// Mutation safety: `evaluateAnalyticalQuestion` sometimes returns a direct
+// reference into the EVIDENCE_ASSESSMENTS registry (for any question — in
+// English or via Spanish canonicalisation — that resolves to a curated
+// assessment). This function never assigns onto such a result. Where the
+// displayed question text needs to differ from the object's own `.question`
+// field (the dynamic/unmatched-fallback path only), it returns a new
+// shallow-copied object instead.
 // ---------------------------------------------------------------------------
 export function evaluateLocalizedQuestion(
   territoryId: TerritoryId,
@@ -118,22 +130,44 @@ export function evaluateLocalizedQuestion(
   locale: Locale
 ): EvidenceAssessment {
   const territory = TERRITORY_CASES[territoryId];
-  const localizedTerritory = localizeTerritory(territory, locale);
 
   if (locale === 'es') {
     const curatedIdx = CURATED_QUESTIONS_ES[territoryId].findIndex(
       (q) => q.trim().toLowerCase() === displayedQuestion.trim().toLowerCase()
     );
     if (curatedIdx !== -1) {
+      // A curated Spanish question maps to its canonical English equivalent
+      // by index. The returned object's `.question` is already the correct
+      // canonical English text (from EVIDENCE_ASSESSMENTS) — it is returned
+      // completely untouched, so it can never be mutated, and both the EN
+      // and ES display (the latter via the per-id overlay in
+      // assessments.es.ts) derive correctly from it at render time.
       const canonicalEnglish = territory.sampleQuestions[curatedIdx];
-      const result = evaluateAnalyticalQuestion(territoryId, canonicalEnglish);
-      return localizeAssessment(result, locale, localizedTerritory);
+      return evaluateAnalyticalQuestion(territoryId, canonicalEnglish);
     }
   }
 
   const augmented = canonicalizeSpanishGuardrailTerms(displayedQuestion, locale);
   const result = evaluateAnalyticalQuestion(territoryId, augmented);
-  // `question` is presentational only — restore exactly what the user saw/typed.
-  result.question = displayedQuestion;
-  return localizeAssessment(result, locale, localizedTerritory);
+
+  // If the augmented text still resolved to a curated assessment (e.g. a
+  // custom Spanish question containing "cerrar senderos" gets the English
+  // trigger words appended and matches the same curated trigger an English
+  // question would), treat it exactly like the curated branch above: return
+  // it untouched. Its canonical `.question` and the per-id ES overlay are
+  // the source of truth in both locales, not the user's literal input —
+  // this is what makes "switch back to EN" show the SAME assessment
+  // entirely in English, matching its English curated equivalent exactly.
+  const isDynamicFallback = result.id.startsWith(`eval-${territoryId}-`);
+  if (!isDynamicFallback) {
+    return result;
+  }
+
+  // Genuinely unmatched custom question: `result` is always a freshly
+  // created object here (analysisEngine.ts builds a new literal each time),
+  // but we still never mutate it — we return a new shallow copy. Its
+  // `.question` field from the engine would otherwise contain the
+  // English-token-augmented text; replace it with exactly what the user
+  // saw/typed, in whatever language they wrote it.
+  return { ...result, question: displayedQuestion };
 }

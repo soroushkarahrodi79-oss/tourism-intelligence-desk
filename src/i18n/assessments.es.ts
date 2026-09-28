@@ -352,7 +352,7 @@ export const EVIDENCE_ASSESSMENTS_ES: Record<string, AssessmentEsOverlay> = {
   },
 
   'madrid-hati-q4': {
-    question: '¿Qué tan robustas fueron las decisiones de HATI bajo la incertidumbre probada?',
+    question: '¿Hasta qué punto fueron robustas las decisiones de HATI bajo la incertidumbre probada?',
     statusHeadline:
       'Resultado Reproducido: 35 ROBUSTAS, 6 LIMÍTROFES, 1 INESTABLE Bajo las Dimensiones de Incertidumbre Probadas',
     signal: {
@@ -560,7 +560,7 @@ export const EVIDENCE_ASSESSMENTS_ES: Record<string, AssessmentEsOverlay> = {
     interpretation: {
       inferences: [
         'La señal ambiental real no respalda una narrativa de deterioro de la vegetación en todo el parque a través de los activos monitoreados.',
-        'Maliciosa-Porrones merece monitoreo porque es el único activo con una tendencia NDVI en declive significativo en esta serie de 21 activos.',
+        'Maliciosa-Porrones merece seguimiento porque es el único activo con una tendencia NDVI en declive significativo en esta serie de 21 activos.',
         'La evidencia puede priorizar la investigación, pero no puede identificar al turismo como la causa de ningún cambio.'
       ],
       plausibleMechanisms:
@@ -604,7 +604,7 @@ export const EVIDENCE_ASSESSMENTS_ES: Record<string, AssessmentEsOverlay> = {
     },
     decisionImplication: {
       managerialConsiderations: [
-        'Usar la señal ambiental para enfocar la atención de monitoreo, no para prescribir una intervención restrictiva.',
+        'Usar la señal ambiental para enfocar la atención de seguimiento, no para prescribir una intervención restrictiva.',
         'Mantener Maliciosa-Porrones en una lista corta de monitoreo / inspección de campo.',
         'Tratar la estabilidad / reverdecimiento como evidencia en contra de fabricar una prioridad de degradación donde no existe una señal adversa.'
       ],
@@ -667,7 +667,7 @@ export const EVIDENCE_ASSESSMENTS_ES: Record<string, AssessmentEsOverlay> = {
     },
     interpretation: {
       inferences: [
-        'Existe una señal persistente de cambio de vegetación por teledetección que merece monitoreo / una revisión de campo focalizada.',
+        'Existe una señal persistente de cambio de vegetación por teledetección que merece seguimiento / una revisión de campo focalizada.',
         'La combinación de NDVI en declive y NDMI en aumento va en contra de una historia simplista de un solo mecanismo.',
         'Ninguna evidencia identifica actualmente al turismo como el factor causal.'
       ],
@@ -727,7 +727,7 @@ export const EVIDENCE_ASSESSMENTS_ES: Record<string, AssessmentEsOverlay> = {
         'No colapsar "tendencia significativa" en "impacto turístico significativo".'
       ],
       policyPerspective: [
-        'Una alerta de monitoreo defendible es la acción máxima actualmente respaldada para este activo.'
+        'Una alerta de seguimiento defendible es la acción máxima actualmente respaldada para este activo.'
       ]
     },
     dataNeededNext: [
@@ -870,7 +870,7 @@ export const EVIDENCE_ASSESSMENTS_ES: Record<string, AssessmentEsOverlay> = {
     },
     interpretation: {
       inferences: [
-        'La capa de senderos puede respaldar el monitoreo ambiental y la planificación de inspección consciente del PRUG.',
+        'La capa de senderos puede respaldar el seguimiento ambiental y la planificación de inspección consciente del PRUG.',
         'No puede respaldar una clasificación de presión turística sendero por sendero porque el uso por visitantes no se mide a escala de sendero.',
         'Un cambio estacional de dos escenas no equivale a una tendencia multianual.'
       ],
@@ -915,7 +915,7 @@ export const EVIDENCE_ASSESSMENTS_ES: Record<string, AssessmentEsOverlay> = {
         'Mantener separadas las superficies de evidencia estacional y multianual.'
       ],
       policyPerspective: [
-        'La capa es una ayuda de alerta temprana y monitoreo, no un asignador automático de intervenciones.'
+        'La capa es una ayuda de alerta temprana y seguimiento, no un asignador automático de intervenciones.'
       ]
     },
     dataNeededNext: [

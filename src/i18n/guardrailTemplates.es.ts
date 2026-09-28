@@ -30,7 +30,7 @@ const policyChange: Builder = (territory, original) => ({
     spatialScope: `Alcance del caso ${territory.shortName}.`,
     temporalWindow: 'Instantánea de evidencia actual del prototipo.',
     summary:
-      'El sistema separa la existencia de evidencia de la autorización operativa. La evidencia de investigación puede respaldar el diagnóstico o el monitoreo mientras sigue siendo insuficiente para una intervención de política específica.'
+      'El sistema separa la existencia de evidencia de la autorización operativa. La evidencia de investigación puede respaldar el diagnóstico o el seguimiento mientras sigue siendo insuficiente para una intervención de política específica.'
   },
   evidence: {
     supportingDatasets: [
@@ -50,7 +50,7 @@ const policyChange: Builder = (territory, original) => ({
   },
   interpretation: {
     inferences: [
-      'La evidencia actual puede respaldar el monitoreo, la delimitación o la investigación dentro de su techo documentado.',
+      'La evidencia actual puede respaldar el seguimiento, la delimitación o la investigación dentro de su techo documentado.',
       'La modificación inmediata de la política no está justificada a menos que la acción solicitada tenga una cadena específica de evidencia y autorización.'
     ],
     plausibleMechanisms:

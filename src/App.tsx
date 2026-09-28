@@ -13,6 +13,8 @@ import { MethodologyModal } from './components/MethodologyModal';
 import { useLocale } from './i18n/LocaleProvider';
 import { localizeAssessment, localizeTerritory } from './i18n/localize';
 import { evaluateLocalizedQuestion } from './i18n/questionRouting';
+import { localizeEvidenceManifest } from './i18n/evidenceManifest.es';
+import { localizeDataStatusLabel } from './i18n/ui';
 import {
   ShieldCheck,
   ChevronRight,
@@ -43,7 +45,7 @@ export default function App() {
   const [isMethodologyOpen, setIsMethodologyOpen] = useState<boolean>(false);
 
   const currentTerritory = localizeTerritory(TERRITORY_CASES[activeTerritoryId], locale);
-  const currentEvidenceManifest = EVIDENCE_MANIFEST[activeTerritoryId];
+  const currentEvidenceManifest = localizeEvidenceManifest(EVIDENCE_MANIFEST[activeTerritoryId], locale);
   const isHati = activeTerritoryId === 'madrid-hati';
   const isBoundedData =
     currentTerritory.dataStatus === 'Demonstration' || currentTerritory.dataStatus === 'Proxy';
@@ -165,7 +167,7 @@ export default function App() {
             <span
               className={`w-1.5 h-1.5 rounded-full ${isBoundedData ? 'bg-hati' : accent.dot}`}
             />
-            <span>{t('app.dataStatusPrefix')} {currentTerritory.dataStatus}</span>
+            <span>{t('app.dataStatusPrefix')} {localizeDataStatusLabel(currentTerritory.dataStatus, locale)}</span>
           </div>
         </div>
 
@@ -257,7 +259,7 @@ export default function App() {
                       ? t('app.reproducedSnapshotLabel')
                       : currentTerritory.dataStatus === 'Derived'
                         ? t('app.realObservationsLabel')
-                        : currentTerritory.dataStatus}
+                        : localizeDataStatusLabel(currentTerritory.dataStatus, locale)}
                   </div>
                   <p className="text-xs text-muted leading-relaxed">
                     {currentTerritory.dataStatusNote}

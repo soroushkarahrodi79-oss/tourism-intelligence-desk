@@ -255,6 +255,9 @@ export interface UiStringTree {
     mdCautionsHeading: string;
     mdSection9: string;
     mdSection10: string;
+    mdProvAuthority: string;
+    mdProvRes: string;
+    mdProvStatus: string;
     mdLimitations: string;
   };
   methodology: {
@@ -564,6 +567,9 @@ export const UI_STRINGS: Record<Locale, UiStringTree> = {
       mdCautionsHeading: '### Cautions & Guardrails:',
       mdSection9: '## 9. DATA NEEDED NEXT',
       mdSection10: '## 10. PROVENANCE & LIMITATIONS',
+      mdProvAuthority: 'Authority:',
+      mdProvRes: 'Res:',
+      mdProvStatus: 'Status:',
       mdLimitations:
         '**Limitations:** Generated for decision-support and research evaluation. Does not replace formal field validation, environmental assessment, or institutional decision procedures.'
     },
@@ -787,7 +793,7 @@ export const UI_STRINGS: Record<Locale, UiStringTree> = {
       hypothesis: 'Hipótesis:',
       epistemicSafeguardTitle: 'Salvaguarda epistémica: evidencia insuficiente',
       epistemicSafeguardBody:
-        'El motor analítico rechaza el salto causal. La evidencia observacional actual es inadecuada o está confundida temporalmente para atribuir este fenómeno al turismo. Las recomendaciones se limitan al monitoreo focalizado.',
+        'El motor analítico rechaza el salto causal. La evidencia observacional actual es inadecuada o está confundida temporalmente para atribuir este fenómeno al turismo. Las recomendaciones se limitan al seguimiento focalizado.',
       correlationRuleTitle: 'Regla científica: la correlación no establece causalidad',
       correlationRuleBody:
         'La coincidencia espacial o temporal entre visitantes y condiciones ambientales no establece al turismo como el mecanismo causante. Las explicaciones físicas y meteorológicas deben evaluarse primero.',
@@ -888,6 +894,9 @@ export const UI_STRINGS: Record<Locale, UiStringTree> = {
       mdCautionsHeading: '### Precauciones y Salvaguardas:',
       mdSection9: '## 9. DATOS NECESARIOS A CONTINUACIÓN',
       mdSection10: '## 10. PROCEDENCIA Y LIMITACIONES',
+      mdProvAuthority: 'Autoridad:',
+      mdProvRes: 'Res.:',
+      mdProvStatus: 'Estado:',
       mdLimitations:
         '**Limitaciones:** Generado para apoyo a la decisión y evaluación de investigación. No sustituye la validación de campo formal, la evaluación ambiental ni los procedimientos institucionales de decisión.'
     },
@@ -1009,4 +1018,23 @@ export function localizeEvaluationLabel(value: string, locale: Locale): string {
 export function localizeConfidenceLabel(level: string, locale: Locale): string {
   if (locale === 'en') return level;
   return CONFIDENCE_LABELS_ES[level] ?? level;
+}
+
+// DataStatus enum values (src/types/index.ts) must never change — they drive
+// logic (isDemo/isReproduced checks, etc.) throughout the app. This lookup is
+// display-only: it translates the label shown to the user without touching
+// the underlying `.dataStatus` field anywhere it is read for logic.
+export const DATA_STATUS_LABELS_ES: Record<string, string> = {
+  Demonstration: 'Demostración',
+  Proxy: 'Proxy',
+  Derived: 'Derivado',
+  Validated: 'Validado',
+  Observed: 'Observado',
+  'Model-derived': 'Derivado de modelo',
+  Reproduced: 'Reproducido'
+};
+
+export function localizeDataStatusLabel(status: string, locale: Locale): string {
+  if (locale === 'en') return status;
+  return DATA_STATUS_LABELS_ES[status] ?? status;
 }

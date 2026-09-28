@@ -11,7 +11,7 @@ import {
   ExternalLink
 } from 'lucide-react';
 import { useLocale } from '../i18n/LocaleProvider';
-import { localizeConfidenceLabel, localizeEvaluationLabel } from '../i18n/ui';
+import { localizeConfidenceLabel, localizeDataStatusLabel, localizeEvaluationLabel } from '../i18n/ui';
 
 interface EvidenceAssessmentPanelProps {
   assessment: EvidenceAssessment;
@@ -58,7 +58,7 @@ export const EvidenceAssessmentPanel: React.FC<EvidenceAssessmentPanelProps> = (
               isBoundedData ? 'border-hati/30 text-hati-strong' : 'border-hairline'
             }`}
           >
-            {assessment.dataStatus}
+            {localizeDataStatusLabel(assessment.dataStatus, locale)}
           </span>
           <span className="meta-label ml-auto">{assessment.id}</span>
         </div>
@@ -312,7 +312,7 @@ export const EvidenceAssessmentPanel: React.FC<EvidenceAssessmentPanelProps> = (
                 <div className="flex items-center justify-between gap-2">
                   <span className="text-xs font-semibold text-ink">{prov.sensorOrPlatform}</span>
                   <span className="meta-label rounded-full border border-hairline bg-surface px-2 py-0.5">
-                    {prov.dataStatus || 'Proxy'}
+                    {localizeDataStatusLabel(prov.dataStatus || 'Proxy', locale)}
                   </span>
                 </div>
                 <div className="mt-1 text-[11px] text-muted leading-relaxed">
