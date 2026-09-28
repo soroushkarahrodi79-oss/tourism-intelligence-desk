@@ -2,6 +2,8 @@ import React from 'react';
 import { TerritoryId } from '../types';
 import { TERRITORY_CASES } from '../data/cases';
 import { Thermometer, Satellite, ArrowRight, ShieldCheck } from 'lucide-react';
+import { useLocale } from '../i18n/LocaleProvider';
+import { localizeTerritory } from '../i18n/localize';
 
 interface CaseCardHeroProps {
   activeTerritoryId: TerritoryId;
@@ -14,8 +16,9 @@ export const CaseCardHero: React.FC<CaseCardHeroProps> = ({
   onSelectTerritory,
   onOpenMethodology
 }) => {
-  const madridCase = TERRITORY_CASES['madrid-hati'];
-  const guadarramaCase = TERRITORY_CASES['guadarrama-snto'];
+  const { locale, t } = useLocale();
+  const madridCase = localizeTerritory(TERRITORY_CASES['madrid-hati'], locale);
+  const guadarramaCase = localizeTerritory(TERRITORY_CASES['guadarrama-snto'], locale);
 
   return (
     <section className="relative border-b border-hairline bg-canvas studio-grid-motif">
@@ -24,21 +27,20 @@ export const CaseCardHero: React.FC<CaseCardHeroProps> = ({
         <div className="max-w-2xl">
           <div className="eyebrow flex items-center gap-2">
             <span className="w-1.5 h-1.5 rounded-full bg-brand" />
-            <span>Geospatial research · decision systems</span>
+            <span>{t('hero.eyebrow')}</span>
           </div>
           <h1 className="mt-3 text-3xl sm:text-4xl lg:text-[2.75rem] font-extrabold leading-[1.08] text-ink">
-            From territorial signals to defensible tourism decisions.
+            {t('hero.title')}
           </h1>
           <p className="mt-4 text-base sm:text-lg text-muted leading-relaxed">
-            Environmental, geospatial and tourism evidence transformed into transparent decision
-            support — without hiding uncertainty.
+            {t('hero.supporting')}
           </p>
           <button
             onClick={onOpenMethodology}
             className="mt-5 inline-flex items-center gap-1.5 text-sm font-medium text-brand hover:text-brand-strong"
           >
             <ShieldCheck className="w-4 h-4" />
-            <span>Why you can trust it — the epistemic charter</span>
+            <span>{t('hero.epistemicLink')}</span>
             <ArrowRight className="w-3.5 h-3.5" />
           </button>
         </div>
@@ -51,21 +53,22 @@ export const CaseCardHero: React.FC<CaseCardHeroProps> = ({
             onSelect={() => onSelectTerritory('madrid-hati')}
             theme="hati"
             icon={<Thermometer className="w-5 h-5" />}
-            index="Case study 01"
-            kicker="Urban thermal intelligence"
-            title="HATI Madrid"
+            index={t('hero.caseStudy01')}
+            kicker={t('hero.hatiKicker')}
+            title={t('hero.hatiTitle')}
             code={madridCase.code}
-            summary="Thermal-method sensitivity & constraint-first opportunity screening."
+            summary={t('hero.hatiSummary')}
             metricA={{
               value: madridCase.keyIndicators[0].value,
-              label: 'observations changed classification'
+              label: t('hero.hatiMetricALabel')
             }}
             metricB={{
               value: madridCase.keyIndicators[1].value,
-              label: 'scenarios changed candidate set'
+              label: t('hero.hatiMetricBLabel')
             }}
-            footnote="Reproduced research · model-derived thermal data"
-            cta="Explore HATI"
+            footnote={t('hero.hatiFootnote')}
+            cta={t('hero.hatiCta')}
+            activeLabel={t('hero.activeCase')}
           />
 
           {/* SNTO — environmental (forest) */}
@@ -74,21 +77,22 @@ export const CaseCardHero: React.FC<CaseCardHeroProps> = ({
             onSelect={() => onSelectTerritory('guadarrama-snto')}
             theme="snto"
             icon={<Satellite className="w-5 h-5" />}
-            index="Case study 02"
-            kicker="Environmental monitoring"
-            title="SNTO Sierra de Guadarrama"
+            index={t('hero.caseStudy02')}
+            kicker={t('hero.sntoKicker')}
+            title={t('hero.sntoTitle')}
             code={guadarramaCase.code}
-            summary="Real Sentinel-2 evidence & evidence-proportionate public-use limits."
+            summary={t('hero.sntoSummary')}
             metricA={{
               value: guadarramaCase.keyIndicators[0].value,
-              label: 'monitored time-series assets'
+              label: t('hero.sntoMetricALabel')
             }}
             metricB={{
               value: guadarramaCase.keyIndicators[1].value,
-              label: 'NDVI trend distribution (↑ / stable / ↓)'
+              label: t('hero.sntoMetricBLabel')
             }}
-            footnote="Real observations · derived indicators"
-            cta="Explore SNTO"
+            footnote={t('hero.sntoFootnote')}
+            cta={t('hero.sntoCta')}
+            activeLabel={t('hero.activeCase')}
           />
         </div>
       </div>
@@ -112,6 +116,7 @@ interface CaseCardProps {
   metricB: { value: string; label: string };
   footnote: string;
   cta: string;
+  activeLabel: string;
 }
 
 // Complete literal class strings per theme so the Tailwind JIT resolves them.
@@ -151,7 +156,8 @@ const CaseCard: React.FC<CaseCardProps> = ({
   metricA,
   metricB,
   footnote,
-  cta
+  cta,
+  activeLabel
 }) => {
   const t = THEME[theme];
   return (
@@ -197,7 +203,7 @@ const CaseCard: React.FC<CaseCardProps> = ({
       <div className="mt-5 pt-4 border-t border-hairline flex items-center justify-between gap-3">
         <span className="text-[11px] text-faint">{footnote}</span>
         <span className={`inline-flex items-center gap-1 text-sm font-semibold ${t.cta}`}>
-          <span>{active ? 'Active case' : cta}</span>
+          <span>{active ? activeLabel : cta}</span>
           <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
         </span>
       </div>
