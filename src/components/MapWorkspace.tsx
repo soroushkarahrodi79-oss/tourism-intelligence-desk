@@ -275,168 +275,157 @@ export const MapWorkspace: React.FC<MapWorkspaceProps> = ({
     }
   }, [territory.id, showStations, showSpatialFeatures, selectedStation, selectedFeature]);
 
+  const spatialChip =
+    'bg-spatial/85 backdrop-blur-sm border border-white/15 text-white/90';
+  const tabBase =
+    'px-2.5 py-1 rounded-md font-medium transition-colors flex items-center gap-1.5';
+
   return (
-    <div className="relative w-full h-[500px] rounded-lg overflow-hidden border border-zinc-800 bg-zinc-950 flex flex-col">
-      {/* Top Map Toolbar */}
-      <div className="absolute top-3 left-3 z-[400] flex items-center gap-2">
-        {/* Basemap Switcher */}
-        <div className="flex items-center p-0.5 bg-zinc-900/95 backdrop-blur-sm border border-zinc-800 rounded-md text-xs">
+    <div className="relative w-full h-[420px] sm:h-[500px] rounded-2xl overflow-hidden border border-hairline shadow-[var(--shadow-card)] bg-spatial flex flex-col">
+      {/* Top toolbar */}
+      <div className="absolute top-3 left-3 right-3 z-[400] flex flex-wrap items-center gap-2">
+        {/* Basemap switcher */}
+        <div className={`flex items-center p-0.5 rounded-lg text-xs ${spatialChip}`}>
           <button
             onClick={() => setBasemap('dark')}
-            className={`px-2.5 py-1 rounded font-medium transition-colors flex items-center gap-1 ${
-              basemap === 'dark' ? 'bg-zinc-800 text-zinc-100' : 'text-zinc-400 hover:text-zinc-200'
-            }`}
-            title="CartoDB Dark Matter GIS Mode"
+            className={`${tabBase} ${basemap === 'dark' ? 'bg-white/15 text-white' : 'text-white/60 hover:text-white'}`}
+            title="CartoDB Dark Matter GIS mode"
           >
             <MapIcon className="w-3.5 h-3.5" />
             <span>Dark</span>
           </button>
           <button
             onClick={() => setBasemap('satellite')}
-            className={`px-2.5 py-1 rounded font-medium transition-colors flex items-center gap-1 ${
-              basemap === 'satellite' ? 'bg-zinc-800 text-zinc-100' : 'text-zinc-400 hover:text-zinc-200'
-            }`}
-            title="Satellite Imagery"
+            className={`${tabBase} ${basemap === 'satellite' ? 'bg-white/15 text-white' : 'text-white/60 hover:text-white'}`}
+            title="Satellite imagery"
           >
             <Satellite className="w-3.5 h-3.5" />
             <span>Satellite</span>
           </button>
           <button
             onClick={() => setBasemap('positron')}
-            className={`px-2.5 py-1 rounded font-medium transition-colors flex items-center gap-1 ${
-              basemap === 'positron' ? 'bg-zinc-800 text-zinc-100' : 'text-zinc-400 hover:text-zinc-200'
-            }`}
-            title="Positron Neutral Mode"
+            className={`${tabBase} ${basemap === 'positron' ? 'bg-white/15 text-white' : 'text-white/60 hover:text-white'}`}
+            title="Positron neutral mode"
           >
             <Compass className="w-3.5 h-3.5" />
-            <span>Positron</span>
+            <span>Light</span>
           </button>
         </div>
 
-        {/* Layer Toggles */}
-        <div className="flex items-center p-0.5 bg-zinc-900/95 backdrop-blur-sm border border-zinc-800 rounded-md text-xs">
+        {/* Layer toggles */}
+        <div className={`flex items-center p-0.5 rounded-lg text-xs ${spatialChip}`}>
           {territory.features.length > 0 && (
             <button
               onClick={() => setShowSpatialFeatures(!showSpatialFeatures)}
-              className={`px-2 py-1 rounded font-medium transition-colors flex items-center gap-1.5 ${
-                showSpatialFeatures ? 'bg-zinc-800 text-zinc-200' : 'text-zinc-500 line-through'
-              }`}
-              title="Toggle Earth Observation Zonal Layers"
+              className={`${tabBase} ${showSpatialFeatures ? 'bg-white/15 text-white' : 'text-white/45 line-through'}`}
+              title="Toggle Earth-observation zonal layers"
             >
               <Layers className="w-3.5 h-3.5" />
-              <span>NDVI Buffer Zone</span>
+              <span>NDVI buffer zone</span>
             </button>
           )}
           <button
             onClick={() => setShowStations(!showStations)}
-            className={`px-2 py-1 rounded font-medium transition-colors flex items-center gap-1.5 ${
-              showStations ? 'bg-zinc-800 text-zinc-200' : 'text-zinc-500 line-through'
-            }`}
+            className={`${tabBase} ${showStations ? 'bg-white/15 text-white' : 'text-white/45 line-through'}`}
             title={
               territory.referencePoints?.length
                 ? territory.id === 'madrid-hati'
                   ? 'Toggle locked pilot study assets'
                   : 'Toggle real Sentinel-2 campaign assets'
-                : 'Toggle Sampling Locations'
+                : 'Toggle sampling locations'
             }
           >
             <Crosshair className="w-3.5 h-3.5" />
             <span>
               {territory.referencePoints?.length
-                ? `Study Assets (${territory.referencePoints.length})`
-                : `Sampling Nodes (${territory.stations.length})`}
+                ? `Study assets (${territory.referencePoints.length})`
+                : `Sampling nodes (${territory.stations.length})`}
             </span>
           </button>
         </div>
-      </div>
 
-      {/* Top Right: Spatial evidence label */}
-      <div className="absolute top-3 right-3 z-[400]">
-        <div className="px-2.5 py-1 rounded bg-zinc-900/95 backdrop-blur-sm border border-zinc-700/80 text-[11px] font-mono text-zinc-300 flex items-center gap-1.5">
-          <span className={`w-1.5 h-1.5 rounded-full ${territory.referencePoints?.length ? 'bg-emerald-400' : 'bg-amber-400'}`}></span>
+        {/* Spatial evidence label */}
+        <div className={`ml-auto px-2.5 py-1 rounded-md text-[11px] font-mono flex items-center gap-1.5 ${spatialChip}`}>
+          <span className={`w-1.5 h-1.5 rounded-full ${territory.referencePoints?.length ? 'bg-snto' : 'bg-hati'}`} />
           <span>
             {territory.referencePoints?.length
               ? territory.id === 'madrid-hati'
-                ? 'LOCKED PILOT ASSET LOCATIONS'
-                : 'REAL CAMPAIGN ASSETS · REPRESENTATIVE POINTS'
-              : 'DEMONSTRATION GEOMETRY'}
+                ? 'Locked pilot asset locations'
+                : 'Real campaign assets · representative points'
+              : 'Demonstration geometry'}
           </span>
         </div>
       </div>
 
-      {/* Fallback Warning if Tiles Fail to Load */}
+      {/* Tile fallback warning */}
       {tileLoadError && (
-        <div className="absolute top-14 left-3 right-3 z-[400] p-2 bg-zinc-900/90 border border-zinc-700 rounded text-xs text-zinc-300 flex items-center gap-2">
-          <AlertCircle className="w-4 h-4 text-amber-400 shrink-0" />
-          <span>Notice: Network connectivity to basemap tiles is limited. Vector geometry and spatial boundaries remain active.</span>
+        <div className="absolute top-16 left-3 right-3 z-[400] p-2.5 rounded-lg bg-spatial/90 border border-white/15 text-xs text-white/85 flex items-center gap-2">
+          <AlertCircle className="w-4 h-4 text-hati shrink-0" />
+          <span>Basemap tile connectivity is limited. Vector geometry and spatial boundaries remain active.</span>
         </div>
       )}
 
-      {/* Leaflet Map Canvas */}
+      {/* Leaflet canvas */}
       <div ref={mapContainerRef} className="w-full flex-1 z-0" />
 
-      {/* Bottom Coordinates & Legend Bar */}
-      <div className="bg-zinc-900/95 border-t border-zinc-800 px-4 py-2 flex flex-wrap items-center justify-between gap-3 text-xs z-10">
-        {/* Dynamic Coordinate Readout */}
-        <div className="flex items-center gap-3 font-mono text-[11px] text-zinc-400">
-          <div className="flex items-center gap-1.5">
-            <span className="text-zinc-400">PROJECTION:</span>
-            <span className="text-zinc-300">WGS84 (EPSG:4326)</span>
-          </div>
-          <span className="text-zinc-700">·</span>
-          <div className="flex items-center gap-1.5">
-            <span className="text-zinc-400">CURSOR:</span>
+      {/* Bottom coordinates & legend */}
+      <div className="bg-spatial border-t border-white/10 px-4 py-2 flex flex-wrap items-center justify-between gap-3 text-xs z-10">
+        <div className="flex items-center gap-3 font-mono text-[11px] text-white/55">
+          <span>
+            <span className="text-white/45">Projection </span>
+            <span className="text-white/80">WGS84 (EPSG:4326)</span>
+          </span>
+          <span className="text-white/20">·</span>
+          <span>
+            <span className="text-white/45">Cursor </span>
             {cursorCoords ? (
-              <span className="text-zinc-200 font-medium">
+              <span className="text-white/90 font-medium">
                 {cursorCoords.lat}° N, {cursorCoords.lng}° W
               </span>
             ) : (
-              <span className="text-zinc-400">Hover over map</span>
+              <span className="text-white/45">hover over map</span>
             )}
-          </div>
+          </span>
         </div>
 
-        {/* Legend */}
-        <div className="flex items-center gap-4 text-[11px] font-mono">
+        <div className="flex items-center gap-4 text-[11px] font-mono text-white/60">
           {territory.referencePoints?.length ? (
             <div className="flex items-center gap-1.5">
-              <span className={`w-2.5 h-2.5 rounded-full bg-zinc-900 inline-block border ${
-                territory.id === 'madrid-hati' ? 'border-amber-400' : 'border-emerald-400'
-              }`}></span>
-              <span className="text-zinc-400">
-                {territory.id === 'madrid-hati' ? 'Published HATI Study Asset' : 'SNTO Sentinel-2 Campaign Asset'}
-              </span>
+              <span className={`w-2.5 h-2.5 rounded-full bg-spatial inline-block border ${
+                territory.id === 'madrid-hati' ? 'border-hati' : 'border-snto'
+              }`} />
+              <span>{territory.id === 'madrid-hati' ? 'Published HATI study asset' : 'SNTO Sentinel-2 campaign asset'}</span>
             </div>
           ) : (
             <>
               <div className="flex items-center gap-1.5">
-                <span className="w-2.5 h-2.5 rounded-sm bg-orange-600/70 inline-block border border-orange-500"></span>
-                <span className="text-zinc-400">Trail Buffer Zone</span>
+                <span className="w-2.5 h-2.5 rounded-sm bg-orange-500/70 inline-block border border-orange-400" />
+                <span>Trail buffer zone</span>
               </div>
               <div className="flex items-center gap-1.5">
-                <span className="w-2.5 h-2.5 rounded-sm bg-lime-600/70 inline-block border border-lime-500"></span>
-                <span className="text-zinc-400">Subalpine Scrub Zone</span>
+                <span className="w-2.5 h-2.5 rounded-sm bg-lime-500/70 inline-block border border-lime-400" />
+                <span>Subalpine scrub zone</span>
               </div>
               <div className="flex items-center gap-1.5">
-                <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 inline-block border border-white"></span>
-                <span className="text-zinc-400">Sampling Node</span>
+                <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 inline-block border border-white" />
+                <span>Sampling node</span>
               </div>
             </>
           )}
         </div>
       </div>
 
-      {/* Selected Entity Inspector Strip */}
+      {/* Selected entity inspector */}
       {(selectedStation || selectedFeature) && (
-        <div className="bg-zinc-950 border-t border-zinc-800 px-4 py-2.5 flex items-center justify-between text-xs">
+        <div className="bg-[#0a1215] border-t border-white/10 px-4 py-2.5 flex flex-wrap items-center justify-between gap-3 text-xs">
           <div className="flex items-center gap-3">
-            <span className="px-1.5 py-0.5 rounded bg-zinc-800 text-zinc-300 font-mono text-[10px] uppercase">
-              {selectedStation ? 'Sampling Node Inspector' : 'Spatial Zone Inspector'}
+            <span className="px-2 py-0.5 rounded-md bg-white/10 text-white/70 font-mono text-[10px]">
+              {selectedStation ? 'Sampling node' : 'Spatial zone'}
             </span>
-            <span className="font-semibold text-zinc-100">
+            <span className="font-semibold text-white">
               {selectedStation ? selectedStation.name : selectedFeature?.name}
             </span>
-            <span className="text-zinc-400 font-mono">
+            <span className="text-white/55 font-mono">
               {selectedStation ? selectedStation.code : selectedFeature?.category}
             </span>
           </div>
@@ -445,20 +434,20 @@ export const MapWorkspace: React.FC<MapWorkspaceProps> = ({
             {selectedStation && (
               <div className="flex items-center gap-3">
                 {Object.entries(selectedStation.readings).slice(0, 3).map(([key, val]) => (
-                  <div key={key} className="text-zinc-400">
-                    <span className="text-zinc-400 capitalize">{key}: </span>
-                    <span className="text-zinc-200 font-medium">{val}</span>
+                  <div key={key} className="text-white/55">
+                    <span className="capitalize">{key}: </span>
+                    <span className="text-white/90 font-medium">{val}</span>
                   </div>
                 ))}
               </div>
             )}
             {selectedFeature && (
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-3 text-white/80">
                 {selectedFeature.properties.lstAnomalyC && (
-                  <span className="text-zinc-300">LST Δ: +{selectedFeature.properties.lstAnomalyC}°C</span>
+                  <span>LST Δ: +{selectedFeature.properties.lstAnomalyC}°C</span>
                 )}
                 {selectedFeature.properties.ndviDelta && (
-                  <span className="text-zinc-300">NDVI Δ: {selectedFeature.properties.ndviDelta}</span>
+                  <span>NDVI Δ: {selectedFeature.properties.ndviDelta}</span>
                 )}
               </div>
             )}
@@ -467,7 +456,7 @@ export const MapWorkspace: React.FC<MapWorkspaceProps> = ({
                 onSelectStation(null);
                 onSelectFeature(null);
               }}
-              className="text-zinc-400 hover:text-zinc-200 text-xs px-1.5 py-0.5 hover:bg-zinc-800 rounded"
+              className="text-white/60 hover:text-white text-xs px-2 py-0.5 hover:bg-white/10 rounded-md"
             >
               Close
             </button>

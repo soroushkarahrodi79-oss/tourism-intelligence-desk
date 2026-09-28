@@ -1,7 +1,7 @@
 import React from 'react';
 import {
   ArrowRight,
-  CheckCircle2,
+  Check,
   FileCheck2,
   GitCommitHorizontal,
   ShieldCheck,
@@ -36,143 +36,146 @@ const capabilities = [
   }
 ];
 
+interface GuidedPath {
+  step: string;
+  kicker: string;
+  title: string;
+  cue: string;
+  territory: TerritoryId;
+  question: string;
+  accent: string;
+}
+
+const guidedPaths: GuidedPath[] = [
+  {
+    step: '01',
+    kicker: 'Reproduced result',
+    title: 'Inspect what HATI actually demonstrated',
+    cue: 'Run evidence assessment',
+    territory: 'madrid-hati',
+    question: 'What did the HATI-Madrid pilot actually demonstrate?',
+    accent: 'text-hati-strong'
+  },
+  {
+    step: '02',
+    kicker: 'Causal boundary',
+    title: 'Try the tempting NDVI → tourism claim',
+    cue: 'See why the system refuses',
+    territory: 'guadarrama-snto',
+    question: 'Does the Maliciosa-Porrones NDVI decline prove tourism damage?',
+    accent: 'text-snto-strong'
+  },
+  {
+    step: '03',
+    kicker: 'Decision ceiling',
+    title: 'Test a high-consequence management request',
+    cue: 'Inspect the L5a boundary',
+    territory: 'guadarrama-snto',
+    question: 'Can SNTO justify closing trails or restricting visitor quotas?',
+    accent: 'text-brand'
+  }
+];
+
 export const ProfessionalOverview: React.FC<ProfessionalOverviewProps> = ({
   onRunGuidedQuestion,
   onOpenMethodology,
   onOpenDecisionBrief
 }) => {
   return (
-    <section className="border-b border-zinc-800 bg-zinc-950 px-4 sm:px-6 lg:px-8 py-7">
+    <section className="border-b border-hairline bg-surface px-4 sm:px-6 lg:px-8 py-10 sm:py-12">
       <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 xl:grid-cols-[1.05fr_1.95fr] gap-5 items-stretch">
-          <div className="rounded-lg border border-zinc-800 bg-zinc-900/50 p-5 sm:p-6">
-            <div className="text-[11px] font-mono uppercase tracking-wider text-emerald-400 mb-2">
-              Product in 30 seconds
-            </div>
-            <h2 className="text-xl sm:text-2xl font-semibold tracking-tight text-zinc-100">
+        <div className="grid grid-cols-1 xl:grid-cols-[1fr_1.7fr] gap-8 xl:gap-12 items-start">
+          {/* What it is */}
+          <div>
+            <div className="eyebrow">In 30 seconds</div>
+            <h2 className="mt-2 text-2xl font-bold tracking-tight text-ink">
               Evidence governance before recommendation.
             </h2>
-            <p className="mt-2.5 text-sm text-zinc-300 leading-relaxed">
-              Tourism Intelligence Desk is a research-engineering prototype for analysts who need to move from
-              geospatial and environmental evidence to a decision without hiding uncertainty or inventing causality.
+            <p className="mt-3 text-sm text-muted leading-relaxed">
+              Tourism Intelligence Desk is a research-engineering prototype for analysts who need to
+              move from geospatial and environmental evidence to a decision without hiding
+              uncertainty or inventing causality.
             </p>
 
-            <div className="mt-4 space-y-2 text-xs text-zinc-300">
-              <div className="flex items-start gap-2">
-                <CheckCircle2 className="w-4 h-4 text-emerald-400 mt-0.5 shrink-0" />
-                <span>Two evidence-backed cases with different epistemic states and decision ceilings.</span>
-              </div>
-              <div className="flex items-start gap-2">
-                <CheckCircle2 className="w-4 h-4 text-emerald-400 mt-0.5 shrink-0" />
-                <span>Deterministic guardrails: unsupported claims return <strong>INSUFFICIENT EVIDENCE</strong>.</span>
-              </div>
-              <div className="flex items-start gap-2">
-                <CheckCircle2 className="w-4 h-4 text-emerald-400 mt-0.5 shrink-0" />
-                <span>Decision briefs expose evidence, limits, competing explanations, next data and provenance.</span>
-              </div>
-            </div>
+            <ul className="mt-5 space-y-2.5">
+              {[
+                <>Two evidence-backed cases with different epistemic states and decision ceilings.</>,
+                <>
+                  Deterministic guardrails: unsupported claims return{' '}
+                  <span className="font-semibold text-ink">insufficient evidence</span>.
+                </>,
+                <>Decision briefs expose evidence, limits, competing explanations, next data and provenance.</>
+              ].map((node, i) => (
+                <li key={i} className="flex items-start gap-2.5 text-sm text-ink-soft leading-relaxed">
+                  <Check className="w-4 h-4 text-brand mt-0.5 shrink-0" />
+                  <span>{node}</span>
+                </li>
+              ))}
+            </ul>
 
-            <div className="mt-5 flex flex-wrap gap-2">
+            <div className="mt-6 flex flex-wrap gap-2.5">
               <button
                 onClick={onOpenDecisionBrief}
-                className="inline-flex items-center gap-1.5 rounded bg-emerald-600 hover:bg-emerald-500 px-3 py-2 text-xs font-medium text-white transition-colors"
+                className="inline-flex items-center gap-1.5 rounded-md bg-brand px-3.5 py-2 text-sm font-semibold text-white hover:bg-brand-strong transition-colors"
               >
-                <FileCheck2 className="w-3.5 h-3.5" />
-                <span>View Decision Brief</span>
+                <FileCheck2 className="w-4 h-4" />
+                <span>View decision brief</span>
               </button>
               <button
                 onClick={onOpenMethodology}
-                className="inline-flex items-center gap-1.5 rounded border border-zinc-700 bg-zinc-900 hover:bg-zinc-800 px-3 py-2 text-xs font-medium text-zinc-200 transition-colors"
+                className="inline-flex items-center gap-1.5 rounded-md border border-hairline bg-surface px-3.5 py-2 text-sm font-medium text-ink-soft hover:border-hairline-strong transition-colors"
               >
-                <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+                <ShieldCheck className="w-4 h-4 text-brand" />
                 <span>Inspect evidence rules</span>
               </button>
             </div>
           </div>
 
-          <div className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+          {/* Capabilities + guided evaluation */}
+          <div className="space-y-6">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               {capabilities.map(({ icon: Icon, title, body }) => (
-                <div key={title} className="rounded-lg border border-zinc-800 bg-zinc-900/35 p-4">
-                  <div className="flex items-center gap-2 mb-2">
-                    <div className="p-1.5 rounded bg-zinc-900 border border-zinc-700 text-zinc-300">
-                      <Icon className="w-3.5 h-3.5" />
-                    </div>
-                    <span className="text-xs font-mono uppercase tracking-wide text-zinc-300 font-semibold">
-                      {title}
-                    </span>
+                <div key={title}>
+                  <div className="inline-grid place-items-center w-9 h-9 rounded-lg bg-brand-soft text-brand mb-2.5">
+                    <Icon className="w-4 h-4" />
                   </div>
-                  <p className="text-xs text-zinc-400 leading-relaxed">{body}</p>
+                  <h3 className="text-sm font-semibold text-ink">{title}</h3>
+                  <p className="mt-1 text-xs text-muted leading-relaxed">{body}</p>
                 </div>
               ))}
             </div>
 
-            <div className="rounded-lg border border-zinc-800 bg-zinc-900/50 p-4 sm:p-5">
-              <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
+            <div className="studio-card p-5">
+              <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
                 <div>
-                  <div className="text-xs font-mono uppercase tracking-wider text-zinc-300 font-semibold">
-                    60-second evaluation path
-                  </div>
-                  <div className="text-[11px] text-zinc-500 mt-0.5">
-                    Use the cases that reveal the system’s strongest behaviour: calibrated claims and explicit refusal.
-                  </div>
+                  <h3 className="text-sm font-semibold text-ink">60-second evaluation path</h3>
+                  <p className="text-xs text-muted mt-0.5">
+                    The cases that reveal the system’s strongest behaviour: calibrated claims and
+                    explicit refusal.
+                  </p>
                 </div>
-                <span className="text-[10px] font-mono text-zinc-500 border border-zinc-800 rounded px-2 py-1">
-                  NO LLM REQUIRED FOR SCIENTIFIC CLAIMS
+                <span className="meta-label rounded-full border border-hairline px-2.5 py-1">
+                  No LLM used for scientific claims
                 </span>
               </div>
 
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-2">
-                <button
-                  onClick={() =>
-                    onRunGuidedQuestion(
-                      'madrid-hati',
-                      'What did the HATI-Madrid pilot actually demonstrate?'
-                    )
-                  }
-                  className="group text-left rounded border border-zinc-800 bg-zinc-950 hover:border-amber-700/70 p-3 transition-colors"
-                >
-                  <div className="text-[10px] font-mono text-amber-400 uppercase">01 · Reproduced result</div>
-                  <div className="text-xs font-medium text-zinc-200 mt-1">Inspect what HATI actually demonstrated</div>
-                  <div className="mt-2 flex items-center gap-1 text-[11px] text-zinc-500 group-hover:text-zinc-300">
-                    <span>Run evidence assessment</span>
-                    <ArrowRight className="w-3 h-3" />
-                  </div>
-                </button>
-
-                <button
-                  onClick={() =>
-                    onRunGuidedQuestion(
-                      'guadarrama-snto',
-                      'Does the Maliciosa-Porrones NDVI decline prove tourism damage?'
-                    )
-                  }
-                  className="group text-left rounded border border-zinc-800 bg-zinc-950 hover:border-emerald-700/70 p-3 transition-colors"
-                >
-                  <div className="text-[10px] font-mono text-emerald-400 uppercase">02 · Causal boundary</div>
-                  <div className="text-xs font-medium text-zinc-200 mt-1">Try the tempting NDVI → tourism claim</div>
-                  <div className="mt-2 flex items-center gap-1 text-[11px] text-zinc-500 group-hover:text-zinc-300">
-                    <span>See why the system refuses</span>
-                    <ArrowRight className="w-3 h-3" />
-                  </div>
-                </button>
-
-                <button
-                  onClick={() =>
-                    onRunGuidedQuestion(
-                      'guadarrama-snto',
-                      'Can SNTO justify closing trails or restricting visitor quotas?'
-                    )
-                  }
-                  className="group text-left rounded border border-zinc-800 bg-zinc-950 hover:border-zinc-600 p-3 transition-colors"
-                >
-                  <div className="text-[10px] font-mono text-zinc-400 uppercase">03 · Decision ceiling</div>
-                  <div className="text-xs font-medium text-zinc-200 mt-1">Test a high-consequence management request</div>
-                  <div className="mt-2 flex items-center gap-1 text-[11px] text-zinc-500 group-hover:text-zinc-300">
-                    <span>Inspect the L5a boundary</span>
-                    <ArrowRight className="w-3 h-3" />
-                  </div>
-                </button>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                {guidedPaths.map((p) => (
+                  <button
+                    key={p.step}
+                    onClick={() => onRunGuidedQuestion(p.territory, p.question)}
+                    className="group text-left rounded-xl border border-hairline bg-surface p-3.5 hover:border-hairline-strong hover:shadow-[var(--shadow-card)] transition-all"
+                  >
+                    <div className={`text-[11px] font-semibold ${p.accent}`}>
+                      {p.step} · {p.kicker}
+                    </div>
+                    <div className="mt-1.5 text-sm font-medium text-ink leading-snug">{p.title}</div>
+                    <div className="mt-2.5 inline-flex items-center gap-1 text-[11px] text-muted group-hover:text-ink">
+                      <span>{p.cue}</span>
+                      <ArrowRight className="w-3 h-3 transition-transform group-hover:translate-x-0.5" />
+                    </div>
+                  </button>
+                ))}
               </div>
             </div>
           </div>
