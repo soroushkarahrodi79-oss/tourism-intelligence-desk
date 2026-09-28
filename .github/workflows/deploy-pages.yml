@@ -24,6 +24,7 @@ jobs:
       VITE_PUBLIC_BASE: /tourism-intelligence-desk/
       VITE_BUILD_SHA: ${{ github.sha }}
       VITE_DEPLOYMENT: github-pages
+      VITE_CARTO_BASEMAP_KEY: ${{ secrets.CARTO_BASEMAP_KEY }}
 
     steps:
       - name: Checkout
