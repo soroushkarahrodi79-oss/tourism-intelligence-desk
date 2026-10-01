@@ -121,21 +121,18 @@ interface CaseCardProps {
 
 // Complete literal class strings per theme so the Tailwind JIT resolves them.
 const THEME: Record<Theme, {
-  rail: string;
   iconWrap: string;
   kicker: string;
   ring: string;
   cta: string;
 }> = {
   hati: {
-    rail: 'before:bg-hati',
     iconWrap: 'bg-hati-soft text-hati-strong',
     kicker: 'text-hati-strong',
     ring: 'ring-hati/40 border-hati/30',
     cta: 'text-hati-strong'
   },
   snto: {
-    rail: 'before:bg-snto',
     iconWrap: 'bg-snto-soft text-snto-strong',
     kicker: 'text-snto-strong',
     ring: 'ring-snto/40 border-snto/30',
@@ -165,7 +162,6 @@ const CaseCard: React.FC<CaseCardProps> = ({
       onClick={onSelect}
       aria-pressed={active}
       className={`group relative w-full text-left studio-card p-5 sm:p-6 transition-all overflow-hidden
-        before:absolute before:left-0 before:top-0 before:h-full before:w-1 before:content-[''] ${t.rail}
         hover:shadow-[var(--shadow-lift)] hover:-translate-y-0.5
         ${active ? `ring-2 ${t.ring}` : 'hover:border-hairline-strong'}`}
     >

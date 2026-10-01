@@ -341,10 +341,10 @@ export const EvidenceAssessmentPanel: React.FC<EvidenceAssessmentPanelProps> = (
 
 type Tone = 'brand' | 'data' | 'hati';
 
-const TONE: Record<Tone, { chip: string; rule: string }> = {
-  brand: { chip: 'bg-brand-soft text-brand', rule: 'bg-brand/50' },
-  data: { chip: 'bg-data-soft text-data', rule: 'bg-data/40' },
-  hati: { chip: 'bg-hati-soft text-hati-strong', rule: 'bg-hati/50' }
+const TONE: Record<Tone, { chip: string }> = {
+  brand: { chip: 'bg-brand-soft text-brand' },
+  data: { chip: 'bg-data-soft text-data' },
+  hati: { chip: 'bg-hati-soft text-hati-strong' }
 };
 
 interface ReasoningStepProps {
@@ -358,8 +358,7 @@ interface ReasoningStepProps {
 const ReasoningStep: React.FC<ReasoningStepProps> = ({ icon, tone, heading, question, children }) => {
   const t = TONE[tone];
   return (
-    <section className="relative pl-5">
-      <span className={`absolute left-0 top-1 bottom-1 w-1 rounded-full ${t.rule}`} />
+    <section className="relative">
       <div className="flex items-center gap-2 mb-1.5">
         <span className={`grid place-items-center w-7 h-7 rounded-lg ${t.chip}`}>{icon}</span>
         <div>
